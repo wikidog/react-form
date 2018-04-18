@@ -13,6 +13,10 @@ class TestForm extends Component {
 
   render() {
     console.log(this.props);
+
+    // If your onSubmit function returns a promise,
+    // the submitting property will be set to true
+    // until the promise has been resolved or rejected.
     const { handleSubmit, submitting } = this.props;
 
     return (
