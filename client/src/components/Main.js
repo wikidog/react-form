@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 
-// import * as actions from '../actions';
+import TestForm from './TestForm';
 
 class Main extends Component {
   render() {
     return (
       <div>
-        <h1>Main</h1>
+        <h2>My Test Form:</h2>
+        <TestForm />
       </div>
     );
   }
