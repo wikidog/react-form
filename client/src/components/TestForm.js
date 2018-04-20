@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import isValidEmail from 'sane-email-validation';
 
+import Button from 'material-ui/Button';
+
 // import * as actions from '../actions';
 import showResults from './showResults';
 
@@ -33,9 +35,14 @@ class TestForm extends Component {
           <label htmlFor="email">Email</label>
           <Field name="email" component="input" type="email" />
         </div>
-        <button type="submit" disabled={submitting}>
+        <Button
+          variant="raised"
+          color="primary"
+          type="submit"
+          disabled={submitting}
+        >
           Submit
-        </button>
+        </Button>
       </form>
     );
   }
