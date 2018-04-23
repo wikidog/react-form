@@ -2,10 +2,20 @@ import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import isValidEmail from 'sane-email-validation';
 
+import { withStyles } from 'material-ui/styles';
+import withRoot from './withRoot';
+
 import Button from 'material-ui/Button';
 
 // import * as actions from '../actions';
 import showResults from './showResults';
+
+const styles = theme => ({
+  root: {
+    textAlign: 'center',
+    paddingTop: theme.spacing.unit * 20,
+  },
+});
 
 class TestForm extends Component {
   // onSubmit(values) {
@@ -70,7 +80,11 @@ function validate(values) {
   return errors;
 }
 
-export default reduxForm({
-  form: 'testForm',
-  validate,
-})(TestForm);
+export default withRoot(
+  withStyles(styles)(
+    reduxForm({
+      form: 'testForm',
+      validate,
+    })(TestForm)
+  )
+);
