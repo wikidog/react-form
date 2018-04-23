@@ -3,7 +3,6 @@ import { Field, reduxForm } from 'redux-form';
 import isValidEmail from 'sane-email-validation';
 
 import { withStyles } from 'material-ui/styles';
-import withRoot from './withRoot';
 
 import Button from 'material-ui/Button';
 
@@ -24,7 +23,7 @@ class TestForm extends Component {
   // }
 
   render() {
-    console.log(this.props);
+    console.log('Test form:', this.props);
 
     // If your onSubmit function returns a promise,
     // the submitting property will be set to true
@@ -80,11 +79,9 @@ function validate(values) {
   return errors;
 }
 
-export default withRoot(
-  withStyles(styles)(
-    reduxForm({
-      form: 'testForm',
-      validate,
-    })(TestForm)
-  )
+export default withStyles(styles)(
+  reduxForm({
+    form: 'testForm',
+    validate,
+  })(TestForm)
 );
