@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import isValidEmail from 'sane-email-validation';
 
+import { withTheme } from 'material-ui/styles';
 import { withStyles } from 'material-ui/styles';
 
 import Button from 'material-ui/Button';
@@ -9,12 +10,21 @@ import Button from 'material-ui/Button';
 // import * as actions from '../actions';
 import showResults from './showResults';
 
-const styles = theme => ({
+const styles = {
   root: {
     textAlign: 'center',
-    paddingTop: theme.spacing.unit * 20,
+    // paddingTop: this.props.theme.spacing.unit * 20,
   },
-});
+  button: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    borderRadius: 3,
+    border: 0,
+    color: 'white',
+    height: 48,
+    padding: '0 30px',
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .30)',
+  },
+};
 
 class TestForm extends Component {
   // onSubmit(values) {
@@ -23,7 +33,8 @@ class TestForm extends Component {
   // }
 
   render() {
-    console.log('Test form:', this.props);
+    console.log('TestForm:', this.props);
+    const { theme, classes } = this.props;
 
     // If your onSubmit function returns a promise,
     // the submitting property will be set to true
@@ -31,9 +42,11 @@ class TestForm extends Component {
     const { handleSubmit, submitting } = this.props;
 
     return (
-      <form onSubmit={handleSubmit(showResults)}>
+      <form className={classes.root} onSubmit={handleSubmit(showResults)}>
         <div>
-          <label htmlFor="firstName">First Name</label>
+          <label style={{ color: theme.palette.primary.main }}>
+            First Name
+          </label>
           <Field name="firstName" component="input" type="text" />
         </div>
         <div>
@@ -45,6 +58,7 @@ class TestForm extends Component {
           <Field name="email" component="input" type="email" />
         </div>
         <Button
+          className={classes.button}
           variant="raised"
           color="primary"
           type="submit"
@@ -79,9 +93,11 @@ function validate(values) {
   return errors;
 }
 
-export default withStyles(styles)(
-  reduxForm({
-    form: 'testForm',
-    validate,
-  })(TestForm)
+export default withTheme()(
+  withStyles(styles)(
+    reduxForm({
+      form: 'testForm',
+      validate,
+    })(TestForm)
+  )
 );
