@@ -5,7 +5,7 @@ import isValidEmail from 'sane-email-validation';
 import { withTheme } from 'material-ui/styles';
 import { withStyles } from 'material-ui/styles';
 
-import Button from 'material-ui/Button';
+import { Button, TextField } from 'material-ui';
 
 // import * as actions from '../actions';
 import showResults from './showResults';
@@ -26,6 +26,30 @@ const styles = {
   },
 };
 
+const renderTextField = ({
+  input,
+  label,
+  meta: { touched, error },
+  ...custom
+}) => (
+  <TextField
+    // hintText={label}
+    label={label}
+    error={touched && error}
+    required
+    fullWidth
+    helperText={'aaaaaaaa'}
+    type="input"
+    {...input}
+    {...custom}
+  />
+);
+
+// const renderTextField = props => {
+//   console.log('renderTextField', props);
+//   return <input />;
+// };
+
 class TestForm extends Component {
   // onSubmit(values) {
   //   // console.log(values);
@@ -39,23 +63,26 @@ class TestForm extends Component {
     // If your onSubmit function returns a promise,
     // the submitting property will be set to true
     // until the promise has been resolved or rejected.
-    const { handleSubmit, submitting } = this.props;
+    const { handleSubmit, pristine, reset, submitting } = this.props;
 
     return (
       <form className={classes.root} onSubmit={handleSubmit(showResults)}>
         <div>
-          <label style={{ color: theme.palette.primary.main }}>
-            First Name
-          </label>
-          <Field name="firstName" component="input" type="text" />
+          <Field
+            name="firstName"
+            component={renderTextField}
+            label="First Name"
+          />
         </div>
         <div>
-          <label htmlFor="lastName">Last Name</label>
-          <Field name="lastName" component="input" type="text" />
+          <Field
+            name="lastName"
+            component={renderTextField}
+            label="Last Name"
+          />
         </div>
         <div>
-          <label htmlFor="email">Email</label>
-          <Field name="email" component="input" type="email" />
+          <Field name="email" component={renderTextField} label="Email" />
         </div>
         <Button
           className={classes.button}
