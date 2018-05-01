@@ -28,14 +28,14 @@ const styles = {
 
 const renderTextField = ({
   input,
-  label,
   meta: { touched, error },
+  label,
   ...custom
 }) => (
   <TextField
     // hintText={label}
     label={label}
-    error={touched && error}
+    error={touched && error ? true : false}
     required
     fullWidth
     helperText={'aaaaaaaa'}
