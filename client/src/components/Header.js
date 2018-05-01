@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { AppBar, Toolbar } from 'material-ui';
+import Typography from 'material-ui/Typography';
+
 import * as actions from '../actions';
 
 class Header extends Component {
   render() {
     return (
-      <div>
-        <h1>My App</h1>
-      </div>
+      <AppBar position="static" color="default">
+        <Toolbar>
+          <Typography variant="title" color="inherit">
+            My App
+          </Typography>
+        </Toolbar>
+      </AppBar>
     );
   }
 }
