@@ -5,7 +5,10 @@ import isValidEmail from 'sane-email-validation';
 import { withTheme } from 'material-ui/styles';
 import { withStyles } from 'material-ui/styles';
 
-import { Button, TextField } from 'material-ui';
+import { Button } from 'material-ui';
+
+import Input, { InputLabel } from 'material-ui/Input';
+import { FormControl, FormHelperText } from 'material-ui/Form';
 
 // import * as actions from '../actions';
 import showResults from './showResults';
@@ -32,17 +35,23 @@ const renderTextField = ({
   label,
   ...custom
 }) => (
-  <TextField
-    // hintText={label}
-    label={label}
-    error={touched && error ? true : false}
-    required
-    fullWidth
-    helperText={'aaaaaaaa'}
-    type="input"
-    {...input}
-    {...custom}
-  />
+  <FormControl fullWidth error={touched && error ? true : false}>
+    <InputLabel htmlFor={input.name}>{label}</InputLabel>
+    <Input id={input.name} {...input} {...custom} />
+    <FormHelperText id={`${input.name}-text`}>
+      {touched ? error : ''}
+    </FormHelperText>
+  </FormControl>
+  // <TextField
+  //   label={label}
+  //   error={touched && error ? true : false}
+  //   required
+  //   fullWidth
+  //   helperText={touched ? error : 'aaaaa'}
+  //   type="input"
+  //   {...input}
+  //   {...custom}
+  // />
 );
 
 // const renderTextField = props => {
@@ -58,12 +67,12 @@ class TestForm extends Component {
 
   render() {
     console.log('TestForm:', this.props);
-    const { theme, classes } = this.props;
+    const { classes } = this.props;
 
     // If your onSubmit function returns a promise,
     // the submitting property will be set to true
     // until the promise has been resolved or rejected.
-    const { handleSubmit, pristine, reset, submitting } = this.props;
+    const { handleSubmit, submitting } = this.props;
 
     return (
       <form className={classes.root} onSubmit={handleSubmit(showResults)}>
@@ -71,28 +80,30 @@ class TestForm extends Component {
           <Field
             name="firstName"
             component={renderTextField}
-            label="First Name"
+            label="First Name *"
           />
         </div>
         <div>
           <Field
             name="lastName"
             component={renderTextField}
-            label="Last Name"
+            label="Last Name *"
           />
         </div>
         <div>
-          <Field name="email" component={renderTextField} label="Email" />
+          <Field name="email" component={renderTextField} label="Email *" />
         </div>
-        <Button
-          className={classes.button}
-          variant="raised"
-          color="primary"
-          type="submit"
-          disabled={submitting}
-        >
-          Submit
-        </Button>
+        <div>
+          <Button
+            // className={classes.button}
+            variant="raised"
+            color="primary"
+            type="submit"
+            disabled={submitting}
+          >
+            Submit
+          </Button>
+        </div>
       </form>
     );
   }

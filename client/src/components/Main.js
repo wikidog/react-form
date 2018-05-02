@@ -32,12 +32,8 @@ class Main extends Component {
           <Grid container justify="center">
             <Grid item>
               <Paper className={classes.form}>
-                <Grid container>
-                  <Grid item>
-                    <h2>My Test Form:</h2>
-                    <TestForm />
-                  </Grid>
-                </Grid>
+                <h2>My Test Form</h2>
+                <TestForm />
               </Paper>
             </Grid>
           </Grid>
@@ -49,3 +45,22 @@ class Main extends Component {
 
 export default withStyles(styles)(Main);
 // export default withTheme()(Main);
+
+// return (
+//   <Grid container className={classes.root} spacing={16}>
+//     <Grid item xs={12}>
+//       <Grid container justify="center">
+//         <Grid item>
+//           <Paper className={classes.form}>
+//             <Grid container>
+//               <Grid item>
+//                 <h2>My Test Form:</h2>
+//                 <TestForm />
+//               </Grid>
+//             </Grid>
+//           </Paper>
+//         </Grid>
+//       </Grid>
+//     </Grid>
+//   </Grid>
+// );
