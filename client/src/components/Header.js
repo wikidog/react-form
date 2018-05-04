@@ -18,6 +18,7 @@ const styles = theme => ({
     },
     boxShadow: 'none',
     // background: 'transparent',
+    // minHeight: 10,
   },
   title: {
     marginLeft: 24,

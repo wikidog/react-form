@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 // import { withTheme } from 'material-ui/styles';
 import { withStyles } from 'material-ui/styles';
 
-import { Grid, Paper, Typography } from 'material-ui';
+import { Grid, Typography } from 'material-ui';
 
 import TestForm from './TestForm';
 
@@ -17,16 +17,16 @@ const styles = theme => ({
   }),
   [theme.breakpoints.up('md')]: {
     root: {
-      maxWidth: theme.breakpoints.values.md,
+      maxWidth: theme.breakpoints.values.md, // maxWidth = 960px
     },
   },
-  form: {
-    margin: theme.spacing.unit * 4,
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    height: 400,
-    width: 400,
-  },
+  // form: {
+  //   margin: theme.spacing.unit * 4,
+  //   padding: theme.spacing.unit * 2,
+  //   textAlign: 'center',
+  //   height: 400,
+  //   width: 400,
+  // },
 });
 
 class Main extends Component {
@@ -38,16 +38,16 @@ class Main extends Component {
       <div className={classes.root}>
         <Grid container spacing={16}>
           <Grid item xs={12}>
-            <Grid container justify="center">
-              <Grid item>
-                <Paper className={classes.form}>
-                  <Typography variant="title" color="inherit">
-                    My Test Form
-                  </Typography>
-                  <TestForm />
-                </Paper>
-              </Grid>
-            </Grid>
+            {/* <Grid container justify="center"> */}
+            {/* <Grid item> */}
+            {/* <Paper className={classes.form}> */}
+            <Typography variant="title" color="inherit">
+              My Test Form
+            </Typography>
+            <TestForm />
+            {/* </Paper> */}
+            {/* </Grid> */}
+            {/* </Grid> */}
           </Grid>
         </Grid>
       </div>

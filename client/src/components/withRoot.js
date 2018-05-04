@@ -21,6 +21,11 @@ const theme = createMuiTheme({
     },
     type: 'light',
   },
+  // mixins: {
+  //   toolbar: {
+  //     minHeight: 64,
+  //   },
+  // },
 });
 
 function withRoot(Component) {
