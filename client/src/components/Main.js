@@ -4,13 +4,21 @@ import React, { Component } from 'react';
 // import { withTheme } from 'material-ui/styles';
 import { withStyles } from 'material-ui/styles';
 
-import { Grid, Paper } from 'material-ui';
+import { Grid, Paper, Typography } from 'material-ui';
 
 import TestForm from './TestForm';
 
 const styles = theme => ({
-  root: {
-    flexGrow: 1,
+  root: theme.mixins.gutters({
+    paddingTop: 80,
+    flex: '1 1 100%',
+    maxWidth: '100%',
+    margin: '0 auto',
+  }),
+  [theme.breakpoints.up('md')]: {
+    root: {
+      maxWidth: theme.breakpoints.values.md,
+    },
   },
   form: {
     margin: theme.spacing.unit * 4,
@@ -27,18 +35,22 @@ class Main extends Component {
     const { classes } = this.props;
 
     return (
-      <Grid container className={classes.root} spacing={16}>
-        <Grid item xs={12}>
-          <Grid container justify="center">
-            <Grid item>
-              <Paper className={classes.form}>
-                <h2>My Test Form</h2>
-                <TestForm />
-              </Paper>
+      <div className={classes.root}>
+        <Grid container spacing={16}>
+          <Grid item xs={12}>
+            <Grid container justify="center">
+              <Grid item>
+                <Paper className={classes.form}>
+                  <Typography variant="title" color="inherit">
+                    My Test Form
+                  </Typography>
+                  <TestForm />
+                </Paper>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </div>
     );
   }
 }
