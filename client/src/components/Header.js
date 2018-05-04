@@ -17,6 +17,7 @@ const styles = theme => ({
       position: 'absolute',
     },
     boxShadow: 'none',
+    // background: 'transparent',
   },
   title: {
     marginLeft: 24,
