@@ -14,7 +14,7 @@ import Snackbar from 'material-ui/Snackbar';
 import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 
-import UploadComponent from './Upload';
+import UploadComponent, { uploader } from './Upload';
 
 // import * as actions from '../actions';
 // import showResults from './showResults';
@@ -31,6 +31,7 @@ const styles = {
   },
   fineUploader: {
     margin: '10px 0 30px 0',
+    textAlign: 'left',
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -86,6 +87,11 @@ class TestForm extends Component {
   };
 
   submitForm = values => {
+    // console.log('uploader', uploader);
+    // console.log('uploader-methods', uploader.methods);
+    uploader.methods.log('adfadfadfadsfasdfasdfasdfadfa ==============');
+    uploader.methods.uploadStoredFiles();
+
     return axios
       .post('http://localhost:5000/formsubmit', values)
       .then(response => {

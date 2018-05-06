@@ -7,7 +7,7 @@ import Gallery from 'react-fine-uploader';
 import 'react-fine-uploader/gallery/gallery.css';
 // import CancelButton from 'react-fine-uploader/cancel-button';
 
-const uploader = new FineUploaderTraditional({
+export const uploader = new FineUploaderTraditional({
   options: {
     debug: true,
     autoUpload: false,
