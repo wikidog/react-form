@@ -8,6 +8,7 @@ import 'react-fine-uploader/gallery/gallery.css';
 // import CancelButton from 'react-fine-uploader/cancel-button';
 
 // export is so that we can call it's methods in other component
+//
 export const uploader = new FineUploaderTraditional({
   options: {
     debug: true,
