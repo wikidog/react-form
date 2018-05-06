@@ -14,6 +14,8 @@ import Snackbar from 'material-ui/Snackbar';
 import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 
+import UploadComponent from './Upload';
+
 // import * as actions from '../actions';
 // import showResults from './showResults';
 
@@ -26,6 +28,9 @@ const styles = {
   },
   snackbar: {
     position: 'absolute',
+  },
+  fineUploader: {
+    margin: '10px 0 30px 0',
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -128,6 +133,9 @@ class TestForm extends Component {
           <Field name="email" component={renderTextField} label="Email *" />
         </div>
         {/* {error && <div>{error}</div>} */}
+        <div className={classes.fineUploader}>
+          <UploadComponent />
+        </div>
         <div>
           <Button
             // className={classes.button}
