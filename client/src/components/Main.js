@@ -38,16 +38,10 @@ class Main extends Component {
       <div className={classes.root}>
         <Grid container spacing={16}>
           <Grid item xs={12}>
-            {/* <Grid container justify="center"> */}
-            {/* <Grid item> */}
-            {/* <Paper className={classes.form}> */}
             <Typography variant="title" color="inherit">
               My Test Form
             </Typography>
             <TestForm />
-            {/* </Paper> */}
-            {/* </Grid> */}
-            {/* </Grid> */}
           </Grid>
         </Grid>
       </div>

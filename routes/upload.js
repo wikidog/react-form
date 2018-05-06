@@ -11,6 +11,12 @@ module.exports = app => {
     res.send({ message: 'secret code 123456' });
   });
 
+  app.post('/formsubmit', (req, res, next) => {
+    console.log(req.body);
+    // res.send({ success: true });
+    res.status(422).send({ error: 'Wrong password' });
+  });
+
   app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
     console.log(req.file);
     res.send({ success: true });

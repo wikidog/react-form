@@ -1,22 +1,31 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+
 import { Field, reduxForm } from 'redux-form';
+import { SubmissionError } from 'redux-form';
 import isValidEmail from 'sane-email-validation';
 
 import { withTheme } from 'material-ui/styles';
 import { withStyles } from 'material-ui/styles';
-
-import { Button } from 'material-ui';
+import Button from 'material-ui/Button';
+import Snackbar from 'material-ui/Snackbar';
+// import Fade from 'material-ui/transitions/Fade';
 
 import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 
 // import * as actions from '../actions';
-import showResults from './showResults';
+// import showResults from './showResults';
 
 const styles = {
   root: {
+    position: 'relative',
+    overflow: 'hidden',
     textAlign: 'center',
     // paddingTop: this.props.theme.spacing.unit * 20,
+  },
+  snackbar: {
+    position: 'absolute',
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -54,28 +63,53 @@ const renderTextField = ({
   // />
 );
 
-// const renderTextField = props => {
-//   console.log('renderTextField', props);
-//   return <input />;
-// };
-
 class TestForm extends Component {
+  state = {
+    open: false,
+  };
   // onSubmit(values) {
   //   // console.log(values);
   //   showResults(values);
   // }
 
+  handleClick = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  submitForm = values => {
+    return axios
+      .post('http://localhost:5000/formsubmit', values)
+      .then(response => {
+        console.log('response from server:', response);
+
+        window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`);
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({ open: true });
+        throw new SubmissionError({
+          email: 'Email does not exist',
+          _error: 'Login failed!',
+        });
+      });
+  };
+
   render() {
     console.log('TestForm:', this.props);
     const { classes } = this.props;
+    const { open } = this.state;
 
     // If your onSubmit function returns a promise,
     // the submitting property will be set to true
     // until the promise has been resolved or rejected.
-    const { handleSubmit, submitting } = this.props;
+    const { error, handleSubmit, submitting } = this.props;
 
     return (
-      <form className={classes.root} onSubmit={handleSubmit(showResults)}>
+      <form className={classes.root} onSubmit={handleSubmit(this.submitForm)}>
         <div>
           <Field
             name="firstName"
@@ -93,6 +127,7 @@ class TestForm extends Component {
         <div>
           <Field name="email" component={renderTextField} label="Email *" />
         </div>
+        {/* {error && <div>{error}</div>} */}
         <div>
           <Button
             // className={classes.button}
@@ -104,6 +139,24 @@ class TestForm extends Component {
             Submit
           </Button>
         </div>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={open}
+          // autoHideDuration={4000}
+          onClose={this.handleClose}
+          // transition={Fade}
+          SnackbarContentProps={{
+            'aria-describedby': 'snackbar-fab-message-id',
+            className: classes.snackbarContent,
+          }}
+          message={<span id="snackbar-fab-message-id">{error}</span>}
+          action={
+            <Button color="inherit" size="small" onClick={this.handleClose}>
+              Undo
+            </Button>
+          }
+          className={classes.snackbar}
+        />
       </form>
     );
   }
@@ -113,15 +166,15 @@ function validate(values) {
   const errors = {};
 
   if (!values.firstName) {
-    errors.firstName = 'Required';
+    errors.firstName = 'Enter your first name';
   }
 
   if (!values.lastName) {
-    errors.lastName = 'Required';
+    errors.lastName = 'Enter your last name';
   }
 
   if (!values.email) {
-    errors.email = 'Required';
+    errors.email = 'Enter your email';
   } else if (!isValidEmail(values.email)) {
     errors.email = 'Invalid Email';
   }
@@ -131,11 +184,16 @@ function validate(values) {
   return errors;
 }
 
+function onSubmitFail(errors) {
+  console.log(errors);
+}
+
 export default withTheme()(
   withStyles(styles)(
     reduxForm({
       form: 'testForm',
       validate,
+      onSubmitFail,
     })(TestForm)
   )
 );

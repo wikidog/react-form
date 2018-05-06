@@ -15,7 +15,7 @@ const morgan = require('morgan');
 // const mongoose = require('mongoose');
 // const cookieSession = require('cookie-session');
 // const passport = require('passport');
-// const cors = require('cors');
+const cors = require('cors');
 
 // ---------------------------------------------------------------------
 // DB setup
@@ -55,7 +55,7 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 
 // allow CORS requests
 //
-// app.use(cors());
+app.use(cors());
 //
 // body-parser: parse request bodies, available under the req.body property
 //              json({type: '*/*'}) - parse as JSON for any request
