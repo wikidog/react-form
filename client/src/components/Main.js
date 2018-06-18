@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 
 // import { withTheme } from 'material-ui/styles';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-import { Grid, Typography } from 'material-ui';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 import TestForm from './TestForm';
 
@@ -19,6 +20,11 @@ const styles = theme => ({
     root: {
       maxWidth: theme.breakpoints.values.md, // maxWidth = 960px
     },
+  },
+  container: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(12, 1fr)',
+    gridGap: `${theme.spacing.unit * 3}px`,
   },
   // form: {
   //   margin: theme.spacing.unit * 4,

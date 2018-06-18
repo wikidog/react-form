@@ -5,14 +5,16 @@ import { Field, reduxForm } from 'redux-form';
 import { SubmissionError } from 'redux-form';
 import isValidEmail from 'sane-email-validation';
 
-import { withTheme } from 'material-ui/styles';
-import { withStyles } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import Snackbar from 'material-ui/Snackbar';
+import { withTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
 // import Fade from 'material-ui/transitions/Fade';
 
-import Input, { InputLabel } from 'material-ui/Input';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 import UploadComponent, { uploader } from './Upload';
 

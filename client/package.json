@@ -8,10 +8,10 @@
     }
   },
   "dependencies": {
-    "@material-ui/icons": "^1.0.0-beta.43",
+    "@material-ui/core": "^1.2.1",
+    "@material-ui/icons": "^1.1.0",
     "axios": "^0.18.0",
     "fine-uploader": "^5.16.2",
-    "material-ui": "^1.0.0-beta.47",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-fine-uploader": "^1.1.0",
@@ -20,8 +20,7 @@
     "react-transition-group": "^1.2.1",
     "redux": "^3.7.2",
     "redux-form": "^7.3.0",
-    "sane-email-validation": "^1.1.0",
-    "typeface-roboto": "0.0.54"
+    "sane-email-validation": "^1.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

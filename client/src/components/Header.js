@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { withStyles } from 'material-ui/styles';
-import { AppBar, Toolbar } from 'material-ui';
-import Typography from 'material-ui/Typography';
-import Tooltip from 'material-ui/Tooltip';
-import IconButton from 'material-ui/IconButton';
-import { AccountBox } from '@material-ui/icons';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import AccountBox from '@material-ui/icons/AccountBox';
 
 import * as actions from '../actions';
 
@@ -69,4 +70,7 @@ function mapStateToProps({ auth }) {
   return { authenticated: auth };
 }
 
-export default connect(mapStateToProps, actions)(withStyles(styles)(Header));
+export default connect(
+  mapStateToProps,
+  actions
+)(withStyles(styles)(Header));
