@@ -10,22 +10,34 @@ import Typography from '@material-ui/core/Typography';
 import TestForm from './TestForm';
 
 const styles = theme => ({
-  root: theme.mixins.gutters({
+  //
+  // TODO: why use "theme.mixins.getters()????"
+  //
+  // root: theme.mixins.gutters({
+  //   paddingTop: 80,
+  //   flex: '1 1 100%',
+  //   maxWidth: '100%',
+  //   margin: '0 auto',
+  // }),
+  root: {
     paddingTop: 80,
     flex: '1 1 100%',
     maxWidth: '100%',
     margin: '0 auto',
-  }),
+  },
+  //
+  // set the maxWidth to 960px
+  //
   [theme.breakpoints.up('md')]: {
     root: {
       maxWidth: theme.breakpoints.values.md, // maxWidth = 960px
     },
   },
-  container: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(12, 1fr)',
-    gridGap: `${theme.spacing.unit * 3}px`,
-  },
+  // container: {
+  //   display: 'grid',
+  //   gridTemplateColumns: 'repeat(12, 1fr)',
+  //   gridGap: `${theme.spacing.unit * 3}px`,
+  // },
   // form: {
   //   margin: theme.spacing.unit * 4,
   //   padding: theme.spacing.unit * 2,
