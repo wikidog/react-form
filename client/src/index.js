@@ -2,15 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import createSagaMiddleware from 'redux-saga';
 
-import reducers from './reducers';
-
-// import 'typeface-roboto';
+import reducer from './reducers';
+import rootSaga from './sagas';
 
 import App from './components/App';
 
-// 2nd parameter is pre-loaded state
-const store = createStore(reducers, {}, applyMiddleware());
+const sagaMiddleware = createSagaMiddleware();
+// 2nd parameter can be the pre-loaded state
+const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
   <Provider store={store}>
