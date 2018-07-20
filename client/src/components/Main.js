@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 
-// import { withTheme } from 'material-ui/styles';
+import { withTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
@@ -67,24 +67,5 @@ class Main extends Component {
   }
 }
 
-export default withStyles(styles)(Main);
-// export default withTheme()(Main);
-
-// return (
-//   <Grid container className={classes.root} spacing={16}>
-//     <Grid item xs={12}>
-//       <Grid container justify="center">
-//         <Grid item>
-//           <Paper className={classes.form}>
-//             <Grid container>
-//               <Grid item>
-//                 <h2>My Test Form:</h2>
-//                 <TestForm />
-//               </Grid>
-//             </Grid>
-//           </Paper>
-//         </Grid>
-//       </Grid>
-//     </Grid>
-//   </Grid>
-// );
+// withTheme(): we need to access the 'theme' variable in this component
+export default withTheme()(withStyles(styles)(Main));

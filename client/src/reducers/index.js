@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { reducer as reduxForm } from 'redux-form';
 
-import authReducer from './authReducer';
+import uploadReducer from './uploadReducer';
 
 export default combineReducers({
-  auth: authReducer,
+  upload: uploadReducer,
   //
   // Redux-Form: the key must be 'form'
   form: reduxForm,

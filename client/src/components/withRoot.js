@@ -4,8 +4,8 @@ import React from 'react';
 //
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 // import purple from 'material-ui/colors/purple';
-import green from '@material-ui/core/colors/green';
 import blue from '@material-ui/core/colors/blue';
+import grey from '@material-ui/core/colors/grey';
 // import pink from 'material-ui/colors/pink';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -14,16 +14,16 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: blue[300],
-      main: blue[500],
-      dark: blue[700],
+      light: blue[500],
+      main: blue[700],
+      dark: blue[900],
     },
     secondary: {
-      light: green[300],
-      main: green[500],
-      dark: green[700],
+      light: grey[500],
+      main: grey[700],
+      dark: grey[900],
     },
-    type: 'light',
+    // type: 'light',     // cannot specify 'main'; either 'light' or 'dark'
   },
   // mixins: {
   //   toolbar: {

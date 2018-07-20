@@ -1,2 +1,5 @@
-// export const FETCH_USER = 'fetch_user';
-// export const FETCH_SURVEYS = 'fetch_surveys';
+export const SUBMIT_FORM_REQUEST = 'SUBMIT_FORM_REQUEST';
+export const SUBMIT_FORM_SUCCESS = 'SUBMIT_FORM_SUCCESS';
+export const SUBMIT_FORM_FAILURE = 'SUBMIT_FORM_FAILURE';
+
+export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';

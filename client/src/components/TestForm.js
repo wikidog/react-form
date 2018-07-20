@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { Field, reduxForm } from 'redux-form';
 import { SubmissionError } from 'redux-form';
 import isValidEmail from 'sane-email-validation';
 
-import { withTheme } from '@material-ui/core/styles';
+// import { withTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -18,7 +19,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 
 import UploadComponent, { uploader } from './Upload';
 
-// import * as actions from '../actions';
+import * as actions from '../actions';
 // import showResults from './showResults';
 
 const styles = {
@@ -35,15 +36,15 @@ const styles = {
     margin: '10px 0 30px 0',
     textAlign: 'left',
   },
-  button: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    borderRadius: 3,
-    border: 0,
-    color: 'white',
-    height: 48,
-    padding: '0 30px',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .30)',
-  },
+  // button: {
+  //   background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+  //   borderRadius: 3,
+  //   border: 0,
+  //   color: 'white',
+  //   height: 48,
+  //   padding: '0 30px',
+  //   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .30)',
+  // },
 };
 
 const renderTextField = ({
@@ -59,16 +60,6 @@ const renderTextField = ({
       {touched ? error : ''}
     </FormHelperText>
   </FormControl>
-  // <TextField
-  //   label={label}
-  //   error={touched && error ? true : false}
-  //   required
-  //   fullWidth
-  //   helperText={touched ? error : 'aaaaa'}
-  //   type="input"
-  //   {...input}
-  //   {...custom}
-  // />
 );
 
 class TestForm extends Component {
@@ -196,7 +187,6 @@ function validate(values) {
   }
 
   // console.log('validate errors:', errors);
-
   return errors;
 }
 
@@ -204,8 +194,15 @@ function onSubmitFail(errors) {
   console.log(errors);
 }
 
-export default withTheme()(
-  withStyles(styles)(
+const mapStateToProps = () => {
+  return {};
+};
+
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    actions
+  )(
     reduxForm({
       form: 'testForm',
       validate,
