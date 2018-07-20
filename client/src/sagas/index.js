@@ -1,34 +1,68 @@
-import { all, takeLatest, call, put } from 'redux-saga/effects';
+import { takeLatest, call, put, all } from 'redux-saga/effects';
 import axios from 'axios';
 
-// function that makes the api request and returns a Promise for response
-function fetchDog() {
+import {
+  FETCH_IMAGE_REQUEST,
+  FETCH_IMAGE_SUCCESS,
+  FETCH_IMAGE_FAILURE,
+} from '../actions/types';
+
+// -----------------------------------------------------------
+
+const apiUrl = 'https://AApixabay.com/api';
+const apiKey = '8783992-06499d83b0b376f06affd8505';
+
+function fetchImage(searchText, amount) {
   return axios({
     method: 'get',
-    url: 'https://dog.ceo/api/breeds/image/random',
-    // url: 'https://dog.ceo/api/beds/image/random',
+    url: `${apiUrl}/?key=${apiKey}&q=${searchText}&$image_type=photo&per_page=${amount}&safesearch=true`,
   });
 }
 
-// worker saga: makes the api call when watcher saga sees the action
-function* workerSaga() {
-  try {
-    const response = yield call(fetchDog);
-    const dog = response.data.message;
+// -----------------------------------------------------------
+// Worker Saga
+function* fetchImageRequest(action) {
+  const searchText = action.payload.searchText;
+  const amount = action.payload.amount;
 
-    // dispatch a success action to the store with the new dog
-    yield put({ type: 'API_CALL_SUCCESS', dog });
+  try {
+    const res = yield call(fetchImage, searchText, amount);
+    // dispatch a success action
+    yield put({ type: FETCH_IMAGE_SUCCESS, payload: res.data.hits });
   } catch (error) {
-    // dispatch a failure action to the store with the error
-    yield put({ type: 'API_CALL_FAILURE', error });
+    // dispatch a failure action
+    // yield put({ type: FETCH_IMAGE_FAILURE, payload: 'Fetch image error' });
+
+    let errorMsg = '';
+
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      errorMsg = error.response.data;
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      errorMsg = 'No response was received from the server';
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      errorMsg = error.message;
+    }
+
+    yield put({ type: FETCH_IMAGE_FAILURE, payload: errorMsg });
   }
 }
 
-// watcher saga: watches for actions dispatched to the store, starts worker saga
-function* watcherSaga() {
-  yield takeLatest('API_CALL_REQUEST', workerSaga);
+// -----------------------------------------------------------
+// Watcher Saga
+//
+// watch FETCH_IMAGE_REQUEST action
+function* watchFetchImage() {
+  yield takeLatest(FETCH_IMAGE_REQUEST, fetchImageRequest);
 }
 
+// -----------------------------------------------------------
+// Root Saga
 export default function* rootSaga() {
-  yield all([watcherSaga()]);
+  yield all([watchFetchImage()]);
 }

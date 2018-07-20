@@ -12,7 +12,11 @@ import App from './components/App';
 
 const sagaMiddleware = createSagaMiddleware();
 // 2nd parameter can be the pre-loaded state
-const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+const store = createStore(
+  reducer,
+  composeWithDevTools(applyMiddleware(sagaMiddleware))
+);
+
 sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
