@@ -1,4 +1,5 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import axios from 'axios';
 
 import {
@@ -9,36 +10,37 @@ import {
 
 // -----------------------------------------------------------
 
-const apiUrl = 'https://pixabay.com/api';
-const apiKey = '8783992-06499d83b0b376f06affd8505';
+const apiUrl = 'http://localhost:5000/formsubmit';
 
-function fetchImage(searchText, amount) {
-  return axios({
-    method: 'get',
-    url: `${apiUrl}/?key=${apiKey}&q=${searchText}&$image_type=photo&per_page=${amount}&safesearch=true`,
-  });
+function submitForm(values) {
+  return axios.post(apiUrl, values);
 }
 
 // -----------------------------------------------------------
 // Worker Saga
 function* submitFormRequest(action) {
-  const searchText = action.payload.searchText;
-  const amount = action.payload.amount;
+  const values = action.payload;
+
+  yield delay(1000);
 
   try {
-    const res = yield call(fetchImage, searchText, amount);
+    const res = yield call(submitForm, values);
     // dispatch a success action
-    yield put({ type: SUBMIT_FORM_SUCCESS, payload: res.data.hits });
+    yield put({ type: SUBMIT_FORM_SUCCESS, payload: res.data.message });
+    //
   } catch (error) {
     // dispatch a failure action
     // yield put({ type: FETCH_IMAGE_FAILURE, payload: 'Fetch image error' });
+
+    console.log(error);
 
     let errorMsg = '';
 
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      errorMsg = error.response.data;
+      console.log(error.response);
+      errorMsg = error.response.data.error;
     } else if (error.request) {
       // The request was made but no response was received
       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of

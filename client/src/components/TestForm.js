@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
 
 import { Field, reduxForm } from 'redux-form';
 import { SubmissionError } from 'redux-form';
@@ -36,15 +35,6 @@ const styles = {
     margin: '10px 0 30px 0',
     textAlign: 'left',
   },
-  // button: {
-  //   background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-  //   borderRadius: 3,
-  //   border: 0,
-  //   color: 'white',
-  //   height: 48,
-  //   padding: '0 30px',
-  //   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .30)',
-  // },
 };
 
 const renderTextField = ({
@@ -62,55 +52,44 @@ const renderTextField = ({
   </FormControl>
 );
 
+// return axios
+//   .post('http://localhost:5000/formsubmit', values)
+//   .then(response => {
+//     console.log('response from server:', response);
+
+//     window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`);
+//   })
+//   .catch(err => {
+//     console.log(err);
+//     this.setState({ open: true });
+//     throw new SubmissionError({
+//       email: 'Email does not exist',
+//       _error: 'Login failed!',
+//     });
+//   });
+
 class TestForm extends Component {
-  state = {
-    open: false,
-  };
-  // onSubmit(values) {
-  //   // console.log(values);
-  //   showResults(values);
-  // }
-
-  handleClick = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
   submitForm = values => {
     // console.log('uploader', uploader);
     // console.log('uploader-methods', uploader.methods);
     uploader.methods.log('adfadfadfadsfasdfasdfasdfadfa ==============');
     uploader.methods.uploadStoredFiles();
 
-    return axios
-      .post('http://localhost:5000/formsubmit', values)
-      .then(response => {
-        console.log('response from server:', response);
-
-        window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`);
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({ open: true });
-        throw new SubmissionError({
-          email: 'Email does not exist',
-          _error: 'Login failed!',
-        });
-      });
+    this.props.submitFormRequest(values);
   };
 
   render() {
     console.log('TestForm:', this.props);
-    const { classes } = this.props;
-    const { open } = this.state;
-
-    // If your onSubmit function returns a promise,
-    // the submitting property will be set to true
-    // until the promise has been resolved or rejected.
-    const { error, handleSubmit, submitting } = this.props;
+    const {
+      error,
+      handleSubmit,
+      closeSnackbar,
+      snackbarOpen,
+      uploadSubmitting,
+      uploadResponse,
+      uploadError,
+      classes,
+    } = this.props;
 
     return (
       <form className={classes.root} onSubmit={handleSubmit(this.submitForm)}>
@@ -141,22 +120,22 @@ class TestForm extends Component {
             variant="raised"
             color="primary"
             type="submit"
-            disabled={submitting}
+            disabled={uploadSubmitting}
           >
             Submit
           </Button>
         </div>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={open}
+          open={snackbarOpen}
           // autoHideDuration={4000}
-          onClose={this.handleClose}
+          onClose={closeSnackbar}
           // transition={Fade}
-          SnackbarContentProps={{
-            'aria-describedby': 'snackbar-fab-message-id',
+          ContentProps={{
+            'aria-describedby': 'snackbar-message-id',
             className: classes.snackbarContent,
           }}
-          message={<span id="snackbar-fab-message-id">{error}</span>}
+          message={<span id="snackbar-message-id">{uploadError}</span>}
           action={
             <Button color="inherit" size="small" onClick={this.handleClose}>
               Undo
@@ -194,8 +173,13 @@ function onSubmitFail(errors) {
   console.log(errors);
 }
 
-const mapStateToProps = () => {
-  return {};
+const mapStateToProps = ({ upload }) => {
+  return {
+    uploadSubmitting: upload.submitting,
+    uploadError: upload.error,
+    uploadResponse: upload.response,
+    snackbarOpen: upload.snackbarOpen,
+  };
 };
 
 export default withStyles(styles)(
