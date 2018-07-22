@@ -62,6 +62,8 @@ const renderTextField = ({
 //   .catch(err => {
 //     console.log(err);
 //     this.setState({ open: true });
+//
+// TODO: take a look at SubmissionError()
 //     throw new SubmissionError({
 //       email: 'Email does not exist',
 //       _error: 'Login failed!',
