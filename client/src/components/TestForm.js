@@ -114,9 +114,11 @@ class TestForm extends Component {
         <div>
           <Field name="email" component={renderTextField} label="Email *" />
         </div>
-        {/* {error && <div>{error}</div>} */}
-        <div className={classes.fineUploader}>
+        {/* <div className={classes.fineUploader}>
           <UploadComponent />
+        </div> */}
+        <div className={classes.fineUploader}>
+          <Field name="uploader" component={UploadComponent} />
         </div>
         <div>
           <Button
@@ -167,6 +169,10 @@ function validate(values) {
     errors.email = 'Enter your email';
   } else if (!isValidEmail(values.email)) {
     errors.email = 'Invalid Email';
+  }
+
+  if (!values.uploader) {
+    errors.uploader = 'Please select a file';
   }
 
   // console.log('validate errors:', errors);

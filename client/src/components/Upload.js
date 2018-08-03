@@ -58,6 +58,12 @@ export const uploader = new FineUploaderTraditional({
 
 class UploadComponent extends Component {
   render() {
+    console.log('in uploader', this.props);
+
+    const {
+      meta: { touched, error },
+    } = this.props;
+
     const fileInputChildren = <span>Select a file</span>;
 
     const dropzoneContent = (
@@ -67,11 +73,14 @@ class UploadComponent extends Component {
     );
 
     return (
-      <Gallery
-        fileInput-children={fileInputChildren}
-        dropzone-content={dropzoneContent}
-        uploader={uploader}
-      />
+      <div>
+        <Gallery
+          fileInput-children={fileInputChildren}
+          dropzone-content={dropzoneContent}
+          uploader={uploader}
+        />
+        {touched ? error : ''}
+      </div>
     );
   }
 }
