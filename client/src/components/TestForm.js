@@ -77,7 +77,7 @@ class TestForm extends Component {
     uploader.methods.log('adfadfadfadsfasdfasdfasdfadfa ==============');
 
     // trigger file upload
-    // uploader.methods.uploadStoredFiles();
+    uploader.methods.uploadStoredFiles();
 
     this.props.submitFormRequest(values);
   };

@@ -36,7 +36,12 @@ export const uploader = new FineUploaderTraditional({
     callbacks: {
       onValidate: () => console.log('aaaaaaaaa == onValidate ======'),
       onValidateBatch: () => console.log('aaaaaaaaa == onValidateBatch ======'),
-      onError: () => console.log('bbbbbbbbb == onError ======'),
+      onError: (id, name, errorReason) => {
+        console.log('bbbbbbbbb == onError ======');
+        // console.log('id', id);
+        // console.log('name', name);
+        console.log('errorReason', errorReason);
+      },
       onStatusChange: (id, oldStatus, newStatus) => {
         console.log('id:', id);
         console.log('oldStatus:', oldStatus);
