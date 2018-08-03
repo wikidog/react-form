@@ -16,7 +16,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-import UploadComponent, { uploader } from './Upload';
+import FineUploaderTraditional from 'fine-uploader-wrappers';
+
+import UploadComponent from './Upload';
 
 import * as actions from '../actions';
 // import showResults from './showResults';
@@ -36,6 +38,68 @@ const styles = {
     textAlign: 'left',
   },
 };
+
+// initialize
+const uploader = new FineUploaderTraditional({
+  options: {
+    debug: true,
+    autoUpload: false,
+    multiple: false,
+    validation: {
+      itemLimit: 1,
+    },
+    messages: {
+      tooManyItemsError: 'one file a time',
+    },
+    chunking: {
+      enabled: false,
+    },
+    deleteFile: {
+      enabled: false,
+      endpoint: '/uploads',
+    },
+    request: {
+      endpoint: '/uploads',
+    },
+    retry: {
+      enableAuto: false,
+    },
+    callbacks: {
+      onValidate: () => console.log('aaaaaaaaa == onValidate ======'),
+      onValidateBatch: () => console.log('aaaaaaaaa == onValidateBatch ======'),
+      onError: (id, name, errorReason) => {
+        console.log('bbbbbbbbb == onError ======');
+        // console.log('id', id);
+        // console.log('name', name);
+        console.log('errorReason', errorReason);
+      },
+      onStatusChange: (id, oldStatus, newStatus) => {
+        console.log('id:', id);
+        console.log('oldStatus:', oldStatus);
+        console.log('newStatus:', newStatus);
+      },
+      onSubmit: (id, name) => {
+        console.log('=============== onSubmit ===================');
+        console.log('id:', id);
+        console.log('name:', name);
+      },
+    },
+  },
+});
+
+const renderUploaderField = fields => (
+  <FormControl
+    fullWidth
+    error={fields.meta.touched && fields.meta.error ? true : false}
+  >
+    {/* <InputLabel htmlFor={input.name}>{label}</InputLabel> */}
+    {/* <Input id={input.name} {...input} {...custom} /> */}
+    <UploadComponent uploader={uploader} {...fields} />
+    <FormHelperText id={`${fields.input.name}-text`}>
+      {fields.meta.touched ? fields.meta.error : ''}
+    </FormHelperText>
+  </FormControl>
+);
 
 const renderTextField = ({
   input,
@@ -117,8 +181,8 @@ class TestForm extends Component {
         {/* <div className={classes.fineUploader}>
           <UploadComponent />
         </div> */}
-        <div className={classes.fineUploader}>
-          <Field name="uploader" component={UploadComponent} />
+        <div>
+          <Field name="uploader" component={renderUploaderField} />
         </div>
         <div>
           <Button

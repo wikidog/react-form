@@ -1,68 +1,15 @@
 import React, { Component } from 'react';
 
-import FineUploaderTraditional from 'fine-uploader-wrappers';
+// import FineUploaderTraditional from 'fine-uploader-wrappers';
 import Gallery from 'react-fine-uploader';
 
 // ...or load this specific CSS file using a <link> tag in your document
 import 'react-fine-uploader/gallery/gallery.css';
 // import CancelButton from 'react-fine-uploader/cancel-button';
 
-// export is so that we can call it's methods in other component
-//
-export const uploader = new FineUploaderTraditional({
-  options: {
-    debug: true,
-    autoUpload: false,
-    multiple: false,
-    validation: {
-      itemLimit: 1,
-    },
-    messages: {
-      tooManyItemsError: 'one file a time',
-    },
-    chunking: {
-      enabled: false,
-    },
-    deleteFile: {
-      enabled: false,
-      endpoint: '/uploads',
-    },
-    request: {
-      endpoint: '/uploads',
-    },
-    retry: {
-      enableAuto: false,
-    },
-    callbacks: {
-      onValidate: () => console.log('aaaaaaaaa == onValidate ======'),
-      onValidateBatch: () => console.log('aaaaaaaaa == onValidateBatch ======'),
-      onError: (id, name, errorReason) => {
-        console.log('bbbbbbbbb == onError ======');
-        // console.log('id', id);
-        // console.log('name', name);
-        console.log('errorReason', errorReason);
-      },
-      onStatusChange: (id, oldStatus, newStatus) => {
-        console.log('id:', id);
-        console.log('oldStatus:', oldStatus);
-        console.log('newStatus:', newStatus);
-      },
-      onSubmit: (id, name) => {
-        console.log('=============== onSubmit ===================');
-        console.log('id:', id);
-        console.log('name:', name);
-      },
-    },
-  },
-});
-
 class UploadComponent extends Component {
   render() {
     console.log('in uploader', this.props);
-
-    const {
-      meta: { touched, error },
-    } = this.props;
 
     const fileInputChildren = <span>Select a file</span>;
 
@@ -77,9 +24,9 @@ class UploadComponent extends Component {
         <Gallery
           fileInput-children={fileInputChildren}
           dropzone-content={dropzoneContent}
-          uploader={uploader}
+          uploader={this.props.uploader}
         />
-        {touched ? error : ''}
+        {/* {touched ? error : ''} */}
       </div>
     );
   }
