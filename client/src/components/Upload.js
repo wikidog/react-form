@@ -47,7 +47,6 @@ class UploadComponent extends Component {
           uploader={uploader}
         />
         {/* {touched ? error : ''} */}
-        <input type="hidden" value={value} />
       </div>
     );
   }
