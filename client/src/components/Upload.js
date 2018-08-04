@@ -8,8 +8,19 @@ import 'react-fine-uploader/gallery/gallery.css';
 // import CancelButton from 'react-fine-uploader/cancel-button';
 
 class UploadComponent extends Component {
+  handleOnClick = () => {
+    console.log('dropzone clicked');
+    console.log('this.props', this.props);
+  };
+
   render() {
+    // TODO: console.log()
     console.log('in uploader', this.props);
+
+    const {
+      uploader,
+      input: { value, onChange },
+    } = this.props;
 
     const fileInputChildren = <span>Select a file</span>;
 
@@ -20,11 +31,11 @@ class UploadComponent extends Component {
     );
 
     return (
-      <div>
+      <div onClick={this.handleOnClick}>
         <Gallery
           fileInput-children={fileInputChildren}
           dropzone-content={dropzoneContent}
-          uploader={this.props.uploader}
+          uploader={uploader}
         />
         {/* {touched ? error : ''} */}
       </div>
