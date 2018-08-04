@@ -11,6 +11,15 @@ class UploadComponent extends Component {
   handleOnClick = () => {
     console.log('dropzone clicked');
     console.log('this.props', this.props);
+
+    const uploader = this.props.uploader;
+
+    let uploads = uploader.methods.getUploads();
+    console.log('uploads:', uploads);
+  };
+
+  handleOnBlur = () => {
+    console.log('on blur');
   };
 
   render() {
@@ -19,7 +28,7 @@ class UploadComponent extends Component {
 
     const {
       uploader,
-      input: { value, onChange },
+      input: { value, onChange, onBlur },
     } = this.props;
 
     const fileInputChildren = <span>Select a file</span>;
@@ -31,13 +40,14 @@ class UploadComponent extends Component {
     );
 
     return (
-      <div onClick={this.handleOnClick}>
+      <div onClick={this.handleOnClick} onBlur={this.handleOnBlur}>
         <Gallery
           fileInput-children={fileInputChildren}
           dropzone-content={dropzoneContent}
           uploader={uploader}
         />
         {/* {touched ? error : ''} */}
+        <input type="hidden" value={value} />
       </div>
     );
   }

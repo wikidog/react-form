@@ -20,7 +20,7 @@ import FineUploaderTraditional from 'fine-uploader-wrappers';
 
 import UploadComponent from './Upload';
 
-import * as actions from '../actions';
+import * as myActions from '../actions';
 // import showResults from './showResults';
 
 const styles = {
@@ -40,81 +40,52 @@ const styles = {
 };
 
 // initialize
-const uploader = new FineUploaderTraditional({
-  options: {
-    debug: true,
-    autoUpload: false,
-    multiple: false,
-    validation: {
-      itemLimit: 1,
-    },
-    messages: {
-      tooManyItemsError: 'one file a time',
-    },
-    chunking: {
-      enabled: false,
-    },
-    deleteFile: {
-      enabled: false,
-      endpoint: '/uploads',
-    },
-    request: {
-      endpoint: '/uploads',
-    },
-    retry: {
-      enableAuto: false,
-    },
-    callbacks: {
-      onValidate: () => console.log('aaaaaaaaa == onValidate ======'),
-      onValidateBatch: () => console.log('aaaaaaaaa == onValidateBatch ======'),
-      onError: (id, name, errorReason) => {
-        console.log('bbbbbbbbb == onError ======');
-        // console.log('id', id);
-        // console.log('name', name);
-        console.log('errorReason', errorReason);
-      },
-      onStatusChange: (id, oldStatus, newStatus) => {
-        console.log('id:', id);
-        console.log('oldStatus:', oldStatus);
-        console.log('newStatus:', newStatus);
-      },
-      onSubmit: (id, name) => {
-        console.log('=============== onSubmit ===================');
-        console.log('id:', id);
-        console.log('name:', name);
-      },
-    },
-  },
-});
-
-const renderUploaderField = fields => (
-  <FormControl
-    fullWidth
-    error={fields.meta.touched && fields.meta.error ? true : false}
-  >
-    {/* <InputLabel htmlFor={input.name}>{label}</InputLabel> */}
-    {/* <Input id={input.name} {...input} {...custom} /> */}
-    <UploadComponent uploader={uploader} {...fields} />
-    <FormHelperText id={`${fields.input.name}-text`}>
-      {fields.meta.touched ? fields.meta.error : ''}
-    </FormHelperText>
-  </FormControl>
-);
-
-const renderTextField = ({
-  input,
-  meta: { touched, error },
-  label,
-  ...custom
-}) => (
-  <FormControl fullWidth error={touched && error ? true : false}>
-    <InputLabel htmlFor={input.name}>{label}</InputLabel>
-    <Input id={input.name} {...input} {...custom} />
-    <FormHelperText id={`${input.name}-text`}>
-      {touched ? error : ''}
-    </FormHelperText>
-  </FormControl>
-);
+// const uploader = new FineUploaderTraditional({
+//   options: {
+//     debug: true,
+//     autoUpload: false,
+//     multiple: false,
+//     validation: {
+//       itemLimit: 1,
+//     },
+//     messages: {
+//       tooManyItemsError: 'one file a time',
+//     },
+//     chunking: {
+//       enabled: false,
+//     },
+//     deleteFile: {
+//       enabled: false,
+//       endpoint: '/uploads',
+//     },
+//     request: {
+//       endpoint: '/uploads',
+//     },
+//     retry: {
+//       enableAuto: false,
+//     },
+//     callbacks: {
+//       onValidate: () => console.log('aaaaaaaaa == onValidate ======'),
+//       onValidateBatch: () => console.log('aaaaaaaaa == onValidateBatch ======'),
+//       onError: (id, name, errorReason) => {
+//         console.log('bbbbbbbbb == onError ======');
+//         // console.log('id', id);
+//         // console.log('name', name);
+//         console.log('errorReason', errorReason);
+//       },
+//       onStatusChange: (id, oldStatus, newStatus) => {
+//         console.log('id:', id);
+//         console.log('oldStatus:', oldStatus);
+//         console.log('newStatus:', newStatus);
+//       },
+//       onSubmit: (id, name) => {
+//         console.log('=============== onSubmit ===================');
+//         console.log('id:', id);
+//         console.log('name:', name);
+//       },
+//     },
+//   },
+// });
 
 // return axios
 //   .post('http://localhost:5000/formsubmit', values)
@@ -135,13 +106,86 @@ const renderTextField = ({
 //   });
 
 class TestForm extends Component {
+  uploader = new FineUploaderTraditional({
+    options: {
+      debug: true,
+      autoUpload: false,
+      multiple: false,
+      validation: {
+        itemLimit: 1,
+      },
+      messages: {
+        tooManyItemsError: 'one file a time',
+      },
+      chunking: {
+        enabled: false,
+      },
+      deleteFile: {
+        enabled: false,
+        endpoint: '/uploads',
+      },
+      request: {
+        endpoint: '/uploads',
+      },
+      retry: {
+        enableAuto: false,
+      },
+      callbacks: {
+        onValidate: () => console.log('aaaaaaaaa == onValidate ======'),
+        onValidateBatch: () =>
+          console.log('aaaaaaaaa == onValidateBatch ======'),
+        onError: (id, name, errorReason) => {
+          console.log('bbbbbbbbb == onError ======');
+          // console.log('id', id);
+          // console.log('name', name);
+          console.log('errorReason', errorReason);
+        },
+        onStatusChange: (id, oldStatus, newStatus) => {
+          console.log('id:', id);
+          console.log('oldStatus:', oldStatus);
+          console.log('newStatus:', newStatus);
+        },
+        onSubmit: (id, name) => {
+          console.log('=============== onSubmit ===================');
+          console.log('id:', id);
+          console.log('name:', name);
+          this.props.change('uploader', this.uploader.methods.getUploads());
+        },
+      },
+    },
+  });
+
+  renderUploaderField = fields => (
+    <FormControl
+      fullWidth
+      error={fields.meta.touched && fields.meta.error ? true : false}
+    >
+      {/* <InputLabel htmlFor={input.name}>{label}</InputLabel> */}
+      {/* <Input id={input.name} {...input} {...custom} /> */}
+      <UploadComponent uploader={this.uploader} {...fields} />
+      <FormHelperText id={`${fields.input.name}-text`}>
+        {fields.meta.touched ? fields.meta.error : ''}
+      </FormHelperText>
+    </FormControl>
+  );
+
+  renderTextField = ({ input, meta: { touched, error }, label, ...custom }) => (
+    <FormControl fullWidth error={touched && error ? true : false}>
+      <InputLabel htmlFor={input.name}>{label}</InputLabel>
+      <Input id={input.name} {...input} {...custom} />
+      <FormHelperText id={`${input.name}-text`}>
+        {touched ? error : ''}
+      </FormHelperText>
+    </FormControl>
+  );
+
   submitForm = values => {
     // console.log('uploader', uploader);
     // console.log('uploader-methods', uploader.methods);
-    uploader.methods.log('adfadfadfadsfasdfasdfasdfadfa ==============');
+    this.uploader.methods.log('adfadfadfadsfasdfasdfasdfadfa ==============');
 
     // trigger file upload
-    uploader.methods.uploadStoredFiles();
+    this.uploader.methods.uploadStoredFiles();
 
     this.props.submitFormRequest(values);
   };
@@ -165,25 +209,29 @@ class TestForm extends Component {
         <div>
           <Field
             name="firstName"
-            component={renderTextField}
+            component={this.renderTextField}
             label="First Name *"
           />
         </div>
         <div>
           <Field
             name="lastName"
-            component={renderTextField}
+            component={this.renderTextField}
             label="Last Name *"
           />
         </div>
         <div>
-          <Field name="email" component={renderTextField} label="Email *" />
+          <Field
+            name="email"
+            component={this.renderTextField}
+            label="Email *"
+          />
         </div>
         {/* <div className={classes.fineUploader}>
           <UploadComponent />
         </div> */}
         <div>
-          <Field name="uploader" component={renderUploaderField} />
+          <Field name="uploader" component={this.renderUploaderField} />
         </div>
         <div>
           <Button
@@ -221,6 +269,7 @@ class TestForm extends Component {
 
 function validate(values) {
   const errors = {};
+  console.log('form values:', values);
 
   if (!values.firstName) {
     errors.firstName = 'Enter your first name';
@@ -260,7 +309,7 @@ const mapStateToProps = ({ upload }) => {
 export default withStyles(styles)(
   connect(
     mapStateToProps,
-    actions
+    myActions
   )(
     reduxForm({
       form: 'testForm',
