@@ -64,8 +64,6 @@ class TestForm extends Component {
       {/* <InputLabel htmlFor={input.name}>{label}</InputLabel> */}
       {/* <Input id={input.name} {...input} {...custom} /> */}
       <UploadComponent
-        // onClick={this.handleOnClick}
-        // uploader={this.uploader}
         change={this.props.change}
         touch={this.props.touch}
         {...fields}
@@ -75,10 +73,6 @@ class TestForm extends Component {
       </FormHelperText>
     </FormControl>
   );
-
-  handleOnClick = () => {
-    console.log('clicked');
-  };
 
   renderTextField = ({ input, meta: { touched, error }, label, ...custom }) => (
     <FormControl fullWidth error={touched && error ? true : false}>

@@ -35,6 +35,22 @@ export const uploader = new FineUploaderTraditional({
 });
 
 class UploadComponent extends Component {
+  //
+  // fine-uploader -------------------------------------------------
+  //
+  handleOnStatusChange = (id, oldStatus, newStatus) => {
+    console.log('id:', id);
+    console.log('oldStatus:', oldStatus);
+    console.log('newStatus:', newStatus);
+    if (newStatus === 'canceled') {
+      this.props.change(
+        'uploader',
+        uploader.methods.getUploads({ status: 'submitted' })
+      );
+      this.props.touch(this.props.input.name);
+    }
+  };
+
   componentDidMount() {
     uploader.on('validate', () =>
       console.log('aaaaaaaaa == onValidate ======')
@@ -49,17 +65,7 @@ class UploadComponent extends Component {
       console.log('errorReason', errorReason);
     });
 
-    uploader.on('statusChange', (id, oldStatus, newStatus) => {
-      console.log('id:', id);
-      console.log('oldStatus:', oldStatus);
-      console.log('newStatus:', newStatus);
-      if (newStatus === 'canceled') {
-        this.props.change(
-          'uploader',
-          uploader.methods.getUploads({ status: 'submitted' })
-        );
-      }
-    });
+    uploader.on('statusChange', this.handleOnStatusChange);
 
     uploader.on('cancel', (id, name) => {
       console.log('=============== onCancel ===================');
@@ -77,6 +83,11 @@ class UploadComponent extends Component {
       );
     });
   }
+
+  componentWillUnmount() {
+    uploader.off('statusChange', this.handleOnStatusChange);
+  }
+  // ================================================================
 
   handleOnClick = () => {
     console.log('dropzone clicked');
@@ -115,7 +126,7 @@ class UploadComponent extends Component {
     return (
       <Gallery
         fileInput-children={fileInputChildren}
-        fileInput-onBlur={this.handleOnBlur}
+        // fileInput-onBlur={this.handleOnBlur}
         dropzone-content={dropzoneContent}
         uploader={uploader}
       />
