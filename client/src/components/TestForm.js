@@ -16,9 +16,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-import FineUploaderTraditional from 'fine-uploader-wrappers';
-
-import UploadComponent from './Upload';
+import UploadComponent, { uploader } from './Upload';
 
 import * as myActions from '../actions';
 // import showResults from './showResults';
@@ -39,54 +37,6 @@ const styles = {
   },
 };
 
-// initialize
-// const uploader = new FineUploaderTraditional({
-//   options: {
-//     debug: true,
-//     autoUpload: false,
-//     multiple: false,
-//     validation: {
-//       itemLimit: 1,
-//     },
-//     messages: {
-//       tooManyItemsError: 'one file a time',
-//     },
-//     chunking: {
-//       enabled: false,
-//     },
-//     deleteFile: {
-//       enabled: false,
-//       endpoint: '/uploads',
-//     },
-//     request: {
-//       endpoint: '/uploads',
-//     },
-//     retry: {
-//       enableAuto: false,
-//     },
-//     callbacks: {
-//       onValidate: () => console.log('aaaaaaaaa == onValidate ======'),
-//       onValidateBatch: () => console.log('aaaaaaaaa == onValidateBatch ======'),
-//       onError: (id, name, errorReason) => {
-//         console.log('bbbbbbbbb == onError ======');
-//         // console.log('id', id);
-//         // console.log('name', name);
-//         console.log('errorReason', errorReason);
-//       },
-//       onStatusChange: (id, oldStatus, newStatus) => {
-//         console.log('id:', id);
-//         console.log('oldStatus:', oldStatus);
-//         console.log('newStatus:', newStatus);
-//       },
-//       onSubmit: (id, name) => {
-//         console.log('=============== onSubmit ===================');
-//         console.log('id:', id);
-//         console.log('name:', name);
-//       },
-//     },
-//   },
-// });
-
 // return axios
 //   .post('http://localhost:5000/formsubmit', values)
 //   .then(response => {
@@ -106,69 +56,6 @@ const styles = {
 //   });
 
 class TestForm extends Component {
-  uploader = new FineUploaderTraditional({
-    options: {
-      debug: true,
-      autoUpload: false,
-      multiple: false,
-      validation: {
-        itemLimit: 1,
-      },
-      messages: {
-        tooManyItemsError: 'one file a time',
-      },
-      chunking: {
-        enabled: false,
-      },
-      deleteFile: {
-        enabled: false,
-        endpoint: '/uploads',
-      },
-      request: {
-        endpoint: '/uploads',
-      },
-      retry: {
-        enableAuto: false,
-      },
-      callbacks: {
-        onValidate: () => console.log('aaaaaaaaa == onValidate ======'),
-        onValidateBatch: () =>
-          console.log('aaaaaaaaa == onValidateBatch ======'),
-        onError: (id, name, errorReason) => {
-          console.log('bbbbbbbbb == onError ======');
-          // console.log('id', id);
-          // console.log('name', name);
-          console.log('errorReason', errorReason);
-        },
-        onStatusChange: (id, oldStatus, newStatus) => {
-          console.log('id:', id);
-          console.log('oldStatus:', oldStatus);
-          console.log('newStatus:', newStatus);
-          if (newStatus == 'canceled') {
-            this.props.change(
-              'uploader',
-              this.uploader.methods.getUploads({ status: 'submitted' })
-            );
-          }
-        },
-        onCancel: (id, name) => {
-          console.log('=============== onCancel ===================');
-          console.log('id:', id);
-          console.log('name:', name);
-        },
-        onSubmitted: (id, name) => {
-          console.log('=============== onSubmitted ===================');
-          console.log('id:', id);
-          console.log('name:', name);
-          this.props.change(
-            'uploader',
-            this.uploader.methods.getUploads({ status: 'submitted' })
-          );
-        },
-      },
-    },
-  });
-
   renderUploaderField = fields => (
     <FormControl
       fullWidth
@@ -177,8 +64,10 @@ class TestForm extends Component {
       {/* <InputLabel htmlFor={input.name}>{label}</InputLabel> */}
       {/* <Input id={input.name} {...input} {...custom} /> */}
       <UploadComponent
-        uploader={this.uploader}
+        // onClick={this.handleOnClick}
+        // uploader={this.uploader}
         change={this.props.change}
+        touch={this.props.touch}
         {...fields}
       />
       <FormHelperText id={`${fields.input.name}-text`}>
@@ -186,6 +75,10 @@ class TestForm extends Component {
       </FormHelperText>
     </FormControl>
   );
+
+  handleOnClick = () => {
+    console.log('clicked');
+  };
 
   renderTextField = ({ input, meta: { touched, error }, label, ...custom }) => (
     <FormControl fullWidth error={touched && error ? true : false}>
@@ -200,10 +93,10 @@ class TestForm extends Component {
   submitForm = values => {
     // console.log('uploader', uploader);
     // console.log('uploader-methods', uploader.methods);
-    this.uploader.methods.log('adfadfadfadsfasdfasdfasdfadfa ==============');
+    uploader.methods.log('adfadfadfadsfasdfasdfasdfadfa ==============');
 
     // trigger file upload
-    this.uploader.methods.uploadStoredFiles();
+    uploader.methods.uploadStoredFiles();
 
     this.props.submitFormRequest(values);
   };
@@ -303,7 +196,7 @@ function validate(values) {
     errors.email = 'Invalid Email';
   }
 
-  if (!values.uploader || values.uploader.length == 0) {
+  if (!values.uploader || values.uploader.length === 0) {
     errors.uploader = 'Please select a file';
   }
 
