@@ -51,13 +51,21 @@ class UploadComponent extends Component {
     }
   };
 
+  handleOnValidate = obj => {
+    console.log('=========== onValidate =============');
+    console.log('file obj', obj);
+  };
+
+  handleOnValidateBatch = files => {
+    console.log('=========== onValidateBatch =============');
+    console.log('files:', files);
+  };
+
   componentDidMount() {
-    uploader.on('validate', () =>
-      console.log('aaaaaaaaa == onValidate ======')
-    );
-    uploader.on('validateBatch', () =>
-      console.log('aaaaaaaaa == onValidateBatch ======')
-    );
+    uploader.on('validate', this.handleOnValidate);
+
+    uploader.on('validateBatch', this.handleOnValidateBatch);
+
     uploader.on('error', (id, name, errorReason) => {
       console.log('bbbbbbbbb == onError ======');
       // console.log('id', id);
