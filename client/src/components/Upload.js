@@ -14,8 +14,8 @@ class UploadComponent extends Component {
 
     const uploader = this.props.uploader;
 
-    let uploads = uploader.methods.getUploads();
-    console.log('uploads:', uploads);
+    const uploads = uploader.methods.getUploads({ status: 'submitted' });
+    this.props.change(this.props.input.name, uploads);
   };
 
   handleOnBlur = () => {
@@ -40,7 +40,7 @@ class UploadComponent extends Component {
     );
 
     return (
-      <div onClick={this.handleOnClick} onBlur={this.handleOnBlur}>
+      <div onClick={this.handleOnClick}>
         <Gallery
           fileInput-children={fileInputChildren}
           dropzone-content={dropzoneContent}

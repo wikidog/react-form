@@ -144,12 +144,26 @@ class TestForm extends Component {
           console.log('id:', id);
           console.log('oldStatus:', oldStatus);
           console.log('newStatus:', newStatus);
+          if (newStatus == 'canceled') {
+            this.props.change(
+              'uploader',
+              this.uploader.methods.getUploads({ status: 'submitted' })
+            );
+          }
         },
-        onSubmit: (id, name) => {
-          console.log('=============== onSubmit ===================');
+        onCancel: (id, name) => {
+          console.log('=============== onCancel ===================');
           console.log('id:', id);
           console.log('name:', name);
-          this.props.change('uploader', this.uploader.methods.getUploads());
+        },
+        onSubmitted: (id, name) => {
+          console.log('=============== onSubmitted ===================');
+          console.log('id:', id);
+          console.log('name:', name);
+          this.props.change(
+            'uploader',
+            this.uploader.methods.getUploads({ status: 'submitted' })
+          );
         },
       },
     },
@@ -162,7 +176,11 @@ class TestForm extends Component {
     >
       {/* <InputLabel htmlFor={input.name}>{label}</InputLabel> */}
       {/* <Input id={input.name} {...input} {...custom} /> */}
-      <UploadComponent uploader={this.uploader} {...fields} />
+      <UploadComponent
+        uploader={this.uploader}
+        change={this.props.change}
+        {...fields}
+      />
       <FormHelperText id={`${fields.input.name}-text`}>
         {fields.meta.touched ? fields.meta.error : ''}
       </FormHelperText>
@@ -285,7 +303,7 @@ function validate(values) {
     errors.email = 'Invalid Email';
   }
 
-  if (!values.uploader) {
+  if (!values.uploader || values.uploader.length == 0) {
     errors.uploader = 'Please select a file';
   }
 
