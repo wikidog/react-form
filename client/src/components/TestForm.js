@@ -190,7 +190,9 @@ function validate(values) {
     errors.email = 'Invalid Email';
   }
 
-  if (!values.uploader || values.uploader.length === 0) {
+  if (values.uploader.errMsg) {
+    errors.uploader = values.uploader.errMsg;
+  } else if (!values.uploader || values.uploader.length === 0) {
     errors.uploader = 'Please select a file';
   }
 
@@ -199,6 +201,7 @@ function validate(values) {
 }
 
 function onSubmitFail(errors) {
+  console.log('========= SubmissionError ==========');
   console.log(errors);
 }
 

@@ -44,8 +44,9 @@ class UploadComponent extends Component {
     console.log('newStatus:', newStatus);
     if (newStatus === 'canceled') {
       this.props.change(
-        'uploader',
-        uploader.methods.getUploads({ status: 'submitted' })
+        this.props.input.name,
+        // uploader.methods.getUploads({ status: 'submitted' })
+        { errMsg: '', storedFiles: uploader.methods.getUploads() }
       );
       this.props.touch(this.props.input.name);
     }
@@ -57,38 +58,52 @@ class UploadComponent extends Component {
   };
 
   handleOnValidateBatch = files => {
+    uploader.methods.clearStoredFiles();
+    // uploader.methods.cancelAll();
     console.log('=========== onValidateBatch =============');
+    console.log('options:', uploader.options);
     console.log('files:', files);
+  };
+
+  handleOnSubmitted = (id, name) => {
+    console.log('=============== onSubmitted ===================');
+    console.log('id:', id);
+    console.log('name:', name);
+    this.props.change(
+      this.props.input.name,
+      // uploader.methods.getUploads({ status: 'submitted' })
+      // uploader.methods.getUploads()
+      { errMsg: '', storedFiles: uploader.methods.getUploads() }
+    );
+  };
+
+  handleOnError = (id, name, errorReason) => {
+    console.log('bbbbbbbbb == onError ======');
+    // console.log('id', id);
+    // console.log('name', name);
+    console.log('errorReason', errorReason);
+
+    this.props.change(
+      this.props.input.name,
+      // uploader.methods.getUploads({ status: 'submitted' })
+      // uploader.methods.getUploads()
+      { errMsg: errorReason, storedFiles: uploader.methods.getUploads() }
+    );
+
+    this.props.touch(this.props.input.name);
   };
 
   componentDidMount() {
     uploader.on('validate', this.handleOnValidate);
-
     uploader.on('validateBatch', this.handleOnValidateBatch);
-
-    uploader.on('error', (id, name, errorReason) => {
-      console.log('bbbbbbbbb == onError ======');
-      // console.log('id', id);
-      // console.log('name', name);
-      console.log('errorReason', errorReason);
-    });
-
+    uploader.on('error', this.handleOnError);
     uploader.on('statusChange', this.handleOnStatusChange);
+    uploader.on('submitted', this.handleOnSubmitted);
 
     uploader.on('cancel', (id, name) => {
       console.log('=============== onCancel ===================');
       console.log('id:', id);
       console.log('name:', name);
-    });
-
-    uploader.on('submitted', (id, name) => {
-      console.log('=============== onSubmitted ===================');
-      console.log('id:', id);
-      console.log('name:', name);
-      this.props.change(
-        'uploader',
-        uploader.methods.getUploads({ status: 'submitted' })
-      );
     });
   }
 
@@ -97,21 +112,22 @@ class UploadComponent extends Component {
   }
   // ================================================================
 
-  handleOnClick = () => {
-    console.log('dropzone clicked');
-    console.log('this.props', this.props);
+  // handleOnClick = () => {
+  //   console.log('dropzone clicked');
+  //   console.log('this.props', this.props);
 
-    const uploader = this.props.uploader;
+  //   const uploader = this.props.uploader;
 
-    const uploads = uploader.methods.getUploads({ status: 'submitted' });
-    this.props.change(this.props.input.name, uploads);
-    // this.props.touch(this.props.input.name);
-  };
+  //   const uploads = uploader.methods.getUploads();
+  //   // const uploads = uploader.methods.getUploads({ status: 'submitted' });
+  //   this.props.change(this.props.input.name, uploads);
+  //   // this.props.touch(this.props.input.name);
+  // };
 
-  handleOnBlur = () => {
-    console.log('on blur');
-    this.props.touch(this.props.input.name);
-  };
+  // handleOnBlur = () => {
+  //   console.log('on blur');
+  //   this.props.touch(this.props.input.name);
+  // };
 
   render() {
     // TODO: console.log()
