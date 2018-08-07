@@ -46,7 +46,7 @@ const statusEnum = uploader.qq.status;
 class UploadComponent extends Component {
   //
   state = {
-    submittedFiles: [],
+    visibleFiles: [],
   };
 
   //
@@ -57,6 +57,7 @@ class UploadComponent extends Component {
     console.log('id:', id);
     console.log('oldStatus:', oldStatus);
     console.log('newStatus:', newStatus);
+
     if (newStatus === statusEnum.CANCELED) {
       this.props.change(
         this.props.input.name,
@@ -65,6 +66,26 @@ class UploadComponent extends Component {
         // uploader.methods.getUploads()
       );
       // this.props.touch(this.props.input.name);
+    }
+
+    const visibleFiles = this.state.visibleFiles;
+
+    if (newStatus === statusEnum.SUBMITTED) {
+      visibleFiles.push({ id });
+      this.setState({ visibleFiles });
+    } else if (isFileGone(status, statusEnum)) {
+      this._removeVisibleFile(id);
+    } else if (
+      status === statusEnum.UPLOAD_SUCCESSFUL ||
+      status === statusEnum.UPLOAD_FAILED
+    ) {
+      if (status === statusEnum.UPLOAD_SUCCESSFUL) {
+        const visibleFileIndex = this._findFileIndex(id);
+        if (visibleFileIndex < 0) {
+          visibleFiles.push({ id, fromServer: true });
+        }
+      }
+      this._updateVisibleFileStatus(id, status);
     }
   };
 
