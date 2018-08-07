@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 
 import FineUploaderTraditional from 'fine-uploader-wrappers';
-import Gallery from 'react-fine-uploader';
+// import Gallery from 'react-fine-uploader';
+import Dropzone from 'react-fine-uploader/dropzone';
+import FileInput from 'react-fine-uploader/file-input';
+import Filename from 'react-fine-uploader/filename';
+import Filesize from 'react-fine-uploader/filesize';
+import ProgressBar from 'react-fine-uploader/progress-bar';
+import Status from 'react-fine-uploader/status';
+import XIcon from 'react-fine-uploader/gallery/x-icon';
 
 // ...or load this specific CSS file using a <link> tag in your document
 import 'react-fine-uploader/gallery/gallery.css';
@@ -34,7 +41,14 @@ export const uploader = new FineUploaderTraditional({
   },
 });
 
+const statusEnum = uploader.qq.status;
+
 class UploadComponent extends Component {
+  //
+  state = {
+    submittedFiles: [],
+  };
+
   //
   // fine-uploader -------------------------------------------------
   //
@@ -43,10 +57,11 @@ class UploadComponent extends Component {
     console.log('id:', id);
     console.log('oldStatus:', oldStatus);
     console.log('newStatus:', newStatus);
-    if (newStatus === 'canceled') {
+    if (newStatus === statusEnum.CANCELED) {
       this.props.change(
         this.props.input.name,
-        uploader.methods.getUploads({ status: 'submitted' })
+        uploader.methods.getUploads({ status: statusEnum.SUBMITTED })
+        // uploader.methods.getUploads({ status: 'submitted' })
         // uploader.methods.getUploads()
       );
       // this.props.touch(this.props.input.name);
@@ -71,9 +86,13 @@ class UploadComponent extends Component {
     console.log('=============== onSubmitted ===================');
     console.log('id:', id);
     console.log('name:', name);
+
+    this.setState({ submittedFiles: [...this.state.submittedFiles, id] });
+
     this.props.change(
       this.props.input.name,
-      uploader.methods.getUploads({ status: 'submitted' })
+      // uploader.methods.getUploads({ status: 'submitted' })
+      uploader.methods.getUploads({ status: statusEnum.SUBMITTED })
       // uploader.methods.getUploads()
     );
   };
@@ -140,7 +159,6 @@ class UploadComponent extends Component {
   render() {
     // TODO: console.log()
     console.log('in uploader', this.props);
-    console.log('uploader object: ', uploader);
 
     // const {
     //   uploader,
@@ -156,13 +174,32 @@ class UploadComponent extends Component {
     );
 
     // <div onClick={this.handleOnClick}></div>
+    // return (
+    //   <Gallery
+    //     fileInput-children={fileInputChildren}
+    //     // fileInput-onBlur={this.handleOnBlur}
+    //     dropzone-content={dropzoneContent}
+    //     uploader={uploader}
+    //   />
+    // );
     return (
-      <Gallery
-        fileInput-children={fileInputChildren}
-        // fileInput-onBlur={this.handleOnBlur}
-        dropzone-content={dropzoneContent}
-        uploader={uploader}
-      />
+      <div>
+        <FileInput multiple uploader={uploader}>
+          <span className="icon icon-upload">Choose Files</span>
+        </FileInput>
+        <Dropzone
+          style={{ border: '1px dotted', height: 200, width: 200 }}
+          uploader={uploader}
+        >
+          <span>Drop Files Here</span>
+        </Dropzone>
+        {this.state.submittedFiles.map(id => (
+          <div key={id}>
+            <Filename key={`filename-${id}`} id={id} uploader={uploader} />
+            <Filesize key={`filesize-${id}`} id={id} uploader={uploader} />
+          </div>
+        ))}
+      </div>
     );
   }
 }
