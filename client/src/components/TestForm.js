@@ -67,7 +67,7 @@ class TestForm extends Component {
       <UploadComponent
         change={this.props.change}
         touch={this.props.touch}
-        blur={this.props.blur}
+        // blur={this.props.blur}
         {...fields}
       />
       <FormHelperText id={`${fields.input.name}-text`}>
@@ -134,9 +134,6 @@ class TestForm extends Component {
             label="Email *"
           />
         </div>
-        {/* <div className={classes.fineUploader}>
-          <UploadComponent />
-        </div> */}
         <div>
           <Field name="uploader" component={this.renderUploaderField} />
         </div>
@@ -193,22 +190,22 @@ const validate = values => {
     errors.email = 'Invalid Email';
   }
 
-  if (!values.uploader || values.uploader === 'aaaaaaaaa') {
+  if (!values.uploader || values.uploader.length === 0) {
     errors.uploader = 'Please select a file';
   }
 
-  // console.log('validate errors:', errors);
+  console.log('form validate errors:', errors);
   return errors;
 };
 
-const asyncValidate = values => {
-  console.log('in asyncValidate');
-  console.log('values:', values);
-  return new Promise(resolve => resolve(1)).then(() => {
-    const err = { uploader: 'too many files' };
-    throw err;
-  });
-};
+// const asyncValidate = values => {
+//   console.log('in asyncValidate');
+//   console.log('values:', values);
+//   return new Promise(resolve => resolve(1)).then(() => {
+//     const err = { uploader: 'too many files' };
+//     throw err;
+//   });
+// };
 
 function onSubmitFail(errors) {
   console.log('========= SubmissionError ==========');
@@ -233,8 +230,6 @@ export default withStyles(styles)(
       form: 'testForm',
       validate,
       onSubmitFail,
-      asyncValidate,
-      asyncBlurFields: ['uploader'],
     })(TestForm)
   )
 );

@@ -39,6 +39,7 @@ class UploadComponent extends Component {
   // fine-uploader -------------------------------------------------
   //
   handleOnStatusChange = (id, oldStatus, newStatus) => {
+    console.log('=========== onStatusChange =============');
     console.log('id:', id);
     console.log('oldStatus:', oldStatus);
     console.log('newStatus:', newStatus);
@@ -48,7 +49,7 @@ class UploadComponent extends Component {
         uploader.methods.getUploads({ status: 'submitted' })
         // uploader.methods.getUploads()
       );
-      this.props.touch(this.props.input.name);
+      // this.props.touch(this.props.input.name);
     }
   };
 
@@ -58,11 +59,12 @@ class UploadComponent extends Component {
   };
 
   handleOnValidateBatch = files => {
-    // uploader.methods.clearStoredFiles();
-    uploader.methods.cancelAll();
     console.log('=========== onValidateBatch =============');
     console.log('options:', uploader.options);
     console.log('files:', files);
+    // uploader.methods.clearStoredFiles();
+    // uploader.methods.cancelAll();
+    this.props.touch(this.props.input.name);
   };
 
   handleOnSubmitted = (id, name) => {
@@ -77,12 +79,21 @@ class UploadComponent extends Component {
   };
 
   handleOnError = (id, name, errorReason) => {
-    console.log('bbbbbbbbb == onError ======');
+    console.log('============== onError ==================');
     // console.log('id', id);
     // console.log('name', name);
     console.log('errorReason:', errorReason);
 
-    this.props.input.onBlur('aaaaaaaaaa');
+    // this.props.input.onBlur('aaaaaaaaaa');
+    alert(errorReason);
+    // alert(
+    //   uploader.qq.format(
+    //     'Error on file number {} - {}.  Reason: {}',
+    //     id,
+    //     name,
+    //     errorReason
+    //   )
+    // );
 
     // this.props.change(
     //   this.props.input.name,
@@ -129,6 +140,7 @@ class UploadComponent extends Component {
   render() {
     // TODO: console.log()
     console.log('in uploader', this.props);
+    console.log('uploader object: ', uploader);
 
     // const {
     //   uploader,
