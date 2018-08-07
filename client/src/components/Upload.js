@@ -45,8 +45,8 @@ class UploadComponent extends Component {
     if (newStatus === 'canceled') {
       this.props.change(
         this.props.input.name,
-        // uploader.methods.getUploads({ status: 'submitted' })
-        { errMsg: '', storedFiles: uploader.methods.getUploads() }
+        uploader.methods.getUploads({ status: 'submitted' })
+        // uploader.methods.getUploads()
       );
       this.props.touch(this.props.input.name);
     }
@@ -58,8 +58,8 @@ class UploadComponent extends Component {
   };
 
   handleOnValidateBatch = files => {
-    uploader.methods.clearStoredFiles();
-    // uploader.methods.cancelAll();
+    // uploader.methods.clearStoredFiles();
+    uploader.methods.cancelAll();
     console.log('=========== onValidateBatch =============');
     console.log('options:', uploader.options);
     console.log('files:', files);
@@ -71,9 +71,8 @@ class UploadComponent extends Component {
     console.log('name:', name);
     this.props.change(
       this.props.input.name,
-      // uploader.methods.getUploads({ status: 'submitted' })
+      uploader.methods.getUploads({ status: 'submitted' })
       // uploader.methods.getUploads()
-      { errMsg: '', storedFiles: uploader.methods.getUploads() }
     );
   };
 
@@ -81,16 +80,14 @@ class UploadComponent extends Component {
     console.log('bbbbbbbbb == onError ======');
     // console.log('id', id);
     // console.log('name', name);
-    console.log('errorReason', errorReason);
+    console.log('errorReason:', errorReason);
 
-    this.props.change(
-      this.props.input.name,
-      // uploader.methods.getUploads({ status: 'submitted' })
-      // uploader.methods.getUploads()
-      { errMsg: errorReason, storedFiles: uploader.methods.getUploads() }
-    );
+    this.props.input.onBlur('aaaaaaaaaa');
 
-    this.props.touch(this.props.input.name);
+    // this.props.change(
+    //   this.props.input.name,
+    //   { errMsg: errorReason, storedFiles: null }
+    // );
   };
 
   componentDidMount() {

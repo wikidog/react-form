@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Field, reduxForm } from 'redux-form';
-import { SubmissionError } from 'redux-form';
+// import { SubmissionError } from 'redux-form';
 import isValidEmail from 'sane-email-validation';
 
 // import { withTheme } from '@material-ui/core/styles';
@@ -56,6 +56,7 @@ const styles = {
 //   });
 
 class TestForm extends Component {
+  //
   renderUploaderField = fields => (
     <FormControl
       fullWidth
@@ -66,6 +67,7 @@ class TestForm extends Component {
       <UploadComponent
         change={this.props.change}
         touch={this.props.touch}
+        blur={this.props.blur}
         {...fields}
       />
       <FormHelperText id={`${fields.input.name}-text`}>
@@ -172,8 +174,9 @@ class TestForm extends Component {
   }
 }
 
-function validate(values) {
+const validate = values => {
   const errors = {};
+
   console.log('form values:', values);
 
   if (!values.firstName) {
@@ -190,15 +193,22 @@ function validate(values) {
     errors.email = 'Invalid Email';
   }
 
-  if (values.uploader.errMsg) {
-    errors.uploader = values.uploader.errMsg;
-  } else if (!values.uploader || values.uploader.length === 0) {
+  if (!values.uploader || values.uploader === 'aaaaaaaaa') {
     errors.uploader = 'Please select a file';
   }
 
   // console.log('validate errors:', errors);
   return errors;
-}
+};
+
+const asyncValidate = values => {
+  console.log('in asyncValidate');
+  console.log('values:', values);
+  return new Promise(resolve => resolve(1)).then(() => {
+    const err = { uploader: 'too many files' };
+    throw err;
+  });
+};
 
 function onSubmitFail(errors) {
   console.log('========= SubmissionError ==========');
@@ -223,6 +233,8 @@ export default withStyles(styles)(
       form: 'testForm',
       validate,
       onSubmitFail,
+      asyncValidate,
+      asyncBlurFields: ['uploader'],
     })(TestForm)
   )
 );
