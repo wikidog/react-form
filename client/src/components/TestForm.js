@@ -16,7 +16,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-import UploadComponent, { uploader } from './Upload';
+// import UploadComponent, { uploader } from './Upload';
+import Gallery, { uploader } from './Gallery';
 
 import * as myActions from '../actions';
 // import showResults from './showResults';
@@ -64,7 +65,7 @@ class TestForm extends Component {
     >
       {/* <InputLabel htmlFor={input.name}>{label}</InputLabel> */}
       {/* <Input id={input.name} {...input} {...custom} /> */}
-      <UploadComponent
+      <Gallery
         change={this.props.change}
         touch={this.props.touch}
         // blur={this.props.blur}

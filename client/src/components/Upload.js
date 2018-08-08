@@ -43,6 +43,10 @@ export const uploader = new FineUploaderTraditional({
 
 const statusEnum = uploader.qq.status;
 
+const isFileGone = (statusToCheck, statusEnum) => {
+  return [statusEnum.CANCELED, statusEnum.DELETED].indexOf(statusToCheck) >= 0;
+};
+
 class UploadComponent extends Component {
   //
   state = {
@@ -68,24 +72,20 @@ class UploadComponent extends Component {
       // this.props.touch(this.props.input.name);
     }
 
-    const visibleFiles = this.state.visibleFiles;
+    // const visibleFiles = this.state.visibleFiles;
 
     if (newStatus === statusEnum.SUBMITTED) {
-      visibleFiles.push({ id });
-      this.setState({ visibleFiles });
-    } else if (isFileGone(status, statusEnum)) {
-      this._removeVisibleFile(id);
-    } else if (
-      status === statusEnum.UPLOAD_SUCCESSFUL ||
-      status === statusEnum.UPLOAD_FAILED
-    ) {
-      if (status === statusEnum.UPLOAD_SUCCESSFUL) {
-        const visibleFileIndex = this._findFileIndex(id);
-        if (visibleFileIndex < 0) {
-          visibleFiles.push({ id, fromServer: true });
-        }
-      }
-      this._updateVisibleFileStatus(id, status);
+      // visibleFiles.push({ id });
+      // this.setState({ visibleFiles });
+
+      this.setState({ visibleFiles: [...this.state.visibleFiles, id] });
+
+      this.props.change(
+        this.props.input.name,
+        // uploader.methods.getUploads({ status: 'submitted' })
+        uploader.methods.getUploads({ status: statusEnum.SUBMITTED })
+        // uploader.methods.getUploads()
+      );
     }
   };
 
@@ -108,14 +108,14 @@ class UploadComponent extends Component {
     console.log('id:', id);
     console.log('name:', name);
 
-    this.setState({ submittedFiles: [...this.state.submittedFiles, id] });
+    // this.setState({ visibleFiles: [...this.state.visibleFiles, id] });
 
-    this.props.change(
-      this.props.input.name,
-      // uploader.methods.getUploads({ status: 'submitted' })
-      uploader.methods.getUploads({ status: statusEnum.SUBMITTED })
-      // uploader.methods.getUploads()
-    );
+    // this.props.change(
+    //   this.props.input.name,
+    //   // uploader.methods.getUploads({ status: 'submitted' })
+    //   uploader.methods.getUploads({ status: statusEnum.SUBMITTED })
+    //   // uploader.methods.getUploads()
+    // );
   };
 
   handleOnError = (id, name, errorReason) => {
@@ -206,19 +206,18 @@ class UploadComponent extends Component {
     return (
       <div>
         <XIcon />
-        <FileInput multiple uploader={uploader}>
-          <span className="icon icon-upload">Choose Files</span>
-        </FileInput>
+        <FileInput multiple={false} uploader={uploader} />
         <Dropzone
+          multiple={false}
           style={{ border: '1px dotted', height: 200, width: 200 }}
           uploader={uploader}
         >
           <span>Drop Files Here</span>
         </Dropzone>
-        {this.state.submittedFiles.map(id => (
+        {this.state.visibleFiles.map(id => (
           <div key={id}>
-            <Filename key={`filename-${id}`} id={id} uploader={uploader} />
-            <Filesize key={`filesize-${id}`} id={id} uploader={uploader} />
+            <Filename id={id} uploader={uploader} />
+            <Filesize id={id} uploader={uploader} />
           </div>
         ))}
       </div>
