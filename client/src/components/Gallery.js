@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 // import { CSSTransitionGroup as ReactCssTransitionGroup } from 'react-transition-group'
 
 import FineUploaderTraditional from 'fine-uploader-wrappers';
@@ -13,10 +14,40 @@ import XIcon from 'react-fine-uploader/gallery/x-icon';
 
 import './gallery.css';
 
+export const uploader = new FineUploaderTraditional({
+  options: {
+    debug: true,
+    autoUpload: false,
+    multiple: false,
+    validation: {
+      itemLimit: 1,
+    },
+    messages: {
+      tooManyItemsError: 'one file a time',
+    },
+    chunking: {
+      enabled: false,
+    },
+    deleteFile: {
+      enabled: false,
+      endpoint: '/uploads',
+    },
+    request: {
+      endpoint: '/uploads',
+    },
+    retry: {
+      enableAuto: false,
+    },
+  },
+});
+
+const statusEnum = uploader.qq.status;
+
 class Gallery extends Component {
+  //
   static propTypes = {
     className: PropTypes.string,
-    uploader: PropTypes.object.isRequired,
+    // uploader: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -34,73 +65,54 @@ class Gallery extends Component {
     'thumbnail-maxSize': 130,
   };
 
-  constructor(props) {
-    super(props);
+  state = {
+    visibleFiles: [],
+  };
 
-    this.state = {
-      visibleFiles: [],
-    };
+  handleOnStatusChange = (id, oldStatus, status) => {
+    const visibleFiles = this.state.visibleFiles;
 
-    const statusEnum = props.uploader.qq.status;
-
-    this._onStatusChange = (id, oldStatus, status) => {
-      const visibleFiles = this.state.visibleFiles;
-
-      if (status === statusEnum.SUBMITTED) {
-        visibleFiles.push({ id });
-        this.setState({ visibleFiles });
-      } else if (isFileGone(status, statusEnum)) {
-        this._removeVisibleFile(id);
-      } else if (
-        status === statusEnum.UPLOAD_SUCCESSFUL ||
-        status === statusEnum.UPLOAD_FAILED
-      ) {
-        if (status === statusEnum.UPLOAD_SUCCESSFUL) {
-          const visibleFileIndex = this._findFileIndex(id);
-          if (visibleFileIndex < 0) {
-            visibleFiles.push({ id, fromServer: true });
-          }
+    if (status === statusEnum.SUBMITTED) {
+      visibleFiles.push({ id });
+      this.setState({ visibleFiles });
+    } else if (isFileGone(status, statusEnum)) {
+      this._removeVisibleFile(id);
+    } else if (
+      status === statusEnum.UPLOAD_SUCCESSFUL ||
+      status === statusEnum.UPLOAD_FAILED
+    ) {
+      if (status === statusEnum.UPLOAD_SUCCESSFUL) {
+        const visibleFileIndex = this._findFileIndex(id);
+        if (visibleFileIndex < 0) {
+          visibleFiles.push({ id, fromServer: true });
         }
-        this._updateVisibleFileStatus(id, status);
       }
-    };
-  }
+      this._updateVisibleFileStatus(id, status);
+    }
+  };
 
   componentDidMount() {
-    this.props.uploader.on('statusChange', this._onStatusChange);
+    uploader.on('statusChange', this.handleOnStatusChange);
   }
 
   componentWillUnmount() {
-    this.props.uploader.off('statusChange', this._onStatusChange);
+    uploader.off('statusChange', this.handleOnStatusChange);
   }
 
   render() {
-    const cancelButtonProps = getComponentProps('cancelButton', this.props);
-    const dropzoneProps = getComponentProps('dropzone', this.props);
-    const fileInputProps = getComponentProps('fileInput', this.props);
-    const filenameProps = getComponentProps('filename', this.props);
-    const filesizeProps = getComponentProps('filesize', this.props);
-    const progressBarProps = getComponentProps('progressBar', this.props);
-    const retryButtonProps = getComponentProps('retryButton', this.props);
-    const statusProps = getComponentProps('status', this.props);
-    const thumbnailProps = getComponentProps('thumbnail', this.props);
-    const uploader = this.props.uploader;
-
     const chunkingEnabled =
       uploader.options.chunking && uploader.options.chunking.enabled;
     const deleteEnabled =
       uploader.options.deleteFile && uploader.options.deleteFile.enabled;
-    const deleteButtonProps =
-      deleteEnabled && getComponentProps('deleteButton', this.props);
-    const pauseResumeButtonProps =
-      chunkingEnabled && getComponentProps('pauseResumeButton', this.props);
+    // const deleteButtonProps =
+    //   deleteEnabled && getComponentProps('deleteButton', this.props);
+    // const pauseResumeButtonProps =
+    //   chunkingEnabled && getComponentProps('pauseResumeButton', this.props);
 
     return (
       <MaybeDropzone
         content={this.props.children}
         hasVisibleFiles={this.state.visibleFiles.length > 0}
-        uploader={uploader}
-        {...dropzoneProps}
       >
         {!fileInputProps.disabled && (
           <FileInputComponent uploader={uploader} {...fileInputProps} />
@@ -236,13 +248,8 @@ class Gallery extends Component {
   }
 }
 
-const MaybeDropzone = ({
-  children,
-  content,
-  hasVisibleFiles,
-  uploader,
-  ...props
-}) => {
+// ========================================================================
+const MaybeDropzone = ({ children, content, hasVisibleFiles, ...props }) => {
   const { disabled, ...dropzoneProps } = props;
 
   let dropzoneDisabled = disabled;
@@ -279,6 +286,7 @@ const MaybeDropzone = ({
   );
 };
 
+// ========================================================================
 const FileInputComponent = ({ uploader, ...props }) => {
   const { children, ...fileInputProps } = props;
   const content = children || (
@@ -301,18 +309,18 @@ const FileInputComponent = ({ uploader, ...props }) => {
   );
 };
 
-const getComponentProps = (componentName, allProps) => {
-  const componentProps = {};
+// const getComponentProps = (componentName, allProps) => {
+//   const componentProps = {};
 
-  Object.keys(allProps).forEach(propName => {
-    if (propName.indexOf(componentName + '-') === 0) {
-      const componentPropName = propName.substr(componentName.length + 1);
-      componentProps[componentPropName] = allProps[propName];
-    }
-  });
+//   Object.keys(allProps).forEach(propName => {
+//     if (propName.indexOf(componentName + '-') === 0) {
+//       const componentPropName = propName.substr(componentName.length + 1);
+//       componentProps[componentPropName] = allProps[propName];
+//     }
+//   });
 
-  return componentProps;
-};
+//   return componentProps;
+// };
 
 const getDefaultMaybeDropzoneContent = ({ content, disabled }) => {
   const className = disabled

@@ -205,6 +205,7 @@ class UploadComponent extends Component {
     // );
     return (
       <div>
+        <XIcon />
         <FileInput multiple uploader={uploader}>
           <span className="icon icon-upload">Choose Files</span>
         </FileInput>
