@@ -24,6 +24,13 @@ import XIcon from 'react-fine-uploader/gallery/x-icon';
 
 import './gallery.css';
 
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
 export const uploader = new FineUploaderTraditional({
   options: {
     debug: true,
@@ -120,11 +127,15 @@ class Gallery extends Component {
     //   chunkingEnabled && getComponentProps('pauseResumeButton', this.props);
 
     const fileInputDisabled = false;
+    const dropZoneDisabled = false;
 
     return (
       <MaybeDropzone
         content={this.props.children}
         hasVisibleFiles={this.state.visibleFiles.length > 0}
+        disabled={dropZoneDisabled}
+        dropActiveClassName={'react-fine-uploader-gallery-dropzone-active'}
+        multiple={true}
       >
         {!fileInputDisabled && (
           <FileInputComponent
@@ -191,7 +202,9 @@ class Gallery extends Component {
               className="react-fine-uploader-gallery-cancel-button"
               id={id}
               uploader={uploader}
-            />
+            >
+              <XIcon />
+            </CancelButton>
 
             <RetryButton
               className="react-fine-uploader-gallery-retry-button"
@@ -204,7 +217,9 @@ class Gallery extends Component {
                 className="react-fine-uploader-gallery-delete-button"
                 id={id}
                 uploader={uploader}
-              />
+              >
+                <XIcon />
+              </DeleteButton>
             )}
 
             {chunkingEnabled && (
