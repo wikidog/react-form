@@ -344,7 +344,7 @@ const getDefaultMaybeDropzoneContent = ({ content, disabled }) => {
     return (
       <span className={className}>
         <UploadIcon className="react-fine-uploader-gallery-dropzone-upload-icon" />
-        Drop files here
+        Drop files here AAAA
       </span>
     );
   }
