@@ -47,6 +47,9 @@ const styles = {
   pos: {
     marginBottom: 12,
   },
+  bottonRow: {
+    display: 'block',
+  },
 };
 
 export const uploader = new FineUploaderTraditional({
@@ -135,6 +138,8 @@ class Gallery extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+
     const chunkingEnabled =
       uploader.options.chunking && uploader.options.chunking.enabled;
     const deleteEnabled =
@@ -155,7 +160,7 @@ class Gallery extends Component {
         dropActiveClassName={'react-fine-uploader-gallery-dropzone-active'}
         multiple={true}
       >
-        <div>
+        <div className={classes.bottonRow}>
           {!fileInputDisabled && (
             <FileInputComponent
               uploader={uploader}
@@ -179,77 +184,86 @@ class Gallery extends Component {
           transitionName="react-fine-uploader-gallery-files"
         > */}
         {this.state.visibleFiles.map(({ id, status, fromServer }) => (
-          <li key={id} className="react-fine-uploader-gallery-file">
-            <ProgressBar
-              className="react-fine-uploader-gallery-progress-bar"
-              id={id}
-              uploader={uploader}
-            />
+          <div key={id}>
+            <div>
+              <Card className={classes.card}>
+                <CardContent>
+                  <ProgressBar
+                    className="react-fine-uploader-gallery-progress-bar"
+                    id={id}
+                    uploader={uploader}
+                  />
 
-            {status === 'upload successful' && (
-              <span>
-                <UploadSuccessIcon className="react-fine-uploader-gallery-upload-success-icon" />
-                <div className="react-fine-uploader-gallery-thumbnail-icon-backdrop" />
-              </span>
-            )}
+                  {status === 'upload successful' && (
+                    <span>
+                      <UploadSuccessIcon className="react-fine-uploader-gallery-upload-success-icon" />
+                      <div className="react-fine-uploader-gallery-thumbnail-icon-backdrop" />
+                    </span>
+                  )}
 
-            {status === 'upload failed' && (
-              <span>
-                <UploadFailedIcon className="react-fine-uploader-gallery-upload-failed-icon" />
-                <div className="react-fine-uploader-gallery-thumbnail-icon-backdrop" />
-              </span>
-            )}
+                  {status === 'upload failed' && (
+                    <span>
+                      <UploadFailedIcon className="react-fine-uploader-gallery-upload-failed-icon" />
+                      <div className="react-fine-uploader-gallery-thumbnail-icon-backdrop" />
+                    </span>
+                  )}
 
-            <div className="react-fine-uploader-gallery-file-footer">
-              <Filename
-                className="react-fine-uploader-gallery-filename"
-                id={id}
-                uploader={uploader}
-              />
-              <Status
-                className="react-fine-uploader-gallery-status"
-                id={id}
-                uploader={uploader}
-              />
-              <Filesize
-                className="react-fine-uploader-gallery-filesize"
-                id={id}
-                uploader={uploader}
-              />
+                  <div className="react-fine-uploader-gallery-file-footer">
+                    <Filename
+                      className="react-fine-uploader-gallery-filename"
+                      id={id}
+                      uploader={uploader}
+                    />
+                    <Status
+                      className="react-fine-uploader-gallery-status"
+                      id={id}
+                      uploader={uploader}
+                    />
+                    <Filesize
+                      className="react-fine-uploader-gallery-filesize"
+                      id={id}
+                      uploader={uploader}
+                    />
+                  </div>
+
+                  <CancelButton
+                    className="react-fine-uploader-gallery-cancel-button"
+                    id={id}
+                    uploader={uploader}
+                  >
+                    <XIcon />
+                  </CancelButton>
+
+                  <RetryButton
+                    className="react-fine-uploader-gallery-retry-button"
+                    id={id}
+                    uploader={uploader}
+                  />
+
+                  {deleteEnabled && (
+                    <DeleteButton
+                      className="react-fine-uploader-gallery-delete-button"
+                      id={id}
+                      uploader={uploader}
+                    >
+                      <XIcon />
+                    </DeleteButton>
+                  )}
+
+                  {chunkingEnabled && (
+                    <PauseResumeButton
+                      className="react-fine-uploader-gallery-pause-resume-button"
+                      id={id}
+                      uploader={uploader}
+                    />
+                  )}
+                </CardContent>
+                <CardActions>
+                  <Button size="small">Learn More</Button>
+                </CardActions>
+              </Card>
             </div>
-
-            <CancelButton
-              className="react-fine-uploader-gallery-cancel-button"
-              id={id}
-              uploader={uploader}
-            >
-              <XIcon />
-            </CancelButton>
-
-            <RetryButton
-              className="react-fine-uploader-gallery-retry-button"
-              id={id}
-              uploader={uploader}
-            />
-
-            {deleteEnabled && (
-              <DeleteButton
-                className="react-fine-uploader-gallery-delete-button"
-                id={id}
-                uploader={uploader}
-              >
-                <XIcon />
-              </DeleteButton>
-            )}
-
-            {chunkingEnabled && (
-              <PauseResumeButton
-                className="react-fine-uploader-gallery-pause-resume-button"
-                id={id}
-                uploader={uploader}
-              />
-            )}
-          </li>
+          </div>
         ))}
         {/* </ReactCssTransitionGroup> */}
       </MaybeDropzone>
