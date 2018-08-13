@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import FineUploaderTraditional from 'fine-uploader-wrappers';
 // import Gallery from 'react-fine-uploader';
 import Dropzone from 'react-fine-uploader/dropzone';
-import FileInput from 'react-fine-uploader/file-input';
+// import FileInput from 'react-fine-uploader/file-input';
 import Filename from 'react-fine-uploader/filename';
 import Filesize from 'react-fine-uploader/filesize';
 import ProgressBar from 'react-fine-uploader/progress-bar';
@@ -30,6 +30,9 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+
+import FileInput from './FileInput';
 
 const styles = {
   card: {
@@ -47,7 +50,7 @@ const styles = {
   pos: {
     marginBottom: 12,
   },
-  bottonRow: {
+  buttonRow: {
     display: 'block',
   },
 };
@@ -58,7 +61,7 @@ export const uploader = new FineUploaderTraditional({
     autoUpload: false,
     multiple: true,
     validation: {
-      itemLimit: 1,
+      itemLimit: 5,
     },
     messages: {
       tooManyItemsError: 'one file a time',
@@ -160,13 +163,12 @@ class Gallery extends Component {
         dropActiveClassName={'react-fine-uploader-gallery-dropzone-active'}
         multiple={true}
       >
-        <div className={classes.bottonRow}>
-          {!fileInputDisabled && (
-            <FileInputComponent
-              uploader={uploader}
-              multiple={uploader.options.multiple}
-            />
-          )}
+        <div className={classes.buttonRow}>
+          <FileInput
+            uploader={uploader}
+            multiple={uploader.options.multiple}
+            disabled={fileInputDisabled}
+          />
 
           <ProgressBar
             className="react-fine-uploader-gallery-total-progress-bar"
@@ -344,28 +346,6 @@ const MaybeDropzone = ({ children, content, hasVisibleFiles, ...props }) => {
 };
 
 // ========================================================================
-const FileInputComponent = ({ uploader, ...props }) => {
-  const { children, multiple, ...fileInputProps } = props;
-  const content = children || (
-    <span>
-      <UploadIcon className="react-fine-uploader-gallery-file-input-upload-icon" />
-      {multiple ? 'Select Files' : 'Select a File'}
-    </span>
-  );
-
-  return (
-    <FileInput
-      className="react-fine-uploader-gallery-file-input-container"
-      uploader={uploader}
-      multiple={multiple}
-      {...fileInputProps}
-    >
-      <span className="react-fine-uploader-gallery-file-input-content">
-        {content}
-      </span>
-    </FileInput>
-  );
-};
 
 // const getComponentProps = (componentName, allProps) => {
 //   const componentProps = {};
