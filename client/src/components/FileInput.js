@@ -40,6 +40,14 @@ class FileInput extends Component {
   render() {
     const { classes, multiple, disabled } = this.props;
 
+    // !!! Important !!!
+    // the "key" property is very important!!!!!!!!
+    //   the key changes every time a file is selected or multiple files
+    //   are selected, which forces React to re-render this component,
+    //   which effectively resets the file input element.
+    //   if we don't use the "key" property, the "onChange" event won't
+    //   fire if the file selected at the 2nd time is the same as the file
+    //   selected at the first time.
     return (
       <div key={this.state.key}>
         <input
