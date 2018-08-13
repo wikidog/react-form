@@ -28,13 +28,13 @@ class FileInput extends Component {
   //
   state = { key: newKey() };
 
-  resetInput = () => {
+  resetFileInput = () => {
     this.setState({ key: newKey() });
   };
 
   handleOnFilesSelected = event => {
     this.props.uploader.methods.addFiles(event.target);
-    this.resetInput();
+    this.resetFileInput();
   };
 
   render() {

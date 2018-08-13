@@ -72,7 +72,7 @@ class TestForm extends Component {
         {...fields}
       />
       <FormHelperText id={`${fields.input.name}-text`}>
-        {fields.meta.touched ? fields.meta.error : ''}
+        {fields.meta.touched && fields.meta.error ? fields.meta.error : ''}
       </FormHelperText>
     </FormControl>
   );

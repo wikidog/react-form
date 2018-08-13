@@ -31,12 +31,22 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+
+import Grid from '@material-ui/core/Grid';
 
 import FileInput from './FileInput';
 
-const styles = {
+const styles = theme => ({
   card: {
     minWidth: 275,
+  },
+  content: {
+    flexGrow: 1,
+  },
+  icon: {
+    // margin: theme.spacing.unit,
+    fontSize: 24,
   },
   bullet: {
     display: 'inline-block',
@@ -53,7 +63,7 @@ const styles = {
   buttonRow: {
     display: 'block',
   },
-};
+});
 
 export const uploader = new FineUploaderTraditional({
   options: {
@@ -170,10 +180,10 @@ class Gallery extends Component {
             disabled={fileInputDisabled}
           />
 
-          <ProgressBar
+          {/* <ProgressBar
             className="react-fine-uploader-gallery-total-progress-bar"
             uploader={uploader}
-          />
+          /> */}
         </div>
 
         {/* <ReactCssTransitionGroup
@@ -186,86 +196,96 @@ class Gallery extends Component {
           transitionName="react-fine-uploader-gallery-files"
         > */}
         {this.state.visibleFiles.map(({ id, status, fromServer }) => (
-          <div key={id}>
-            <div>
-              <Card className={classes.card}>
-                <CardContent>
-                  <ProgressBar
-                    className="react-fine-uploader-gallery-progress-bar"
-                    id={id}
-                    uploader={uploader}
-                  />
-
-                  {status === 'upload successful' && (
-                    <span>
-                      <UploadSuccessIcon className="react-fine-uploader-gallery-upload-success-icon" />
-                      <div className="react-fine-uploader-gallery-thumbnail-icon-backdrop" />
-                    </span>
-                  )}
-
-                  {status === 'upload failed' && (
-                    <span>
-                      <UploadFailedIcon className="react-fine-uploader-gallery-upload-failed-icon" />
-                      <div className="react-fine-uploader-gallery-thumbnail-icon-backdrop" />
-                    </span>
-                  )}
-
-                  <div className="react-fine-uploader-gallery-file-footer">
-                    <Filename
-                      className="react-fine-uploader-gallery-filename"
-                      id={id}
-                      uploader={uploader}
-                    />
-                    <Status
-                      className="react-fine-uploader-gallery-status"
-                      id={id}
-                      uploader={uploader}
-                    />
-                    <Filesize
-                      className="react-fine-uploader-gallery-filesize"
-                      id={id}
-                      uploader={uploader}
-                    />
-                  </div>
-
+          <Card key={id} className={classes.card}>
+            <CardContent className={classes.content}>
+              <Grid container spacing={16}>
+                <Grid item xs={12} xs>
+                  <Typography variant="title" className={classes.title}>
+                    Text only
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="title" className={classes.title}>
+                    Icon with text
+                  </Typography>
+                </Grid>
+                <Grid item>
                   <CancelButton
-                    className="react-fine-uploader-gallery-cancel-button"
+                    // className="react-fine-uploader-gallery-cancel-button"
                     id={id}
                     uploader={uploader}
                   >
-                    <XIcon />
+                    <DeleteForeverIcon className={classes.icon} />
                   </CancelButton>
+                </Grid>
+              </Grid>
 
-                  <RetryButton
-                    className="react-fine-uploader-gallery-retry-button"
-                    id={id}
-                    uploader={uploader}
-                  />
+              <ProgressBar
+                className="react-fine-uploader-gallery-progress-bar"
+                id={id}
+                uploader={uploader}
+              />
 
-                  {deleteEnabled && (
-                    <DeleteButton
-                      className="react-fine-uploader-gallery-delete-button"
-                      id={id}
-                      uploader={uploader}
-                    >
-                      <XIcon />
-                    </DeleteButton>
-                  )}
+              {status === 'upload successful' && (
+                <span>
+                  <UploadSuccessIcon className="react-fine-uploader-gallery-upload-success-icon" />
+                  <div className="react-fine-uploader-gallery-thumbnail-icon-backdrop" />
+                </span>
+              )}
 
-                  {chunkingEnabled && (
-                    <PauseResumeButton
-                      className="react-fine-uploader-gallery-pause-resume-button"
-                      id={id}
-                      uploader={uploader}
-                    />
-                  )}
-                </CardContent>
-                <CardActions>
-                  <Button size="small">Learn More</Button>
-                </CardActions>
-              </Card>
-            </div>
-          </div>
+              {status === 'upload failed' && (
+                <span>
+                  <UploadFailedIcon className="react-fine-uploader-gallery-upload-failed-icon" />
+                  <div className="react-fine-uploader-gallery-thumbnail-icon-backdrop" />
+                </span>
+              )}
+
+              <div className="react-fine-uploader-gallery-file-footer">
+                <Filename
+                  className="react-fine-uploader-gallery-filename"
+                  id={id}
+                  uploader={uploader}
+                />
+                <Status
+                  className="react-fine-uploader-gallery-status"
+                  id={id}
+                  uploader={uploader}
+                />
+                <Filesize
+                  className="react-fine-uploader-gallery-filesize"
+                  id={id}
+                  uploader={uploader}
+                />
+              </div>
+
+              <RetryButton
+                className="react-fine-uploader-gallery-retry-button"
+                id={id}
+                uploader={uploader}
+              />
+
+              {deleteEnabled && (
+                <DeleteButton
+                  className="react-fine-uploader-gallery-delete-button"
+                  id={id}
+                  uploader={uploader}
+                >
+                  <XIcon />
+                </DeleteButton>
+              )}
+
+              {chunkingEnabled && (
+                <PauseResumeButton
+                  className="react-fine-uploader-gallery-pause-resume-button"
+                  id={id}
+                  uploader={uploader}
+                />
+              )}
+            </CardContent>
+            <CardActions>
+              <Button size="small">Learn More</Button>
+            </CardActions>
+          </Card>
         ))}
         {/* </ReactCssTransitionGroup> */}
       </MaybeDropzone>
