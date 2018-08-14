@@ -6,7 +6,8 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 2.5,
   },
   leftIcon: {
     marginRight: theme.spacing.unit,

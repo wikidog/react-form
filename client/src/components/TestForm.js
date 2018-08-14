@@ -26,7 +26,7 @@ const styles = {
   root: {
     position: 'relative',
     overflow: 'hidden',
-    textAlign: 'center',
+    // textAlign: 'center',
     // paddingTop: this.props.theme.spacing.unit * 20,
   },
   snackbar: {

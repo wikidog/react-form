@@ -10,7 +10,6 @@ import Filename from 'react-fine-uploader/filename';
 import Filesize from 'react-fine-uploader/filesize';
 import ProgressBar from 'react-fine-uploader/progress-bar';
 import Status from 'react-fine-uploader/status';
-import CancelButton from 'react-fine-uploader/cancel-button';
 import DeleteButton from 'react-fine-uploader/delete-button';
 import RetryButton from 'react-fine-uploader/retry-button';
 import PauseResumeButton from 'react-fine-uploader/pause-resume-button';
@@ -36,32 +35,23 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Grid from '@material-ui/core/Grid';
 
 import FileInput from './FileInput';
+import CancelButton from './CancelButton';
 
 const styles = theme => ({
   card: {
     minWidth: 275,
-  },
-  content: {
     flexGrow: 1,
+  },
+  fileInput: {
+    // marginBottom: 20,
   },
   icon: {
     // margin: theme.spacing.unit,
     fontSize: 24,
   },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
   title: {
-    marginBottom: 16,
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  buttonRow: {
-    display: 'block',
+    // marginBottom: 16,
+    fontSize: 16,
   },
 });
 
@@ -173,18 +163,17 @@ class Gallery extends Component {
         dropActiveClassName={'react-fine-uploader-gallery-dropzone-active'}
         multiple={true}
       >
-        <div className={classes.buttonRow}>
-          <FileInput
-            uploader={uploader}
-            multiple={uploader.options.multiple}
-            disabled={fileInputDisabled}
-          />
+        <FileInput
+          className={classes.fileInput}
+          uploader={uploader}
+          multiple={uploader.options.multiple}
+          disabled={fileInputDisabled}
+        />
 
-          {/* <ProgressBar
+        {/* <ProgressBar
             className="react-fine-uploader-gallery-total-progress-bar"
             uploader={uploader}
           /> */}
-        </div>
 
         {/* <ReactCssTransitionGroup
           className="react-fine-uploader-gallery-files"
@@ -197,16 +186,16 @@ class Gallery extends Component {
         > */}
         {this.state.visibleFiles.map(({ id, status, fromServer }) => (
           <Card key={id} className={classes.card}>
-            <CardContent className={classes.content}>
-              <Grid container spacing={16}>
-                <Grid item xs={12} xs>
+            <CardContent>
+              <Grid container spacing={16} alignItems={'center'}>
+                <Grid item xs={12} sm>
                   <Typography variant="title" className={classes.title}>
-                    Text only
+                    <Filename id={id} uploader={uploader} />
                   </Typography>
                 </Grid>
                 <Grid item>
                   <Typography variant="title" className={classes.title}>
-                    Icon with text
+                    <Filesize id={id} uploader={uploader} />
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -214,9 +203,7 @@ class Gallery extends Component {
                     // className="react-fine-uploader-gallery-cancel-button"
                     id={id}
                     uploader={uploader}
-                  >
-                    <DeleteForeverIcon className={classes.icon} />
-                  </CancelButton>
+                  />
                 </Grid>
               </Grid>
 
@@ -241,18 +228,8 @@ class Gallery extends Component {
               )}
 
               <div className="react-fine-uploader-gallery-file-footer">
-                <Filename
-                  className="react-fine-uploader-gallery-filename"
-                  id={id}
-                  uploader={uploader}
-                />
                 <Status
                   className="react-fine-uploader-gallery-status"
-                  id={id}
-                  uploader={uploader}
-                />
-                <Filesize
-                  className="react-fine-uploader-gallery-filesize"
                   id={id}
                   uploader={uploader}
                 />
@@ -282,9 +259,6 @@ class Gallery extends Component {
                 />
               )}
             </CardContent>
-            <CardActions>
-              <Button size="small">Learn More</Button>
-            </CardActions>
           </Card>
         ))}
         {/* </ReactCssTransitionGroup> */}

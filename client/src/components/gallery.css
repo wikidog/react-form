@@ -237,8 +237,8 @@
 }
 .react-fine-uploader-gallery-cancel-button,
 .react-fine-uploader-gallery-delete-button {
-    right: -18px;
-    top: -12px;
+    right: -10px;
+    top: 2px;
 }
 .react-fine-uploader-gallery-pause-resume-button,
 .react-fine-uploader-gallery-retry-button {
