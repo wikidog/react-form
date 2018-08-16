@@ -5,12 +5,11 @@ import PropTypes from 'prop-types';
 import FineUploaderTraditional from 'fine-uploader-wrappers';
 // import Gallery from 'react-fine-uploader';
 import Dropzone from 'react-fine-uploader/dropzone';
-import FileInput from 'react-fine-uploader/file-input';
+// import FileInput from 'react-fine-uploader/file-input';
 import Filename from 'react-fine-uploader/filename';
 import Filesize from 'react-fine-uploader/filesize';
-import ProgressBar from 'react-fine-uploader/progress-bar';
+// import ProgressBar from 'react-fine-uploader/progress-bar';
 import Status from 'react-fine-uploader/status';
-import CancelButton from 'react-fine-uploader/cancel-button';
 import DeleteButton from 'react-fine-uploader/delete-button';
 import RetryButton from 'react-fine-uploader/retry-button';
 import PauseResumeButton from 'react-fine-uploader/pause-resume-button';
@@ -25,29 +24,40 @@ import XIcon from 'react-fine-uploader/gallery/x-icon';
 import './gallery.css';
 
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
+import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
-const styles = {
+import Grid from '@material-ui/core/Grid';
+
+import FileInput from './FileInput';
+import CancelButton from './CancelButton';
+import ProgressBar from './ProgressBar';
+
+const styles = theme => ({
+  root: {
+    ...theme.mixins.gutters(),
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
+  },
   card: {
     minWidth: 275,
+    flexGrow: 1,
   },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
+  fileInput: {
+    // marginBottom: 20,
+  },
+  icon: {
+    // margin: theme.spacing.unit,
+    fontSize: 24,
   },
   title: {
-    marginBottom: 16,
-    fontSize: 14,
+    // marginBottom: 16,
+    fontSize: 16,
   },
-  pos: {
-    marginBottom: 12,
-  },
-};
+});
 
 export const uploader = new FineUploaderTraditional({
   options: {
@@ -55,7 +65,7 @@ export const uploader = new FineUploaderTraditional({
     autoUpload: false,
     multiple: true,
     validation: {
-      itemLimit: 1,
+      itemLimit: 5,
     },
     messages: {
       tooManyItemsError: 'one file a time',
@@ -78,7 +88,7 @@ export const uploader = new FineUploaderTraditional({
 
 const statusEnum = uploader.qq.status;
 
-class Gallery extends Component {
+class UploaderRows extends Component {
   //
   static propTypes = {
     className: PropTypes.string,
@@ -104,14 +114,33 @@ class Gallery extends Component {
     visibleFiles: [],
   };
 
+  // this function is for Redux-Form <Field /> component
+  handleOnFieldValueChange = value => {
+    // this will dispatch a CHANGE action on Redux-Form
+    this.props.change(
+      this.props.input.name,
+      // uploader.methods.getUploads({ status: 'submitted' })
+      // uploader.methods.getUploads({ status: statusEnum.SUBMITTED })
+      // uploader.methods.getUploads()
+      value
+    );
+  };
+
   handleOnStatusChange = (id, oldStatus, newStatus) => {
+    console.log('=========== onStatusChange =============');
+    console.log('id:', id);
+    console.log('oldStatus:', oldStatus);
+    console.log('newStatus:', newStatus);
+
     const visibleFiles = this.state.visibleFiles;
 
     if (newStatus === statusEnum.SUBMITTED) {
       visibleFiles.push({ id });
       this.setState({ visibleFiles });
+      this.handleOnFieldValueChange(visibleFiles);
     } else if (isFileGone(newStatus, statusEnum)) {
       this._removeVisibleFile(id);
+      this.handleOnFieldValueChange(visibleFiles);
     } else if (
       newStatus === statusEnum.UPLOAD_SUCCESSFUL ||
       newStatus === statusEnum.UPLOAD_FAILED
@@ -126,15 +155,49 @@ class Gallery extends Component {
     }
   };
 
+  handleOnValidateBatch = files => {
+    console.log('=========== onValidateBatch =============');
+    console.log('options:', uploader.options);
+    console.log('files:', files);
+    // uploader.methods.clearStoredFiles();
+    // uploader.methods.cancelAll();
+    // for Redux-Form
+    this.props.touch(this.props.input.name);
+  };
+
+  handleOnError = (id, name, errorReason) => {
+    console.log('============== onError ==================');
+    // console.log('id', id);
+    // console.log('name', name);
+    console.log('errorReason:', errorReason);
+
+    // this.props.input.onBlur('aaaaaaaaaa');
+    alert(errorReason);
+    // alert(
+    //   uploader.qq.format(
+    //     'Error on file number {} - {}.  Reason: {}',
+    //     id,
+    //     name,
+    //     errorReason
+    //   )
+    // );
+  };
+
   componentDidMount() {
     uploader.on('statusChange', this.handleOnStatusChange);
+    uploader.on('validateBatch', this.handleOnValidateBatch);
+    uploader.on('error', this.handleOnError);
   }
 
   componentWillUnmount() {
     uploader.off('statusChange', this.handleOnStatusChange);
+    uploader.off('validateBatch', this.handleOnValidateBatch);
+    uploader.off('error', this.handleOnError);
   }
 
   render() {
+    const { classes } = this.props;
+
     const chunkingEnabled =
       uploader.options.chunking && uploader.options.chunking.enabled;
     const deleteEnabled =
@@ -155,19 +218,17 @@ class Gallery extends Component {
         dropActiveClassName={'react-fine-uploader-gallery-dropzone-active'}
         multiple={true}
       >
-        <div>
-          {!fileInputDisabled && (
-            <FileInputComponent
-              uploader={uploader}
-              multiple={uploader.options.multiple}
-            />
-          )}
+        <FileInput
+          className={classes.fileInput}
+          uploader={uploader}
+          multiple={uploader.options.multiple}
+          disabled={fileInputDisabled}
+        />
 
-          <ProgressBar
+        {/* <ProgressBar
             className="react-fine-uploader-gallery-total-progress-bar"
             uploader={uploader}
-          />
-        </div>
+          /> */}
 
         {/* <ReactCssTransitionGroup
           className="react-fine-uploader-gallery-files"
@@ -179,12 +240,43 @@ class Gallery extends Component {
           transitionName="react-fine-uploader-gallery-files"
         > */}
         {this.state.visibleFiles.map(({ id, status, fromServer }) => (
-          <li key={id} className="react-fine-uploader-gallery-file">
-            <ProgressBar
-              className="react-fine-uploader-gallery-progress-bar"
-              id={id}
-              uploader={uploader}
-            />
+          <Paper key={id} className={classes.root}>
+            <Grid container spacing={16} alignItems={'center'}>
+              <Grid item xs={12} sm>
+                <Typography variant="title" className={classes.title}>
+                  <Filename id={id} uploader={uploader} />
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="subheading" className={classes.subheading}>
+                  <Filesize id={id} uploader={uploader} />
+                </Typography>
+              </Grid>
+              <Grid item>
+                <CancelButton id={id} uploader={uploader} />
+              </Grid>
+            </Grid>
+            <Grid container spacing={16} alignItems={'center'}>
+              <Grid item>
+                <Typography variant="subheading" className={classes.subheading}>
+                  <Status
+                    // className="react-fine-uploader-gallery-status"
+                    id={id}
+                    uploader={uploader}
+                  />
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm>
+                <Typography variant="title" className={classes.title}>
+                  <ProgressBar
+                    // className="react-fine-uploader-gallery-progress-bar"
+                    id={id}
+                    uploader={uploader}
+                    hideBeforeStart={false}
+                  />
+                </Typography>
+              </Grid>
+            </Grid>
 
             {status === 'upload successful' && (
               <span>
@@ -201,30 +293,12 @@ class Gallery extends Component {
             )}
 
             <div className="react-fine-uploader-gallery-file-footer">
-              <Filename
-                className="react-fine-uploader-gallery-filename"
-                id={id}
-                uploader={uploader}
-              />
               <Status
                 className="react-fine-uploader-gallery-status"
                 id={id}
                 uploader={uploader}
               />
-              <Filesize
-                className="react-fine-uploader-gallery-filesize"
-                id={id}
-                uploader={uploader}
-              />
             </div>
-
-            <CancelButton
-              className="react-fine-uploader-gallery-cancel-button"
-              id={id}
-              uploader={uploader}
-            >
-              <XIcon />
-            </CancelButton>
 
             <RetryButton
               className="react-fine-uploader-gallery-retry-button"
@@ -249,7 +323,7 @@ class Gallery extends Component {
                 uploader={uploader}
               />
             )}
-          </li>
+          </Paper>
         ))}
         {/* </ReactCssTransitionGroup> */}
       </MaybeDropzone>
@@ -330,28 +404,6 @@ const MaybeDropzone = ({ children, content, hasVisibleFiles, ...props }) => {
 };
 
 // ========================================================================
-const FileInputComponent = ({ uploader, ...props }) => {
-  const { children, multiple, ...fileInputProps } = props;
-  const content = children || (
-    <span>
-      <UploadIcon className="react-fine-uploader-gallery-file-input-upload-icon" />
-      {multiple ? 'Select Files' : 'Select a File'}
-    </span>
-  );
-
-  return (
-    <FileInput
-      className="react-fine-uploader-gallery-file-input-container"
-      uploader={uploader}
-      multiple={multiple}
-      {...fileInputProps}
-    >
-      <span className="react-fine-uploader-gallery-file-input-content">
-        {content}
-      </span>
-    </FileInput>
-  );
-};
 
 // const getComponentProps = (componentName, allProps) => {
 //   const componentProps = {};
@@ -389,4 +441,4 @@ const isFileGone = (statusToCheck, statusEnum) => {
   return [statusEnum.CANCELED, statusEnum.DELETED].indexOf(statusToCheck) >= 0;
 };
 
-export default withStyles(styles)(Gallery);
+export default withStyles(styles)(UploaderRows);
