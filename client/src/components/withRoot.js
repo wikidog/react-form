@@ -6,6 +6,8 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 // import purple from 'material-ui/colors/purple';
 import blue from '@material-ui/core/colors/blue';
 import grey from '@material-ui/core/colors/grey';
+import green from '@material-ui/core/colors/green';
+import orange from '@material-ui/core/colors/orange';
 // import pink from 'material-ui/colors/pink';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -24,6 +26,10 @@ const theme = createMuiTheme({
       dark: grey[900],
     },
     // type: 'light',     // cannot specify 'main'; either 'light' or 'dark'
+  },
+  status: {
+    danger: orange,
+    succeed: green,
   },
   // mixins: {
   //   toolbar: {

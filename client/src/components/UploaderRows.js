@@ -28,7 +28,9 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import DoneIcon from '@material-ui/icons/Done';
+import ErrorIcon from '@material-ui/icons/Error';
+// import green from '@material-ui/core/colors/green';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -50,8 +52,9 @@ const styles = theme => ({
     // marginBottom: 20,
   },
   icon: {
-    // margin: theme.spacing.unit,
+    margin: theme.spacing.unit,
     fontSize: 24,
+    // color: theme.status.succeed,
   },
   title: {
     // marginBottom: 16,
@@ -253,7 +256,13 @@ class UploaderRows extends Component {
                 </Typography>
               </Grid>
               <Grid item>
-                <CancelButton id={id} uploader={uploader} />
+                {!status && <CancelButton id={id} uploader={uploader} />}
+                {status === statusEnum.UPLOAD_SUCCESSFUL && (
+                  <DoneIcon className={classes.icon} color="primary" />
+                )}
+                {status === statusEnum.UPLOAD_FAILED && (
+                  <ErrorIcon className={classes.icon} color="error" />
+                )}
               </Grid>
             </Grid>
             <Grid container spacing={16} alignItems={'center'}>
@@ -277,13 +286,6 @@ class UploaderRows extends Component {
                 </Typography>
               </Grid>
             </Grid>
-
-            {status === 'upload successful' && (
-              <span>
-                <UploadSuccessIcon className="react-fine-uploader-gallery-upload-success-icon" />
-                <div className="react-fine-uploader-gallery-thumbnail-icon-backdrop" />
-              </span>
-            )}
 
             {status === 'upload failed' && (
               <span>
