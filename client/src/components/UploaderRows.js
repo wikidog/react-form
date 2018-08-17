@@ -52,8 +52,8 @@ const styles = theme => ({
     // marginBottom: 20,
   },
   icon: {
-    margin: theme.spacing.unit,
-    fontSize: 24,
+    margin: theme.spacing.unit + 2,
+    // fontSize: 24,
     // color: theme.status.succeed,
   },
   title: {

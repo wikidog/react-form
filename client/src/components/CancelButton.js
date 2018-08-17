@@ -8,7 +8,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 const styles = {
   icon: {
     // margin: theme.spacing.unit,
-    fontSize: 24,
+    // fontSize: 22,
   },
 };
 
