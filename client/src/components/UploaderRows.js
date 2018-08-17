@@ -264,29 +264,31 @@ class UploaderRows extends Component {
                 </div>
               </Grid>
             </Grid>
-            <Grid container spacing={16} alignItems={'center'}>
-              <Grid item>
-                <Typography
-                  variant="body1"
-                  align="left"
-                  classes={{ root: classes.status }}
-                >
-                  <Status
-                    // className="react-fine-uploader-gallery-status"
+            {status && (
+              <Grid container spacing={16} alignItems={'center'}>
+                <Grid item>
+                  <Typography
+                    variant="body1"
+                    align="left"
+                    classes={{ root: classes.status }}
+                  >
+                    <Status
+                      // className="react-fine-uploader-gallery-status"
+                      id={id}
+                      uploader={uploader}
+                    />
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm>
+                  <ProgressBar
+                    // className="react-fine-uploader-gallery-progress-bar"
                     id={id}
                     uploader={uploader}
+                    hideBeforeStart={false}
                   />
-                </Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm>
-                <ProgressBar
-                  // className="react-fine-uploader-gallery-progress-bar"
-                  id={id}
-                  uploader={uploader}
-                  hideBeforeStart={false}
-                />
-              </Grid>
-            </Grid>
+            )}
 
             <RetryButton
               className="react-fine-uploader-gallery-retry-button"
