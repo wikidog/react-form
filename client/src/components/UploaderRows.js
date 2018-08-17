@@ -15,10 +15,10 @@ import RetryButton from 'react-fine-uploader/retry-button';
 import PauseResumeButton from 'react-fine-uploader/pause-resume-button';
 
 import UploadIcon from 'react-fine-uploader/gallery/upload-icon';
-import PauseIcon from 'react-fine-uploader/gallery/pause-icon';
-import PlayIcon from 'react-fine-uploader/gallery/play-icon';
-import UploadFailedIcon from 'react-fine-uploader/gallery/upload-failed-icon';
-import UploadSuccessIcon from 'react-fine-uploader/gallery/upload-success-icon';
+// import PauseIcon from 'react-fine-uploader/gallery/pause-icon';
+// import PlayIcon from 'react-fine-uploader/gallery/play-icon';
+// import UploadFailedIcon from 'react-fine-uploader/gallery/upload-failed-icon';
+// import UploadSuccessIcon from 'react-fine-uploader/gallery/upload-success-icon';
 import XIcon from 'react-fine-uploader/gallery/x-icon';
 
 import './gallery.css';
@@ -30,6 +30,7 @@ import Typography from '@material-ui/core/Typography';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DoneIcon from '@material-ui/icons/Done';
 import ErrorIcon from '@material-ui/icons/Error';
+import CircularProgress from '@material-ui/core/CircularProgress';
 // import green from '@material-ui/core/colors/green';
 
 import Grid from '@material-ui/core/Grid';
@@ -44,13 +45,6 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
   },
-  card: {
-    minWidth: 275,
-    flexGrow: 1,
-  },
-  fileInput: {
-    // marginBottom: 20,
-  },
   icon: {
     margin: theme.spacing.unit + 2,
     // fontSize: 24,
@@ -59,6 +53,9 @@ const styles = theme => ({
   title: {
     // marginBottom: 16,
     fontSize: 16,
+  },
+  status: {
+    fontStyle: 'italic',
   },
 });
 
@@ -100,17 +97,11 @@ class UploaderRows extends Component {
 
   static defaultProps = {
     className: '',
-    'cancelButton-children': <XIcon />,
-    'deleteButton-children': <XIcon />,
     'dropzone-disabled': false,
     'dropzone-dropActiveClassName':
       'react-fine-uploader-gallery-dropzone-active',
     'dropzone-multiple': true,
     'fileInput-multiple': true,
-    'pauseResumeButton-pauseChildren': <PauseIcon />,
-    'pauseResumeButton-resumeChildren': <PlayIcon />,
-    'retryButton-children': <PlayIcon />,
-    'thumbnail-maxSize': 130,
   };
 
   state = {
@@ -146,8 +137,11 @@ class UploaderRows extends Component {
       this.handleOnFieldValueChange(visibleFiles);
     } else if (
       newStatus === statusEnum.UPLOAD_SUCCESSFUL ||
-      newStatus === statusEnum.UPLOAD_FAILED
+      newStatus === statusEnum.UPLOAD_FAILED ||
+      newStatus === statusEnum.UPLOADING
     ) {
+      console.log('--- new status 44 -----');
+      console.log(newStatus);
       if (newStatus === statusEnum.UPLOAD_SUCCESSFUL) {
         const visibleFileIndex = this._findFileIndex(id);
         if (visibleFileIndex < 0) {
@@ -256,18 +250,27 @@ class UploaderRows extends Component {
                 </Typography>
               </Grid>
               <Grid item>
-                {!status && <CancelButton id={id} uploader={uploader} />}
-                {status === statusEnum.UPLOAD_SUCCESSFUL && (
-                  <DoneIcon className={classes.icon} color="primary" />
-                )}
-                {status === statusEnum.UPLOAD_FAILED && (
-                  <ErrorIcon className={classes.icon} color="error" />
-                )}
+                <div>
+                  {!status && <CancelButton id={id} uploader={uploader} />}
+                  {status === statusEnum.UPLOADING && (
+                    <CircularProgress color="primary" size={20} />
+                  )}
+                  {status === statusEnum.UPLOAD_SUCCESSFUL && (
+                    <DoneIcon className={classes.icon} color="primary" />
+                  )}
+                  {status === statusEnum.UPLOAD_FAILED && (
+                    <ErrorIcon className={classes.icon} color="error" />
+                  )}
+                </div>
               </Grid>
             </Grid>
             <Grid container spacing={16} alignItems={'center'}>
               <Grid item>
-                <Typography variant="subheading" className={classes.subheading}>
+                <Typography
+                  variant="body1"
+                  align="left"
+                  classes={{ root: classes.status }}
+                >
                   <Status
                     // className="react-fine-uploader-gallery-status"
                     id={id}
@@ -276,31 +279,14 @@ class UploaderRows extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={12} sm>
-                <Typography variant="title" className={classes.title}>
-                  <ProgressBar
-                    // className="react-fine-uploader-gallery-progress-bar"
-                    id={id}
-                    uploader={uploader}
-                    hideBeforeStart={false}
-                  />
-                </Typography>
+                <ProgressBar
+                  // className="react-fine-uploader-gallery-progress-bar"
+                  id={id}
+                  uploader={uploader}
+                  hideBeforeStart={false}
+                />
               </Grid>
             </Grid>
-
-            {status === 'upload failed' && (
-              <span>
-                <UploadFailedIcon className="react-fine-uploader-gallery-upload-failed-icon" />
-                <div className="react-fine-uploader-gallery-thumbnail-icon-backdrop" />
-              </span>
-            )}
-
-            <div className="react-fine-uploader-gallery-file-footer">
-              <Status
-                className="react-fine-uploader-gallery-status"
-                id={id}
-                uploader={uploader}
-              />
-            </div>
 
             <RetryButton
               className="react-fine-uploader-gallery-retry-button"
@@ -350,6 +336,7 @@ class UploaderRows extends Component {
         this.setState({ visibleFiles: this.state.visibleFiles });
         return true;
       }
+      return false;
     });
   }
 
@@ -361,6 +348,7 @@ class UploaderRows extends Component {
         visibleFileIndex = index;
         return true;
       }
+      return false;
     });
 
     return visibleFileIndex;
