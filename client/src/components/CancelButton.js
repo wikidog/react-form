@@ -5,39 +5,46 @@ import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
-const styles = {
-  icon: {
+const styles = theme => ({
+  iconButton: {
     // margin: theme.spacing.unit,
     // fontSize: 22,
+    width: theme.spacing.unit * 5,
+    height: theme.spacing.unit * 5,
   },
-};
+});
 
 class CancelButton extends Component {
   //
-  state = { cancelable: true };
+  constructor(props) {
+    super(props);
 
-  handleOnStatusChange = (id, oldStatus, newStatus) => {
-    //
-    const statusEnum = this.props.uploader.qq.status;
+    this.state = { cancelable: true };
 
-    if (id === this.props.id && !this._unmounted) {
-      if (!isCancelable(newStatus, statusEnum) && this.state.cancelable) {
-        this.setState({ cancelable: false });
-      } else if (
-        isCancelable(newStatus, statusEnum) &&
-        !this.state.cancelable
-      ) {
-        this.setState({ cancelable: true });
-      } else if (
-        newStatus === statusEnum.DELETED ||
-        newStatus === statusEnum.CANCELED
-      ) {
-        this.unregisterStatusChangeHandler();
+    this.handleOnStatusChange = (id, oldStatus, newStatus) => {
+      //
+      console.log('----- in CancelButton ------');
+      const statusEnum = this.props.uploader.qq.status;
+
+      if (id === this.props.id && !this._unmounted) {
+        if (!isCancelable(newStatus, statusEnum) && this.state.cancelable) {
+          this.setState({ cancelable: false });
+        } else if (
+          isCancelable(newStatus, statusEnum) &&
+          !this.state.cancelable
+        ) {
+          this.setState({ cancelable: true });
+        } else if (
+          newStatus === statusEnum.DELETED ||
+          newStatus === statusEnum.CANCELED
+        ) {
+          this.unregisterStatusChangeHandler();
+        }
       }
-    }
-  };
+    };
 
-  handleOnClick = () => this.props.uploader.methods.cancel(this.props.id);
+    this.handleOnClick = () => props.uploader.methods.cancel(this.props.id);
+  }
 
   componentDidMount() {
     this.props.uploader.on('statusChange', this.handleOnStatusChange);
@@ -58,7 +65,7 @@ class CancelButton extends Component {
     if (this.state.cancelable) {
       return (
         <IconButton
-          className={classes.icon}
+          classes={{ root: classes.iconButton }}
           aria-label="Cancel"
           onClick={this.state.cancelable && this.handleOnClick}
           disabled={!this.state.cancelable}

@@ -10,6 +10,7 @@ import Filename from 'react-fine-uploader/filename';
 import Filesize from 'react-fine-uploader/filesize';
 // import ProgressBar from 'react-fine-uploader/progress-bar';
 import Status from 'react-fine-uploader/status';
+// import Status from './Status';
 import DeleteButton from 'react-fine-uploader/delete-button';
 import RetryButton from 'react-fine-uploader/retry-button';
 import PauseResumeButton from 'react-fine-uploader/pause-resume-button';
@@ -45,16 +46,21 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
   },
+  gridItem: {
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
   icon: {
-    margin: theme.spacing.unit + 2,
+    margin: 0,
     // fontSize: 24,
     // color: theme.status.succeed,
   },
   iconStatus: {
     display: 'flex',
-    width: theme.spacing.unit * 4,
-    height: theme.spacing.unit * 4,
+    width: theme.spacing.unit * 5,
+    height: theme.spacing.unit * 5,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     // marginBottom: 16,
@@ -64,6 +70,11 @@ const styles = theme => ({
     fontStyle: 'italic',
   },
 });
+
+const gridItemStyle = {
+  paddingTop: 0,
+  paddingBottom: 0,
+};
 
 export const uploader = new FineUploaderTraditional({
   options: {
@@ -110,81 +121,85 @@ class UploaderRows extends Component {
     'fileInput-multiple': true,
   };
 
-  state = {
-    visibleFiles: [],
-  };
+  constructor(props) {
+    super(props);
 
-  // this function is for Redux-Form <Field /> component
-  handleOnFieldValueChange = value => {
-    // this will dispatch a CHANGE action on Redux-Form
-    this.props.change(
-      this.props.input.name,
-      // uploader.methods.getUploads({ status: 'submitted' })
-      // uploader.methods.getUploads({ status: statusEnum.SUBMITTED })
-      // uploader.methods.getUploads()
-      value
-    );
-  };
+    this.state = {
+      visibleFiles: [],
+    };
 
-  handleOnStatusChange = (id, oldStatus, newStatus) => {
-    console.log('=========== onStatusChange =============');
-    console.log('id:', id);
-    console.log('oldStatus:', oldStatus);
-    console.log('newStatus:', newStatus);
+    // this function is for Redux-Form <Field /> component
+    this.handleOnFieldValueChange = value => {
+      // this will dispatch a CHANGE action on Redux-Form
+      props.change(
+        props.input.name,
+        // uploader.methods.getUploads({ status: 'submitted' })
+        // uploader.methods.getUploads({ status: statusEnum.SUBMITTED })
+        // uploader.methods.getUploads()
+        value
+      );
+    };
 
-    const visibleFiles = this.state.visibleFiles;
+    this.handleOnStatusChange = (id, oldStatus, newStatus) => {
+      console.log('=========== onStatusChange =============');
+      console.log('id:', id);
+      console.log('oldStatus:', oldStatus);
+      console.log('newStatus:', newStatus);
 
-    if (newStatus === statusEnum.SUBMITTED) {
-      visibleFiles.push({ id });
-      this.setState({ visibleFiles });
-      this.handleOnFieldValueChange(visibleFiles);
-    } else if (isFileGone(newStatus, statusEnum)) {
-      this._removeVisibleFile(id);
-      this.handleOnFieldValueChange(visibleFiles);
-    } else if (
-      newStatus === statusEnum.UPLOAD_SUCCESSFUL ||
-      newStatus === statusEnum.UPLOAD_FAILED ||
-      newStatus === statusEnum.UPLOADING
-    ) {
-      console.log('--- new status 44 -----');
-      console.log(newStatus);
-      if (newStatus === statusEnum.UPLOAD_SUCCESSFUL) {
-        const visibleFileIndex = this._findFileIndex(id);
-        if (visibleFileIndex < 0) {
-          visibleFiles.push({ id, fromServer: true });
+      const visibleFiles = this.state.visibleFiles;
+
+      if (newStatus === statusEnum.SUBMITTED) {
+        visibleFiles.push({ id });
+        this.setState({ visibleFiles });
+        this.handleOnFieldValueChange(visibleFiles);
+      } else if (isFileGone(newStatus, statusEnum)) {
+        this._removeVisibleFile(id);
+        this.handleOnFieldValueChange(visibleFiles);
+      } else if (
+        newStatus === statusEnum.UPLOAD_SUCCESSFUL ||
+        newStatus === statusEnum.UPLOAD_FAILED ||
+        newStatus === statusEnum.UPLOADING
+      ) {
+        console.log('--- new status 44 -----');
+        console.log(newStatus);
+        if (newStatus === statusEnum.UPLOAD_SUCCESSFUL) {
+          const visibleFileIndex = this._findFileIndex(id);
+          if (visibleFileIndex < 0) {
+            visibleFiles.push({ id, fromServer: true });
+          }
         }
+        this._updateVisibleFileStatus(id, newStatus);
       }
-      this._updateVisibleFileStatus(id, newStatus);
-    }
-  };
+    };
 
-  handleOnValidateBatch = files => {
-    console.log('=========== onValidateBatch =============');
-    console.log('options:', uploader.options);
-    console.log('files:', files);
-    // uploader.methods.clearStoredFiles();
-    // uploader.methods.cancelAll();
-    // for Redux-Form
-    this.props.touch(this.props.input.name);
-  };
+    this.handleOnValidateBatch = files => {
+      console.log('=========== onValidateBatch =============');
+      console.log('options:', uploader.options);
+      console.log('files:', files);
+      // uploader.methods.clearStoredFiles();
+      // uploader.methods.cancelAll();
+      // for Redux-Form
+      props.touch(props.input.name);
+    };
 
-  handleOnError = (id, name, errorReason) => {
-    console.log('============== onError ==================');
-    // console.log('id', id);
-    // console.log('name', name);
-    console.log('errorReason:', errorReason);
+    this.handleOnError = (id, name, errorReason) => {
+      console.log('============== onError ==================');
+      // console.log('id', id);
+      // console.log('name', name);
+      console.log('errorReason:', errorReason);
 
-    // this.props.input.onBlur('aaaaaaaaaa');
-    alert(errorReason);
-    // alert(
-    //   uploader.qq.format(
-    //     'Error on file number {} - {}.  Reason: {}',
-    //     id,
-    //     name,
-    //     errorReason
-    //   )
-    // );
-  };
+      // this.props.input.onBlur('aaaaaaaaaa');
+      alert(errorReason);
+      // alert(
+      //   uploader.qq.format(
+      //     'Error on file number {} - {}.  Reason: {}',
+      //     id,
+      //     name,
+      //     errorReason
+      //   )
+      // );
+    };
+  }
 
   componentDidMount() {
     uploader.on('statusChange', this.handleOnStatusChange);
@@ -245,17 +260,20 @@ class UploaderRows extends Component {
         {this.state.visibleFiles.map(({ id, status, fromServer }) => (
           <Paper key={id} className={classes.root}>
             <Grid container spacing={16} alignItems={'center'}>
-              <Grid item xs={12} sm>
+              <Grid item xs={12} sm style={gridItemStyle}>
                 <Typography variant="title" className={classes.title}>
                   <Filename id={id} uploader={uploader} />
                 </Typography>
               </Grid>
-              <Grid item>
+              <Grid item style={gridItemStyle}>
                 <Typography variant="subheading" className={classes.subheading}>
                   <Filesize id={id} uploader={uploader} />
                 </Typography>
               </Grid>
-              <Grid item>
+              <Grid
+                item
+                style={{ paddingTop: 0, paddingBottom: 0, paddingRight: 0 }}
+              >
                 <div className={classes.iconStatus}>
                   {!status && <CancelButton id={id} uploader={uploader} />}
                   {status === statusEnum.UPLOADING && (
@@ -272,20 +290,15 @@ class UploaderRows extends Component {
             </Grid>
             {status && (
               <Grid container spacing={16} alignItems={'center'}>
-                <Grid item>
-                  <Typography
-                    variant="body1"
-                    align="left"
-                    classes={{ root: classes.status }}
-                  >
-                    <Status
-                      // className="react-fine-uploader-gallery-status"
-                      id={id}
-                      uploader={uploader}
-                    />
-                  </Typography>
+                <Grid item style={{ paddingTop: 0, paddingBottom: 0 }}>
+                  <Status id={id} uploader={uploader} status={status} />
                 </Grid>
-                <Grid item xs={12} sm>
+                <Grid
+                  item
+                  xs={12}
+                  sm
+                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                >
                   <ProgressBar
                     // className="react-fine-uploader-gallery-progress-bar"
                     id={id}

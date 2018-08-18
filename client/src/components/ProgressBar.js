@@ -64,6 +64,7 @@ class ProgressBar extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
+        {percentWidth}
         <LinearProgress variant="determinate" value={percentWidth} />
       </div>
     );
@@ -106,6 +107,9 @@ class ProgressBar extends Component {
     const statusEnum = this.props.uploader.qq.status;
 
     this._trackStatusEventHandler = (id, oldStatus, newStatus) => {
+      console.log('-------------------- in progressBar -----------');
+      console.log('oldStatus:', oldStatus);
+      console.log('newStatus:', newStatus);
       if (!this._unmounted) {
         if (this._isTotalProgress) {
           if (
