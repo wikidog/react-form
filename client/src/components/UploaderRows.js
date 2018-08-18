@@ -51,8 +51,10 @@ const styles = theme => ({
     // color: theme.status.succeed,
   },
   iconStatus: {
+    display: 'flex',
     width: theme.spacing.unit * 4,
     height: theme.spacing.unit * 4,
+    alignItems: 'center',
   },
   title: {
     // marginBottom: 16,
