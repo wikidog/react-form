@@ -121,85 +121,79 @@ class UploaderRows extends Component {
     'fileInput-multiple': true,
   };
 
-  constructor(props) {
-    super(props);
+  state = {
+    visibleFiles: [],
+  };
 
-    this.state = {
-      visibleFiles: [],
-    };
+  // this function is for Redux-Form <Field /> component
+  handleOnFieldValueChange = value => {
+    // this will dispatch a CHANGE action on Redux-Form
+    this.props.change(
+      this.props.input.name,
+      // uploader.methods.getUploads({ status: 'submitted' })
+      // uploader.methods.getUploads({ status: statusEnum.SUBMITTED })
+      // uploader.methods.getUploads()
+      value
+    );
+  };
 
-    // this function is for Redux-Form <Field /> component
-    this.handleOnFieldValueChange = value => {
-      // this will dispatch a CHANGE action on Redux-Form
-      props.change(
-        props.input.name,
-        // uploader.methods.getUploads({ status: 'submitted' })
-        // uploader.methods.getUploads({ status: statusEnum.SUBMITTED })
-        // uploader.methods.getUploads()
-        value
-      );
-    };
+  handleOnStatusChange = (id, oldStatus, newStatus) => {
+    console.log('=========== onStatusChange =============');
+    console.log('id:', id);
+    console.log('oldStatus:', oldStatus);
+    console.log('newStatus:', newStatus);
 
-    this.handleOnStatusChange = (id, oldStatus, newStatus) => {
-      console.log('=========== onStatusChange =============');
-      console.log('id:', id);
-      console.log('oldStatus:', oldStatus);
-      console.log('newStatus:', newStatus);
+    const visibleFiles = this.state.visibleFiles;
 
-      const visibleFiles = this.state.visibleFiles;
-
-      if (newStatus === statusEnum.SUBMITTED) {
-        visibleFiles.push({ id });
-        this.setState({ visibleFiles });
-        this.handleOnFieldValueChange(visibleFiles);
-      } else if (isFileGone(newStatus, statusEnum)) {
-        this._removeVisibleFile(id);
-        this.handleOnFieldValueChange(visibleFiles);
-      } else if (
-        newStatus === statusEnum.UPLOAD_SUCCESSFUL ||
-        newStatus === statusEnum.UPLOAD_FAILED ||
-        newStatus === statusEnum.UPLOADING
-      ) {
-        console.log('--- new status 44 -----');
-        console.log(newStatus);
-        if (newStatus === statusEnum.UPLOAD_SUCCESSFUL) {
-          const visibleFileIndex = this._findFileIndex(id);
-          if (visibleFileIndex < 0) {
-            visibleFiles.push({ id, fromServer: true });
-          }
+    if (newStatus === statusEnum.SUBMITTED) {
+      visibleFiles.push({ id });
+      this.setState({ visibleFiles });
+      this.handleOnFieldValueChange(visibleFiles);
+    } else if (isFileGone(newStatus, statusEnum)) {
+      this._removeVisibleFile(id);
+      this.handleOnFieldValueChange(visibleFiles);
+    } else if (
+      newStatus === statusEnum.UPLOAD_SUCCESSFUL ||
+      newStatus === statusEnum.UPLOAD_FAILED ||
+      newStatus === statusEnum.UPLOADING
+    ) {
+      if (newStatus === statusEnum.UPLOAD_SUCCESSFUL) {
+        const visibleFileIndex = this._findFileIndex(id);
+        if (visibleFileIndex < 0) {
+          visibleFiles.push({ id, fromServer: true });
         }
-        this._updateVisibleFileStatus(id, newStatus);
       }
-    };
+      this._updateVisibleFileStatus(id, newStatus);
+    }
+  };
 
-    this.handleOnValidateBatch = files => {
-      console.log('=========== onValidateBatch =============');
-      console.log('options:', uploader.options);
-      console.log('files:', files);
-      // uploader.methods.clearStoredFiles();
-      // uploader.methods.cancelAll();
-      // for Redux-Form
-      props.touch(props.input.name);
-    };
+  handleOnValidateBatch = files => {
+    console.log('=========== onValidateBatch =============');
+    console.log('options:', uploader.options);
+    console.log('files:', files);
+    // uploader.methods.clearStoredFiles();
+    // uploader.methods.cancelAll();
+    // for Redux-Form
+    this.props.touch(this.props.input.name);
+  };
 
-    this.handleOnError = (id, name, errorReason) => {
-      console.log('============== onError ==================');
-      // console.log('id', id);
-      // console.log('name', name);
-      console.log('errorReason:', errorReason);
+  handleOnError = (id, name, errorReason) => {
+    console.log('============== onError ==================');
+    // console.log('id', id);
+    // console.log('name', name);
+    console.log('errorReason:', errorReason);
 
-      // this.props.input.onBlur('aaaaaaaaaa');
-      alert(errorReason);
-      // alert(
-      //   uploader.qq.format(
-      //     'Error on file number {} - {}.  Reason: {}',
-      //     id,
-      //     name,
-      //     errorReason
-      //   )
-      // );
-    };
-  }
+    // this.props.input.onBlur('aaaaaaaaaa');
+    alert(errorReason);
+    // alert(
+    //   uploader.qq.format(
+    //     'Error on file number {} - {}.  Reason: {}',
+    //     id,
+    //     name,
+    //     errorReason
+    //   )
+    // );
+  };
 
   componentDidMount() {
     uploader.on('statusChange', this.handleOnStatusChange);
@@ -288,10 +282,17 @@ class UploaderRows extends Component {
                 </div>
               </Grid>
             </Grid>
-            {status && (
+
+            <div hidden={!status}>
               <Grid container spacing={16} alignItems={'center'}>
                 <Grid item style={{ paddingTop: 0, paddingBottom: 0 }}>
-                  <Status id={id} uploader={uploader} status={status} />
+                  <Typography
+                    variant="caption"
+                    align="left"
+                    classes={{ root: classes.status }}
+                  >
+                    <Status id={id} uploader={uploader} />
+                  </Typography>
                 </Grid>
                 <Grid
                   item
@@ -303,11 +304,12 @@ class UploaderRows extends Component {
                     // className="react-fine-uploader-gallery-progress-bar"
                     id={id}
                     uploader={uploader}
-                    hideBeforeStart={false}
+                    hideBeforeStart={true}
+                    hideOnComplete={true}
                   />
                 </Grid>
               </Grid>
-            )}
+            </div>
 
             <RetryButton
               className="react-fine-uploader-gallery-retry-button"

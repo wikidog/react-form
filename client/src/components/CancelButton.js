@@ -16,35 +16,31 @@ const styles = theme => ({
 
 class CancelButton extends Component {
   //
-  constructor(props) {
-    super(props);
+  state = { cancelable: true };
 
-    this.state = { cancelable: true };
+  handleOnStatusChange = (id, oldStatus, newStatus) => {
+    //
+    console.log('----- in CancelButton ------');
+    const statusEnum = this.props.uploader.qq.status;
 
-    this.handleOnStatusChange = (id, oldStatus, newStatus) => {
-      //
-      console.log('----- in CancelButton ------');
-      const statusEnum = this.props.uploader.qq.status;
-
-      if (id === this.props.id && !this._unmounted) {
-        if (!isCancelable(newStatus, statusEnum) && this.state.cancelable) {
-          this.setState({ cancelable: false });
-        } else if (
-          isCancelable(newStatus, statusEnum) &&
-          !this.state.cancelable
-        ) {
-          this.setState({ cancelable: true });
-        } else if (
-          newStatus === statusEnum.DELETED ||
-          newStatus === statusEnum.CANCELED
-        ) {
-          this.unregisterStatusChangeHandler();
-        }
+    if (id === this.props.id && !this._unmounted) {
+      if (!isCancelable(newStatus, statusEnum) && this.state.cancelable) {
+        this.setState({ cancelable: false });
+      } else if (
+        isCancelable(newStatus, statusEnum) &&
+        !this.state.cancelable
+      ) {
+        this.setState({ cancelable: true });
+      } else if (
+        newStatus === statusEnum.DELETED ||
+        newStatus === statusEnum.CANCELED
+      ) {
+        this.unregisterStatusChangeHandler();
       }
-    };
+    }
+  };
 
-    this.handleOnClick = () => props.uploader.methods.cancel(this.props.id);
-  }
+  handleOnClick = () => this.props.uploader.methods.cancel(this.props.id);
 
   componentDidMount() {
     this.props.uploader.on('statusChange', this.handleOnStatusChange);

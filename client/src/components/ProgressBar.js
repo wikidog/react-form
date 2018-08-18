@@ -63,27 +63,10 @@ class ProgressBar extends Component {
 
     const { classes } = this.props;
     return (
-      <div className={classes.root}>
-        {percentWidth}
+      <div className={classes.root} hidden={this.state.hidden}>
         <LinearProgress variant="determinate" value={percentWidth} />
       </div>
     );
-
-    // return (
-    //   <div
-    //     className={`${className}-container ${customContainerClassName}`}
-    //     hidden={this.state.hidden}
-    //   >
-    //     <div
-    //       aria-valuemax="100"
-    //       aria-valuemin="0"
-    //       aria-valuenow={percentWidth}
-    //       className={`${className} ${this.props.className || ''}`}
-    //       role="progressbar"
-    //       style={{ width: percentWidth + '%' }}
-    //     />
-    //   </div>
-    // );
   }
 
   _createEventHandlers() {
