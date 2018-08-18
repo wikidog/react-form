@@ -50,6 +50,10 @@ const styles = theme => ({
     // fontSize: 24,
     // color: theme.status.succeed,
   },
+  iconStatus: {
+    width: theme.spacing.unit * 4,
+    height: theme.spacing.unit * 4,
+  },
   title: {
     // marginBottom: 16,
     fontSize: 16,
@@ -250,7 +254,7 @@ class UploaderRows extends Component {
                 </Typography>
               </Grid>
               <Grid item>
-                <div>
+                <div className={classes.iconStatus}>
                   {!status && <CancelButton id={id} uploader={uploader} />}
                   {status === statusEnum.UPLOADING && (
                     <CircularProgress color="primary" size={20} />
