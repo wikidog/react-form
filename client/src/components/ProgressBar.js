@@ -64,6 +64,7 @@ class ProgressBar extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root} hidden={this.state.hidden}>
+        <span>{percentWidth}</span>
         <LinearProgress variant="determinate" value={percentWidth} />
       </div>
     );

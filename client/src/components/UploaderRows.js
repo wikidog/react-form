@@ -388,7 +388,8 @@ const MaybeDropzone = ({ children, content, hasVisibleFiles, ...props }) => {
   }
 
   if (hasVisibleFiles) {
-    content = <span />;
+    // content = <span />;
+    content = null;
   } else {
     content =
       content ||

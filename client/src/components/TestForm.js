@@ -121,7 +121,7 @@ class TestForm extends Component {
             label="First Name *"
           />
         </div>
-        <div>
+        {/* <div>
           <Field
             name="lastName"
             component={this.renderTextField}
@@ -134,7 +134,7 @@ class TestForm extends Component {
             component={this.renderTextField}
             label="Email *"
           />
-        </div>
+        </div> */}
         <div>
           <Field name="uploader" component={this.renderUploaderField} />
         </div>
@@ -144,6 +144,8 @@ class TestForm extends Component {
             variant="raised"
             color="primary"
             type="submit"
+            disableFocusRipple={true}
+            disableRipple={true}
             disabled={uploadSubmitting}
           >
             Submit
@@ -161,7 +163,13 @@ class TestForm extends Component {
           }}
           message={<span id="snackbar-message-id">{uploadError}</span>}
           action={
-            <Button color="inherit" size="small" onClick={this.handleClose}>
+            <Button
+              color="inherit"
+              size="small"
+              onClick={this.handleClose}
+              disableFocusRipple={true}
+              disableRipple={true}
+            >
               Undo
             </Button>
           }

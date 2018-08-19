@@ -64,6 +64,7 @@ class CancelButton extends Component {
           classes={{ root: classes.iconButton }}
           aria-label="Cancel"
           onClick={this.state.cancelable && this.handleOnClick}
+          disableRipple={true}
           disabled={!this.state.cancelable}
         >
           <DeleteForeverIcon />

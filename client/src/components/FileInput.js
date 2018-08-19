@@ -66,6 +66,8 @@ class FileInput extends Component {
             color="default"
             component="span"
             disabled={disabled}
+            disableFocusRipple={true}
+            disableRipple={true}
             className={classes.button}
           >
             <CloudUploadIcon
