@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
+// import _debounce from 'lodash/debounce';
+import _throttle from 'lodash/throttle';
 
 const styles = {
   root: {
@@ -36,9 +38,15 @@ class ProgressBar extends Component {
 
   componentDidMount() {
     if (this._isTotalProgress) {
-      this.props.uploader.on('totalProgress', this._trackProgressEventHandler);
+      this.props.uploader.on(
+        'totalProgress',
+        _throttle(this._trackProgressEventHandler, 80)
+      );
     } else {
-      this.props.uploader.on('progress', this._trackProgressEventHandler);
+      this.props.uploader.on(
+        'progress',
+        _throttle(this._trackProgressEventHandler, 80)
+      );
     }
 
     this.props.uploader.on('statusChange', this._trackStatusEventHandler);
@@ -57,15 +65,16 @@ class ProgressBar extends Component {
     //   ? this.props.className + '-container'
     //   : '';
 
-    const percentWidth =
-      (this.state.bytesUploaded / this.state.totalSize) * 100 || 0;
+    const intPercent = Math.round(
+      (this.state.bytesUploaded / this.state.totalSize) * 100 || 0
+    );
     // const percentWidth = 10;
 
     const { classes } = this.props;
     return (
       <div className={classes.root} hidden={this.state.hidden}>
-        <span>{percentWidth}</span>
-        <LinearProgress variant="determinate" value={percentWidth} />
+        {/* <span>{intPercent}</span> */}
+        <LinearProgress variant="determinate" value={intPercent} />
       </div>
     );
   }
@@ -83,6 +92,7 @@ class ProgressBar extends Component {
         totalSize
       ) => {
         if (id === this.props.id) {
+          // console.log('bytesUpload:', bytesUploaded);
           this.setState({ bytesUploaded, totalSize });
         }
       };
