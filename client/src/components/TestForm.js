@@ -100,7 +100,7 @@ class TestForm extends Component {
 
   render() {
     // TODO: console.log()
-    console.log('TestForm:', this.props);
+    // console.log('TestForm:', this.props);
     const {
       error,
       handleSubmit,
