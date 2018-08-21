@@ -18,6 +18,7 @@ module.exports = app => {
   });
 
   app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
+    console.log(req.body);
     console.log(req.file);
     res.send({ success: true });
   });
