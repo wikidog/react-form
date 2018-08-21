@@ -20,6 +20,12 @@ module.exports = app => {
   app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
     console.log(req.body);
     console.log(req.file);
+
+    req.file.mv(`uploads/${req.file.filename}`, err => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+    });
     res.send({ success: true });
   });
 };
