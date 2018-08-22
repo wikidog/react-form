@@ -59,6 +59,8 @@ app.use(cors());
 //
 // body-parser: parse request bodies, available under the req.body property
 //              json({type: '*/*'}) - parse as JSON for any request
+//
+// parse "Content-Type: application/json"
 app.use(bodyParser.json());
 
 // ---------------------------------------------------------------------

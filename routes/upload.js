@@ -4,7 +4,16 @@
 const multer = require('multer');
 
 //
-const upload = multer({ dest: 'uploads/' });
+const storage = multer.diskStorage({
+  destination: (req, file, next) => next(null, 'uploads'),
+  filename: (req, file, next) => {
+    console.log(req.body);
+    console.log(file);
+    next(null, `upload_${Date.now()}-${file.originalname}`);
+  },
+});
+// const upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage });
 
 module.exports = app => {
   app.get('/upload', (req, res) => {
@@ -18,14 +27,6 @@ module.exports = app => {
   });
 
   app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
-    console.log(req.body);
-    console.log(req.file);
-
-    req.file.mv(`uploads/${req.file.filename}`, err => {
-      if (err) {
-        return res.status(500).send(err);
-      }
-    });
     res.send({ success: true });
   });
 };
