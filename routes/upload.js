@@ -5,13 +5,18 @@ const multer = require('multer');
 
 //
 const storage = multer.diskStorage({
-  destination: (req, file, next) => next(null, 'uploads'),
-  filename: (req, file, next) => {
-    console.log(req.body);
-    console.log(file);
-    next(null, `upload_${Date.now()}-${file.originalname}`);
-  },
+  destination: multerDestination,
+  filename: multerFilename,
 });
+
+const multerDestination = (req, file, next) => next(null, 'uploads');
+
+const multerFilename = (req, file, next) => {
+  console.log(req.body);
+  console.log(file);
+  next(null, `upload_${Date.now()}-${file.originalname}`);
+};
+
 // const upload = multer({ dest: 'uploads/' });
 const upload = multer({ storage });
 
@@ -21,6 +26,15 @@ module.exports = app => {
   });
 
   app.post('/formsubmit', (req, res, next) => {
+    console.log(req.body);
+    res.send({ success: true });
+    // res.status(422).send({ error: 'Wrong password' });
+  });
+
+  // for this request, we need
+  //    app.use(bodyParser.urlencoded({ extended: true }));
+  app.post('/chunksdone', (req, res, next) => {
+    console.log('======== chunksdone ==========');
     console.log(req.body);
     res.send({ success: true });
     // res.status(422).send({ error: 'Wrong password' });

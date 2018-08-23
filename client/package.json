@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "proxy": {
+    "/chunksdone": {
+      "target": "http://localhost:5000"
+    },
+    "/upload": {
+      "target": "http://localhost:5000"
+    },
     "/uploads": {
       "target": "http://localhost:5000"
     }

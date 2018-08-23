@@ -62,6 +62,8 @@ app.use(cors());
 //
 // parse "Content-Type: application/json"
 app.use(bodyParser.json());
+// parse "Content-Type: application/x-www-form-urlencoded"
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // ---------------------------------------------------------------------
 

@@ -76,6 +76,7 @@ const gridItemStyle = {
   paddingBottom: 0,
 };
 
+// Uploader
 export const uploader = new FineUploaderTraditional({
   options: {
     debug: true,
@@ -88,7 +89,13 @@ export const uploader = new FineUploaderTraditional({
       tooManyItemsError: 'one file a time',
     },
     chunking: {
-      enabled: false,
+      enabled: true,
+      concurrent: {
+        enabled: true,
+      },
+      success: {
+        endpoint: '/chunksdone',
+      },
     },
     deleteFile: {
       enabled: false,
