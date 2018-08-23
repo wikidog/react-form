@@ -4,18 +4,20 @@
 const multer = require('multer');
 
 //
-const storage = multer.diskStorage({
-  destination: multerDestination,
-  filename: multerFilename,
-});
+const destination = (req, file, next) => {
+  next(null, 'uploads');
+};
 
-const multerDestination = (req, file, next) => next(null, 'uploads');
-
-const multerFilename = (req, file, next) => {
+const filename = (req, file, next) => {
   console.log(req.body);
   console.log(file);
   next(null, `upload_${Date.now()}-${file.originalname}`);
 };
+
+const storage = multer.diskStorage({
+  destination,
+  filename,
+});
 
 // const upload = multer({ dest: 'uploads/' });
 const upload = multer({ storage });
