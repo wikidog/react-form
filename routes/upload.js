@@ -11,38 +11,35 @@ const UPLOAD_DIR = 'uploads';
 //
 const destination = async (req, file, next) => {
   const partIndex = req.body.qqpartindex;
-  console.log('====== in destination =======');
-
+  console.log('####### in destination ########');
+  console.log(req.body);
+  console.log(file);
   if (partIndex == null) {
     console.log('----- no chunking -----');
     next(null, UPLOAD_DIR);
   } else {
     console.log('******* chunking ******');
-    const dest = `${UPLOAD_DIR}/${req.body.qquuid}`;
-    await fse.ensureDir(dest);
-    next(null, dest);
+    const destDir = `${UPLOAD_DIR}/${req.body.qquuid}`;
+    await fse.ensureDir(destDir);
+    next(null, destDir);
   }
 };
 
 const filename = (req, file, next) => {
+  const partIndex = req.body.qqpartindex;
   console.log('====== in filename =======');
   console.log(req.body);
   console.log(file);
-  const partIndex = req.body.qqpartindex;
   if (partIndex == null) {
     console.log('----- no chunking -----');
     next(null, `upload_${Date.now()}-${file.originalname}`);
   } else {
     console.log('******* chunking ******');
     const totalParts = req.body.qqtotalparts;
+    // 0 left padding
+    // padding length depends on the length of total parts
     next(null, partIndex.padStart(totalParts.length, '0'));
   }
-};
-
-const getChunkFilename = (index, count) => {
-  const digits = ('' + count).length;
-  const zeros = new Array(digits + 1).join('0');
-  return (zeros + index).slice(-digits);
 };
 
 const storage = multer.diskStorage({
@@ -66,9 +63,44 @@ module.exports = app => {
 
   // for this request, we need
   //    app.use(bodyParser.urlencoded({ extended: true }));
-  app.post('/chunksdone', (req, res, next) => {
+  app.post('/chunksdone', async (req, res, next) => {
     console.log('======== chunksdone ==========');
     console.log(req.body);
+    const uuid = req.body.qquuid;
+    const filename = req.body.qqfilename;
+    const totalSize = req.body.qqtotalfilesizes;
+    const totalParts = req.body.qqtotalparts;
+    const totalPartsInt = parseInt(totalParts);
+    //
+    const fromDir = `${UPLOAD_DIR}/${uuid}`;
+    // const files = await fse.readdir(destDir);
+    const toFile = `${UPLOAD_DIR}/upload_${Date.now()}-${filename}`;
+
+    const toStream = await fse.createWriteStream(toFile, { flags: 'a' });
+
+    let i = 0;
+    while (i < totalPartsInt) {
+      const paddedFilename = ('' + i).padStart(totalParts.length, '0');
+      const fromStream = await fse.createReadStream(
+        `${fromDir}/${paddedFilename}`
+      );
+      console.log('reading:', `${fromDir}/${paddedFilename}`);
+      fromStream
+        .on('error', error => {
+          console.log('!!!!!! problem appending chunk !!!!!!', error);
+          toStream.end();
+          // TODO: throw error??????
+        })
+        .on('end', () => {
+          i++;
+        })
+        .pipe(
+          toStream,
+          { end: false }
+        );
+    }
+    toStream.end();
+
     res.send({ success: true });
     // res.status(422).send({ error: 'Wrong password' });
   });
