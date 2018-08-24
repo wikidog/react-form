@@ -1,17 +1,48 @@
-//
+const fse = require('fs-extra');
+
 // middleware for handling multipart/form-data
-// Multer won't process any form which is not multipart (multipart/form-data).
+// Multer won't process any request body which is not multipart
+//   (multipart/form-data).
 const multer = require('multer');
 
+const UPLOAD_DIR = 'uploads';
+
+// multer disStorage configuration
 //
-const destination = (req, file, next) => {
-  next(null, 'uploads');
+const destination = async (req, file, next) => {
+  const partIndex = req.body.qqpartindex;
+  console.log('====== in destination =======');
+
+  if (partIndex == null) {
+    console.log('----- no chunking -----');
+    next(null, UPLOAD_DIR);
+  } else {
+    console.log('******* chunking ******');
+    const dest = `${UPLOAD_DIR}/${req.body.qquuid}`;
+    await fse.ensureDir(dest);
+    next(null, dest);
+  }
 };
 
 const filename = (req, file, next) => {
+  console.log('====== in filename =======');
   console.log(req.body);
   console.log(file);
-  next(null, `upload_${Date.now()}-${file.originalname}`);
+  const partIndex = req.body.qqpartindex;
+  if (partIndex == null) {
+    console.log('----- no chunking -----');
+    next(null, `upload_${Date.now()}-${file.originalname}`);
+  } else {
+    console.log('******* chunking ******');
+    const totalParts = req.body.qqtotalparts;
+    next(null, partIndex.padStart(totalParts.length, '0'));
+  }
+};
+
+const getChunkFilename = (index, count) => {
+  const digits = ('' + count).length;
+  const zeros = new Array(digits + 1).join('0');
+  return (zeros + index).slice(-digits);
 };
 
 const storage = multer.diskStorage({
