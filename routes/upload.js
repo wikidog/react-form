@@ -66,6 +66,10 @@ module.exports = app => {
   app.post('/chunksdone', async (req, res, next) => {
     console.log('======== chunksdone ==========');
     console.log(req.body);
+
+    res.send({ success: true });
+    return;
+
     const uuid = req.body.qquuid;
     const filename = req.body.qqfilename;
     const totalSize = req.body.qqtotalfilesizes;
