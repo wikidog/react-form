@@ -50,6 +50,45 @@ const storage = multer.diskStorage({
 // const upload = multer({ dest: 'uploads/' });
 const upload = multer({ storage });
 
+// ====================================================================
+
+const mergeParts = (index, totalPartsInt, fromDir, toStream, next) => {
+  if (index < totalPartsInt) {
+    const paddedFilename = ('' + index).padStart(
+      ('' + totalPartsInt).length,
+      '0'
+    );
+    const fromStream = fs.createReadStream(`${fromDir}/${paddedFilename}`);
+    // console.log('reading:', `${fromDir}/${paddedFilename}`);
+
+    // if an error occurred while reding the source stream
+    fromStream.on('error', error => {
+      console.log('!!!!!! problem appending chunk !!!!!!', error);
+      toStream.end();
+      // TODO: throw error??????
+      next(error);
+    });
+
+    fromStream.on('end', () => {
+      // console.log('=== on end');
+      // * recursive
+      mergeParts(index + 1, totalPartsInt, fromDir, toStream, next);
+    });
+
+    fromStream.pipe(
+      toStream,
+      { end: false }
+    );
+  } else {
+    // only close the destination stream when all parts are merged
+    toStream.end();
+    // TODO: return results
+    res.send({ success: true });
+  }
+};
+
+// ====================================================================
+
 module.exports = app => {
   app.get('/upload', (req, res) => {
     res.send({ message: 'secret code 123456' });
@@ -63,12 +102,13 @@ module.exports = app => {
 
   // for this request, we need
   //    app.use(bodyParser.urlencoded({ extended: true }));
-  app.post('/chunksdone', async (req, res, next) => {
+  app.post('/chunksdone', (req, res, next) => {
     console.log('======== chunksdone ==========');
     console.log(req.body);
 
-    res.send({ success: true });
-    return;
+    // res.send({ success: true });
+    // // res.status(422).send({ error: 'Wrong password' });
+    // return;
 
     const uuid = req.body.qquuid;
     const filename = req.body.qqfilename;
@@ -80,33 +120,15 @@ module.exports = app => {
     // const files = await fse.readdir(destDir);
     const toFile = `${UPLOAD_DIR}/upload_${Date.now()}-${filename}`;
 
-    const toStream = await fse.createWriteStream(toFile, { flags: 'a' });
+    const toStream = fse.createWriteStream(toFile, { flags: 'a' });
 
-    let i = 0;
-    while (i < totalPartsInt) {
-      const paddedFilename = ('' + i).padStart(totalParts.length, '0');
-      const fromStream = await fse.createReadStream(
-        `${fromDir}/${paddedFilename}`
-      );
-      console.log('reading:', `${fromDir}/${paddedFilename}`);
-      fromStream
-        .on('error', error => {
-          console.log('!!!!!! problem appending chunk !!!!!!', error);
-          toStream.end();
-          // TODO: throw error??????
-        })
-        .on('end', () => {
-          i++;
-        })
-        .pipe(
-          toStream,
-          { end: false }
-        );
-    }
-    toStream.end();
+    toStream.on('error', error => {
+      console.log('!!!!!! problem appending chunk !!!!!!', error);
+      toStream.end();
+      next(error);
+    });
 
-    res.send({ success: true });
-    // res.status(422).send({ error: 'Wrong password' });
+    mergeParts(0, totalPartsInt, fromDir, toStream, res => { res.send({success.true})}, next);
   });
 
   app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
