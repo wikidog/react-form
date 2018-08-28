@@ -1,4 +1,4 @@
-const fse = require('fs-extra');
+const fs = require('fs-extra');
 
 // middleware for handling multipart/form-data
 // Multer won't process any request body which is not multipart
@@ -20,7 +20,7 @@ const destination = async (req, file, next) => {
   } else {
     console.log('******* chunking ******');
     const destDir = `${UPLOAD_DIR}/${req.body.qquuid}`;
-    await fse.ensureDir(destDir);
+    await fs.ensureDir(destDir);
     next(null, destDir);
   }
 };
@@ -52,7 +52,7 @@ const upload = multer({ storage });
 
 // ====================================================================
 
-const mergeParts = (index, totalPartsInt, fromDir, toStream, next) => {
+const mergeParts = (index, totalPartsInt, fromDir, toStream, success, next) => {
   if (index < totalPartsInt) {
     const paddedFilename = ('' + index).padStart(
       ('' + totalPartsInt).length,
@@ -65,14 +65,14 @@ const mergeParts = (index, totalPartsInt, fromDir, toStream, next) => {
     fromStream.on('error', error => {
       console.log('!!!!!! problem appending chunk !!!!!!', error);
       toStream.end();
-      // TODO: throw error??????
+      // TODO: return error??????
       next(error);
     });
 
     fromStream.on('end', () => {
       // console.log('=== on end');
       // * recursive
-      mergeParts(index + 1, totalPartsInt, fromDir, toStream, next);
+      mergeParts(index + 1, totalPartsInt, fromDir, toStream, success, next);
     });
 
     fromStream.pipe(
@@ -82,9 +82,23 @@ const mergeParts = (index, totalPartsInt, fromDir, toStream, next) => {
   } else {
     // only close the destination stream when all parts are merged
     toStream.end();
-    // TODO: return results
-    res.send({ success: true });
+    // TODO: done; return results
+    success();
   }
+};
+
+const combineChunks = (fromDir, totalPartsInt, toFile, success, next) => {
+  console.log('----- combineChunks -------');
+  const toStream = fs.createWriteStream(toFile, { flags: 'a' });
+
+  toStream.on('error', error => {
+    console.log('!!!!!! problem appending chunk !!!!!!', error);
+    toStream.end();
+    // TODO: return error??????
+    next(error);
+  });
+
+  mergeParts(0, totalPartsInt, fromDir, toStream, success, next);
 };
 
 // ====================================================================
@@ -117,18 +131,16 @@ module.exports = app => {
     const totalPartsInt = parseInt(totalParts);
     //
     const fromDir = `${UPLOAD_DIR}/${uuid}`;
-    // const files = await fse.readdir(destDir);
+    // const files = await fs.readdir(destDir);
     const toFile = `${UPLOAD_DIR}/upload_${Date.now()}-${filename}`;
 
-    const toStream = fse.createWriteStream(toFile, { flags: 'a' });
-
-    toStream.on('error', error => {
-      console.log('!!!!!! problem appending chunk !!!!!!', error);
-      toStream.end();
-      next(error);
-    });
-
-    mergeParts(0, totalPartsInt, fromDir, toStream, res => { res.send({success.true})}, next);
+    combineChunks(
+      fromDir,
+      totalPartsInt,
+      toFile,
+      () => res.send({ success: true }),
+      next
+    );
   });
 
   app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
