@@ -11,22 +11,22 @@ import Filesize from 'react-fine-uploader/filesize';
 // import ProgressBar from 'react-fine-uploader/progress-bar';
 import Status from 'react-fine-uploader/status';
 // import Status from './Status';
-import DeleteButton from 'react-fine-uploader/delete-button';
-import RetryButton from 'react-fine-uploader/retry-button';
-import PauseResumeButton from 'react-fine-uploader/pause-resume-button';
+// import DeleteButton from 'react-fine-uploader/delete-button';
+// import RetryButton from 'react-fine-uploader/retry-button';
+// import PauseResumeButton from 'react-fine-uploader/pause-resume-button';
 
-import UploadIcon from 'react-fine-uploader/gallery/upload-icon';
+// import UploadIcon from 'react-fine-uploader/gallery/upload-icon';
 // import PauseIcon from 'react-fine-uploader/gallery/pause-icon';
 // import PlayIcon from 'react-fine-uploader/gallery/play-icon';
 // import UploadFailedIcon from 'react-fine-uploader/gallery/upload-failed-icon';
 // import UploadSuccessIcon from 'react-fine-uploader/gallery/upload-success-icon';
-import XIcon from 'react-fine-uploader/gallery/x-icon';
+// import XIcon from 'react-fine-uploader/gallery/x-icon';
 
 import './gallery.css';
 
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DoneIcon from '@material-ui/icons/Done';
@@ -53,6 +53,11 @@ const styles = theme => ({
   icon: {
     margin: 0,
     // fontSize: 24,
+    // color: theme.status.succeed,
+  },
+  dropzoneIcon: {
+    marginRight: theme.spacing.unit,
+    fontSize: 24,
     // color: theme.status.succeed,
   },
   iconStatus: {
@@ -218,10 +223,10 @@ class UploaderRows extends Component {
   render() {
     const { classes } = this.props;
 
-    const chunkingEnabled =
-      uploader.options.chunking && uploader.options.chunking.enabled;
-    const deleteEnabled =
-      uploader.options.deleteFile && uploader.options.deleteFile.enabled;
+    // const chunkingEnabled =
+    //   uploader.options.chunking && uploader.options.chunking.enabled;
+    // const deleteEnabled =
+    //   uploader.options.deleteFile && uploader.options.deleteFile.enabled;
     // const deleteButtonProps =
     //   deleteEnabled && getComponentProps('deleteButton', this.props);
     // const pauseResumeButtonProps =
@@ -319,7 +324,7 @@ class UploaderRows extends Component {
               </Grid>
             </div>
 
-            <RetryButton
+            {/* <RetryButton
               className="react-fine-uploader-gallery-retry-button"
               id={id}
               uploader={uploader}
@@ -341,7 +346,7 @@ class UploaderRows extends Component {
                 id={id}
                 uploader={uploader}
               />
-            )}
+            )} */}
           </Paper>
         ))}
         {/* </ReactCssTransitionGroup> */}
@@ -451,10 +456,10 @@ const getDefaultMaybeDropzoneContent = ({ content, disabled }) => {
     return <span className={className}>{content}</span>;
   } else if (!disabled) {
     return (
-      <span className={className}>
-        <UploadIcon className="react-fine-uploader-gallery-dropzone-upload-icon" />
+      <Typography variant="display2" component="span" className={className}>
+        <CloudUploadIcon fontSize="inherit" />
         Drop files here AAAA
-      </span>
+      </Typography>
     );
   }
 };
