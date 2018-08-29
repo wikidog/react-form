@@ -1,8 +1,7 @@
 const fs = require('fs-extra');
 
-// middleware for handling multipart/form-data
-// Multer won't process any request body which is not multipart
-//   (multipart/form-data).
+//* middleware for handling multipart/form-data
+//* Multer won't process any request body which is not multipart/form-data
 const multer = require('multer');
 
 const UPLOAD_DIR = 'uploads';
@@ -11,14 +10,14 @@ const UPLOAD_DIR = 'uploads';
 //
 const destination = async (req, file, next) => {
   const partIndex = req.body.qqpartindex;
-  console.log('####### in destination ########');
-  console.log(req.body);
-  console.log(file);
+  // console.log('####### in destination ########');
+  // console.log(req.body);
+  // console.log(file);
   if (partIndex == null) {
-    console.log('----- no chunking -----');
+    // console.log('----- no chunking -----');
     next(null, UPLOAD_DIR);
   } else {
-    console.log('******* chunking ******');
+    // console.log('******* chunking ******');
     const destDir = `${UPLOAD_DIR}/${req.body.qquuid}`;
     await fs.ensureDir(destDir);
     next(null, destDir);
@@ -27,14 +26,14 @@ const destination = async (req, file, next) => {
 
 const filename = (req, file, next) => {
   const partIndex = req.body.qqpartindex;
-  console.log('====== in filename =======');
-  console.log(req.body);
-  console.log(file);
+  // console.log('====== in filename =======');
+  // console.log(req.body);
+  // console.log(file);
   if (partIndex == null) {
-    console.log('----- no chunking -----');
+    // console.log('----- no chunking -----');
     next(null, `upload_${Date.now()}-${file.originalname}`);
   } else {
-    console.log('******* chunking ******');
+    // console.log('******* chunking ******');
     const totalParts = req.body.qqtotalparts;
     // 0 left padding
     // padding length depends on the length of total parts
@@ -88,7 +87,7 @@ const mergeParts = (index, totalPartsInt, fromDir, toStream, success, next) => {
 };
 
 const combineChunks = (fromDir, totalPartsInt, toFile, success, next) => {
-  console.log('----- combineChunks -------');
+  // console.log('----- combineChunks -------');
   const toStream = fs.createWriteStream(toFile, { flags: 'a' });
 
   toStream.on('error', error => {
