@@ -105,6 +105,13 @@ const combineChunks = (fromDir, totalPartsInt, toFile, success, next) => {
 module.exports = app => {
   app.get('/upload', (req, res) => {
     res.send({ message: 'secret code 123456' });
+    return;
+
+    // req.setTimeout(10000);
+
+    // setTimeout(() => {
+    //   res.send({ message: 'secret code 123456' });
+    // }, 180000);
   });
 
   app.post('/formsubmit', (req, res, next) => {
