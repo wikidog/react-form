@@ -140,6 +140,9 @@ module.exports = app => {
     // const files = await fs.readdir(destDir);
     const toFile = `${UPLOAD_DIR}/upload_${Date.now()}-${filename}`;
 
+    //! Node has default 2 minute timeout for the request
+    //! if the uploaded file is very big, merging could take long time
+    //! we must extend the timeout value for this request
     combineChunks(
       fromDir,
       totalPartsInt,

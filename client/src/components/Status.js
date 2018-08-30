@@ -1,12 +1,16 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import { Hidden } from '@material-ui/core';
 
-const styles = {
+const styles = theme => ({
   root: {
+    display: 'flex',
+    minWidth: theme.spacing.unit * 8,
+    overflow: 'hidden',
     fontStyle: 'italic',
   },
-};
+});
 
 const text = {
   canceled: 'Canceled',
@@ -17,14 +21,24 @@ const text = {
   retrying_upload: 'Retrying...',
   submitting: 'Submitting...',
   uploading: 'Uploading...',
+  upload_finalizing: 'Merging...',
   upload_failed: 'Failed',
   upload_successful: 'Completed',
 };
 
 const Status = ({ status, classes }) => {
+  if (!status) {
+    return null;
+  }
+
   const newStatusToDisplay = getStatusToDisplay({ displayMap: text, status });
   return (
-    <Typography variant="caption" align="left" classes={{ root: classes.root }}>
+    <Typography
+      variant="caption"
+      component="div"
+      align="left"
+      classes={{ root: classes.root }}
+    >
       {newStatusToDisplay}
     </Typography>
   );

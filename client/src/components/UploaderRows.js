@@ -9,8 +9,10 @@ import Dropzone from 'react-fine-uploader/dropzone';
 import Filename from 'react-fine-uploader/filename';
 import Filesize from 'react-fine-uploader/filesize';
 // import ProgressBar from 'react-fine-uploader/progress-bar';
-import Status from 'react-fine-uploader/status';
-// import Status from './Status';
+
+// import Status from 'react-fine-uploader/status';
+import Status from './Status';
+
 // import DeleteButton from 'react-fine-uploader/delete-button';
 // import RetryButton from 'react-fine-uploader/retry-button';
 // import PauseResumeButton from 'react-fine-uploader/pause-resume-button';
@@ -166,8 +168,10 @@ class UploaderRows extends Component {
       this._removeVisibleFile(id);
       this.handleOnFieldValueChange(visibleFiles);
     } else if (
+      // * we only display these statuses
       newStatus === statusEnum.UPLOAD_SUCCESSFUL ||
       newStatus === statusEnum.UPLOAD_FAILED ||
+      newStatus === statusEnum.UPLOAD_FINALIZING ||
       newStatus === statusEnum.UPLOADING
     ) {
       if (newStatus === statusEnum.UPLOAD_SUCCESSFUL) {
@@ -222,6 +226,8 @@ class UploaderRows extends Component {
 
   render() {
     const { classes } = this.props;
+
+    // console.log(statusEnum);
 
     // const chunkingEnabled =
     //   uploader.options.chunking && uploader.options.chunking.enabled;
@@ -283,7 +289,8 @@ class UploaderRows extends Component {
               >
                 <div className={classes.iconStatus}>
                   {!status && <CancelButton id={id} uploader={uploader} />}
-                  {status === statusEnum.UPLOADING && (
+                  {(status === statusEnum.UPLOADING ||
+                    status === statusEnum.UPLOAD_FINALIZING) && (
                     <CircularProgress color="primary" size={20} />
                   )}
                   {status === statusEnum.UPLOAD_SUCCESSFUL && (
@@ -299,13 +306,7 @@ class UploaderRows extends Component {
             <div hidden={!status}>
               <Grid container spacing={16} alignItems={'center'}>
                 <Grid item style={{ paddingTop: 0, paddingBottom: 0 }}>
-                  <Typography
-                    variant="caption"
-                    align="left"
-                    classes={{ root: classes.status }}
-                  >
-                    <Status id={id} uploader={uploader} />
-                  </Typography>
+                  <Status status={status} />
                 </Grid>
                 <Grid
                   item
@@ -314,7 +315,6 @@ class UploaderRows extends Component {
                   style={{ paddingTop: 0, paddingBottom: 0 }}
                 >
                   <ProgressBar
-                    // className="react-fine-uploader-gallery-progress-bar"
                     id={id}
                     uploader={uploader}
                     hideBeforeStart={true}
