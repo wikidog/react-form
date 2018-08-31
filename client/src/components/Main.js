@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 
-import { withTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
@@ -67,5 +66,4 @@ class Main extends Component {
   }
 }
 
-// withTheme(): we need to access the 'theme' variable in this component
-export default withTheme()(withStyles(styles)(Main));
+export default withStyles(styles)(Main);

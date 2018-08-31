@@ -1,7 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import { Hidden } from '@material-ui/core';
 
 const styles = theme => ({
   root: {

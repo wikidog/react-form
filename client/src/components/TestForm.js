@@ -99,15 +99,14 @@ class TestForm extends Component {
   };
 
   render() {
-    // TODO: console.log()
     // console.log('TestForm:', this.props);
     const {
-      error,
+      // error,
       handleSubmit,
       closeSnackbar,
       snackbarOpen,
       uploadSubmitting,
-      uploadResponse,
+      // uploadResponse,
       uploadError,
       classes,
     } = this.props;
@@ -183,7 +182,7 @@ class TestForm extends Component {
 const validate = values => {
   const errors = {};
 
-  console.log('form values:', values);
+  // console.log('form values:', values);
 
   if (!values.firstName) {
     errors.firstName = 'Enter your first name';
@@ -203,7 +202,7 @@ const validate = values => {
     errors.uploader = 'Please select a file';
   }
 
-  console.log('form validate errors:', errors);
+  // console.log('form validate errors:', errors);
   return errors;
 };
 
