@@ -8,10 +8,10 @@ import Main from './Main';
 
 const styles = theme => ({
   root: {
-    display: 'flex',
-    alignItems: 'stretch',
-    minHeight: '100vh',
-    width: '100%',
+    // display: 'flex',
+    // alignItems: 'stretch',
+    // minHeight: '100vh',
+    // width: '100%',
   },
 });
 

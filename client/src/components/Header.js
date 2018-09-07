@@ -13,20 +13,22 @@ import * as actions from '../actions';
 
 const styles = theme => ({
   root: {
+    // flexGrow: 1,
     // transition: theme.transitions.create('width'),
-    '@media print': {
-      position: 'absolute',
-    },
-    boxShadow: 'none',
+    // '@media print': {
+    //   position: 'absolute',
+    // },
+    // boxShadow: 'none',
     // background: 'transparent',
     // minHeight: 10,
   },
   title: {
     marginLeft: 24,
-    flex: '0 1 auto',
+    // flex: '0 1 auto',
+    flexGrow: 1,
   },
   grow: {
-    flex: '1 1 auto',
+    // flex: '1 1 auto',
   },
 });
 
@@ -35,7 +37,8 @@ class Header extends Component {
     const { classes } = this.props;
 
     return (
-      <AppBar className={classes.root}>
+      // <AppBar className={classes.root}>
+      <AppBar position="static" className={classes.root}>
         <Toolbar>
           <Typography
             className={classes.title}
@@ -45,7 +48,6 @@ class Header extends Component {
           >
             My App
           </Typography>
-          <div className={classes.grow} />
           <Tooltip
             id="appbar-account"
             title="GitHub repository"

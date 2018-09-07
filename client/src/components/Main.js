@@ -20,18 +20,18 @@ const styles = theme => ({
   // }),
   root: {
     paddingTop: 80,
-    flex: '1 1 100%',
-    maxWidth: '100%',
-    margin: '0 auto',
+    // flex: '1 1 100%',
+    // maxWidth: '100%',
+    // margin: '0 auto',
   },
   //
   // set the maxWidth to 960px
   //
-  [theme.breakpoints.up('md')]: {
-    root: {
-      maxWidth: theme.breakpoints.values.md, // maxWidth = 960px
-    },
-  },
+  // [theme.breakpoints.up('md')]: {
+  //   root: {
+  //     maxWidth: theme.breakpoints.values.md, // maxWidth = 960px
+  //   },
+  // },
   // container: {
   //   display: 'grid',
   //   gridTemplateColumns: 'repeat(12, 1fr)',
