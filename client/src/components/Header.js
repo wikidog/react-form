@@ -23,7 +23,7 @@ const styles = theme => ({
     // minHeight: 10,
   },
   title: {
-    marginLeft: 24,
+    marginLeft: theme.spacing.unit * 2,
     // flex: '0 1 auto',
     flexGrow: 1,
   },
@@ -37,8 +37,12 @@ class Header extends Component {
     const { classes } = this.props;
 
     return (
-      // <AppBar className={classes.root}>
-      <AppBar position="static" className={classes.root}>
+      /**
+       * * "static": default positioning; element in its normal position
+       * *           in the document layout flow
+       * * "fixed":  fixed in place - persisting navigation menu
+       */
+      <AppBar position="fixed">
         <Toolbar>
           <Typography
             className={classes.title}
