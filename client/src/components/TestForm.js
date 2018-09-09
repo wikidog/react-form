@@ -24,7 +24,7 @@ import * as myActions from '../actions';
 const styles = {
   root: {
     position: 'relative',
-    overflow: 'hidden',
+    // overflow: 'hidden',
     // textAlign: 'center',
     // paddingTop: this.props.theme.spacing.unit * 20,
   },
@@ -32,7 +32,7 @@ const styles = {
     position: 'absolute',
   },
   fineUploader: {
-    margin: '10px 0 30px 0',
+    margin: '10px',
     textAlign: 'left',
   },
 };
