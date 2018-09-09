@@ -12,23 +12,10 @@ import AccountBox from '@material-ui/icons/AccountBox';
 import * as actions from '../actions';
 
 const styles = theme => ({
-  root: {
-    // flexGrow: 1,
-    // transition: theme.transitions.create('width'),
-    // '@media print': {
-    //   position: 'absolute',
-    // },
-    // boxShadow: 'none',
-    // background: 'transparent',
-    // minHeight: 10,
-  },
   title: {
     marginLeft: theme.spacing.unit * 2,
     // flex: '0 1 auto',
     flexGrow: 1,
-  },
-  grow: {
-    // flex: '1 1 auto',
   },
 });
 

@@ -4,8 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   root: {
-    display: 'flex',
-    minWidth: theme.spacing.unit * 8,
+    //!!! change the minWidth if the font size is changed !!!
+    //!!! <Typography variant="xxxxx"
+    minWidth: theme.spacing.unit * 10,
     overflow: 'hidden',
     fontStyle: 'italic',
   },
@@ -33,7 +34,7 @@ const Status = ({ status, classes }) => {
   const newStatusToDisplay = getStatusToDisplay({ displayMap: text, status });
   return (
     <Typography
-      variant="body1"
+      variant="body1" //!! change the minWidth if we change this property !!
       color="textSecondary"
       component="div"
       align="left"
