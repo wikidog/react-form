@@ -33,7 +33,8 @@ const Status = ({ status, classes }) => {
   const newStatusToDisplay = getStatusToDisplay({ displayMap: text, status });
   return (
     <Typography
-      variant="caption"
+      variant="body1"
+      color="textSecondary"
       component="div"
       align="left"
       classes={{ root: classes.root }}
