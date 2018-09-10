@@ -43,10 +43,17 @@ import CancelButton from './CancelButton';
 import ProgressBar from './ProgressBar';
 
 const styles = theme => ({
-  root: {
-    ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
+  dropzone: {
+    borderRadius: 6,
+    // maxHeight: 490,
+    // minHeight: 410,
+    height: 450,
+    overflowY: 'auto',
+    padding: theme.spacing.unit,
+    position: 'relative',
+  },
+  uploadItem: {
+    padding: theme.spacing.unit,
   },
   gridItem: {
     paddingTop: 0,
@@ -128,12 +135,12 @@ class UploaderRows extends Component {
   };
 
   static defaultProps = {
-    className: '',
-    'dropzone-disabled': false,
-    'dropzone-dropActiveClassName':
-      'react-fine-uploader-gallery-dropzone-active',
-    'dropzone-multiple': true,
-    'fileInput-multiple': true,
+    // className: '',
+    // 'dropzone-disabled': false,
+    // 'dropzone-dropActiveClassName':
+    //   'react-fine-uploader-gallery-dropzone-active',
+    // 'dropzone-multiple': true,
+    // 'fileInput-multiple': true,
   };
 
   state = {
@@ -271,7 +278,7 @@ class UploaderRows extends Component {
           transitionName="react-fine-uploader-gallery-files"
         > */}
         {this.state.visibleFiles.map(({ id, status, fromServer }) => (
-          <Paper key={id} className={classes.root}>
+          <Paper key={id} className={classes.uploadItem}>
             <Grid container spacing={16} alignItems={'center'}>
               <Grid item xs={12} sm style={gridItemStyle}>
                 <Typography variant="title" className={classes.title}>
@@ -396,6 +403,7 @@ const MaybeDropzone = ({ children, content, hasVisibleFiles, ...props }) => {
   const { disabled, ...dropzoneProps } = props;
 
   let dropzoneDisabled = disabled;
+  // let dropzoneDisabled = true;
   if (!dropzoneDisabled) {
     dropzoneDisabled = !uploader.qq.supportedFeatures.fileDrop;
   }
@@ -456,10 +464,12 @@ const getDefaultMaybeDropzoneContent = ({ content, disabled }) => {
     return <span className={className}>{content}</span>;
   } else if (!disabled) {
     return (
-      <Typography variant="display2" component="span" className={className}>
-        <CloudUploadIcon fontSize="inherit" />
-        Drop files here AAAA
-      </Typography>
+      <div>
+        <Typography variant="display2" component="span" className={className}>
+          <CloudUploadIcon fontSize="inherit" />
+          Drop files here AAAA
+        </Typography>
+      </div>
     );
   }
 };
