@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 // import { CSSTransitionGroup as ReactCssTransitionGroup } from 'react-transition-group'
 
 import FineUploaderTraditional from 'fine-uploader-wrappers';
 // import Gallery from 'react-fine-uploader';
-import Dropzone from 'react-fine-uploader/dropzone';
+// import Dropzone from 'react-fine-uploader/dropzone';
+import Dropzone from './Dropzone';
 // import FileInput from 'react-fine-uploader/file-input';
 import Filename from 'react-fine-uploader/filename';
 import Filesize from 'react-fine-uploader/filesize';
@@ -24,7 +26,7 @@ import Status from './Status';
 // import UploadSuccessIcon from 'react-fine-uploader/gallery/upload-success-icon';
 // import XIcon from 'react-fine-uploader/gallery/x-icon';
 
-import './gallery.css';
+// import './gallery.css';
 
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -43,15 +45,33 @@ import CancelButton from './CancelButton';
 import ProgressBar from './ProgressBar';
 
 const styles = theme => ({
+  // ==== dropzone styles =========================================
   dropzone: {
-    borderRadius: 6,
+    borderRadius: 4,
     // maxHeight: 490,
     // minHeight: 410,
-    height: 450,
+    height: 400,
     overflowY: 'auto',
     padding: theme.spacing.unit,
     position: 'relative',
   },
+  dropzoneEnabled: {
+    border: '2px dashed #00ABC7',
+  },
+  dropzoneActive: {
+    // background: '#FDFDFD',
+    background: '#FEFEFE',
+    border: '2px solid #00ABC7',
+  },
+  dropzoneDisabled: {
+    border: '2px solid #00ABC7',
+  },
+  dropzoneBackgroundContent: {
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+  },
+  // ==============================================================
   uploadItem: {
     padding: theme.spacing.unit,
   },
@@ -97,7 +117,7 @@ export const uploader = new FineUploaderTraditional({
     autoUpload: false,
     multiple: true,
     validation: {
-      itemLimit: 5,
+      itemLimit: 15,
     },
     messages: {
       tooManyItemsError: 'one file a time',
@@ -232,6 +252,7 @@ class UploaderRows extends Component {
   }
 
   render() {
+    console.log('== in UploaderRows', this.props);
     const { classes } = this.props;
 
     // console.log(statusEnum);
@@ -253,7 +274,9 @@ class UploaderRows extends Component {
         content={this.props.children}
         hasVisibleFiles={this.state.visibleFiles.length > 0}
         disabled={dropZoneDisabled}
-        dropActiveClassName={'react-fine-uploader-gallery-dropzone-active'}
+        classes={classes}
+        // dropActiveClassName={'react-fine-uploader-gallery-dropzone-active'}
+        dropActiveClassName={classes.dropzoneActive}
         multiple={true}
       >
         <FileInput
@@ -399,9 +422,14 @@ class UploaderRows extends Component {
 }
 
 // ========================================================================
-const MaybeDropzone = ({ children, content, hasVisibleFiles, ...props }) => {
-  const { disabled, ...dropzoneProps } = props;
-
+const MaybeDropzone = ({
+  children,
+  content,
+  hasVisibleFiles,
+  disabled,
+  classes,
+  ...rest
+}) => {
   let dropzoneDisabled = disabled;
   // let dropzoneDisabled = true;
   if (!dropzoneDisabled) {
@@ -414,12 +442,17 @@ const MaybeDropzone = ({ children, content, hasVisibleFiles, ...props }) => {
   } else {
     content =
       content ||
-      getDefaultMaybeDropzoneContent({ content, disabled: dropzoneDisabled });
+      getDefaultMaybeDropzoneContent({
+        content,
+        classes,
+        disabled: dropzoneDisabled,
+      });
   }
 
   if (dropzoneDisabled) {
     return (
-      <div className="react-fine-uploader-gallery-nodrop-container">
+      // <div className="react-fine-uploader-gallery-nodrop-container">
+      <div className={classNames(classes.dropzone, classes.dropzoneDisabled)}>
         {content}
         {children}
       </div>
@@ -428,9 +461,10 @@ const MaybeDropzone = ({ children, content, hasVisibleFiles, ...props }) => {
 
   return (
     <Dropzone
-      className="react-fine-uploader-gallery-dropzone"
+      // className="react-fine-uploader-gallery-dropzone"
+      className={classNames(classes.dropzone, classes.dropzoneEnabled)}
       uploader={uploader}
-      {...dropzoneProps}
+      {...rest}
     >
       {content}
       {children}
@@ -453,10 +487,11 @@ const MaybeDropzone = ({ children, content, hasVisibleFiles, ...props }) => {
 //   return componentProps;
 // };
 
-const getDefaultMaybeDropzoneContent = ({ content, disabled }) => {
-  const className = disabled
-    ? 'react-fine-uploader-gallery-nodrop-content'
-    : 'react-fine-uploader-gallery-dropzone-content';
+const getDefaultMaybeDropzoneContent = ({ content, classes, disabled }) => {
+  // const className = disabled
+  //   ? 'react-fine-uploader-gallery-nodrop-content'
+  //   : 'react-fine-uploader-gallery-dropzone-content';
+  const className = classes.dropzoneBackgroundContent;
 
   if (disabled && !content) {
     return <span className={className}>Upload files</span>;
@@ -464,9 +499,9 @@ const getDefaultMaybeDropzoneContent = ({ content, disabled }) => {
     return <span className={className}>{content}</span>;
   } else if (!disabled) {
     return (
-      <div>
-        <Typography variant="display2" component="span" className={className}>
-          <CloudUploadIcon fontSize="inherit" />
+      <div className={className}>
+        <CloudUploadIcon />
+        <Typography variant="display2" component="span">
           Drop files here AAAA
         </Typography>
       </div>
