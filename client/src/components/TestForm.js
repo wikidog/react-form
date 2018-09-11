@@ -16,7 +16,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 // import UploadComponent, { uploader } from './Upload';
-import UploaderRows, { uploader } from './UploaderRows';
+import UploaderRows, { uploader } from './uploader/UploaderRows';
 
 import * as myActions from '../actions';
 // import showResults from './showResults';
