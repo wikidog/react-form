@@ -81,12 +81,14 @@ const styles = theme => ({
     fontSize: 36,
     // color: theme.status.succeed,
   },
-  // ==============================================================
+  // ==== file select button ======================================
   fileInput: {
     marginBottom: theme.spacing.unit * 2,
   },
+  // ==== item list ===============================================
   uploadItem: {
     padding: theme.spacing.unit,
+    marginBottom: theme.spacing.unit,
   },
   gridItem: {
     paddingTop: 0,
@@ -342,7 +344,7 @@ class UploaderRows extends Component {
               </Grid>
             </Grid>
 
-            <div hidden={!status}>
+            <div hidden={!status} style={{ marginBottom: 4 }}>
               <Grid container spacing={16} alignItems={'center'}>
                 <Grid item style={{ paddingTop: 0, paddingBottom: 0 }}>
                   <Status status={status} />
