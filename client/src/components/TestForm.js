@@ -5,7 +5,6 @@ import { Field, reduxForm } from 'redux-form';
 // import { SubmissionError } from 'redux-form';
 import isValidEmail from 'sane-email-validation';
 
-// import { withTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -25,7 +24,7 @@ import * as myActions from '../actions';
 const styles = {
   root: {
     position: 'relative',
-    overflow: 'hidden',
+    // overflow: 'hidden',
     // textAlign: 'center',
     // paddingTop: this.props.theme.spacing.unit * 20,
   },
@@ -33,7 +32,7 @@ const styles = {
     position: 'absolute',
   },
   fineUploader: {
-    margin: '10px 0 30px 0',
+    margin: '10px',
     textAlign: 'left',
   },
 };

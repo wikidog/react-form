@@ -7,8 +7,8 @@ import createSagaMiddleware from 'redux-saga';
 
 import 'typeface-roboto';
 
-// Polyfills are needed for Redux-Form to work in IE 11
-// Material UI doesn't need any polyfills.
+//! Polyfills are needed for Redux-Form to work in IE 11
+//* Material UI doesn't need any polyfills.
 import 'babel-polyfill';
 
 import reducer from './reducers';

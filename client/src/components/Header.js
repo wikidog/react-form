@@ -12,21 +12,10 @@ import AccountBox from '@material-ui/icons/AccountBox';
 import * as actions from '../actions';
 
 const styles = theme => ({
-  root: {
-    // transition: theme.transitions.create('width'),
-    '@media print': {
-      position: 'absolute',
-    },
-    boxShadow: 'none',
-    // background: 'transparent',
-    // minHeight: 10,
-  },
   title: {
-    marginLeft: 24,
-    flex: '0 1 auto',
-  },
-  grow: {
-    flex: '1 1 auto',
+    marginLeft: theme.spacing.unit * 2,
+    // flex: '0 1 auto',
+    flexGrow: 1,
   },
 });
 
@@ -35,7 +24,12 @@ class Header extends Component {
     const { classes } = this.props;
 
     return (
-      <AppBar className={classes.root}>
+      /**
+       * * "static": default positioning; element in its normal position
+       * *           in the document layout flow
+       * * "fixed":  fixed in place - persisting navigation menu
+       */
+      <AppBar position="fixed">
         <Toolbar>
           <Typography
             className={classes.title}
@@ -45,7 +39,6 @@ class Header extends Component {
           >
             My App
           </Typography>
-          <div className={classes.grow} />
           <Tooltip
             id="appbar-account"
             title="GitHub repository"
