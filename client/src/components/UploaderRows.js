@@ -52,7 +52,7 @@ const styles = theme => ({
     // minHeight: 410,
     height: 400,
     overflowY: 'auto',
-    padding: theme.spacing.unit,
+    padding: theme.spacing.unit * 2,
     position: 'relative',
   },
   dropzoneEnabled: {
@@ -68,10 +68,23 @@ const styles = theme => ({
   },
   dropzoneBackgroundContent: {
     position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
+    top: '40%',
+    left: '0',
+    opacity: '0.25',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dropzoneIcon: {
+    marginRight: theme.spacing.unit,
+    fontSize: 36,
+    // color: theme.status.succeed,
   },
   // ==============================================================
+  fileInput: {
+    marginBottom: theme.spacing.unit * 2,
+  },
   uploadItem: {
     padding: theme.spacing.unit,
   },
@@ -79,14 +92,9 @@ const styles = theme => ({
     paddingTop: 0,
     paddingBottom: 0,
   },
-  icon: {
+  statusIcon: {
     margin: 0,
     // fontSize: 24,
-    // color: theme.status.succeed,
-  },
-  dropzoneIcon: {
-    marginRight: theme.spacing.unit,
-    fontSize: 24,
     // color: theme.status.succeed,
   },
   iconStatus: {
@@ -279,12 +287,13 @@ class UploaderRows extends Component {
         dropActiveClassName={classes.dropzoneActive}
         multiple={true}
       >
-        <FileInput
-          className={classes.fileInput}
-          uploader={uploader}
-          multiple={uploader.options.multiple}
-          disabled={fileInputDisabled}
-        />
+        <div className={classes.fileInput}>
+          <FileInput
+            uploader={uploader}
+            multiple={uploader.options.multiple}
+            disabled={fileInputDisabled}
+          />
+        </div>
 
         {/* <ProgressBar
             className="react-fine-uploader-gallery-total-progress-bar"
@@ -324,10 +333,10 @@ class UploaderRows extends Component {
                     <CircularProgress color="primary" size={20} />
                   )}
                   {status === statusEnum.UPLOAD_SUCCESSFUL && (
-                    <DoneIcon className={classes.icon} color="primary" />
+                    <DoneIcon className={classes.statusIcon} color="primary" />
                   )}
                   {status === statusEnum.UPLOAD_FAILED && (
-                    <ErrorIcon className={classes.icon} color="error" />
+                    <ErrorIcon className={classes.statusIcon} color="error" />
                   )}
                 </div>
               </Grid>
@@ -488,25 +497,36 @@ const MaybeDropzone = ({
 // };
 
 const getDefaultMaybeDropzoneContent = ({ content, classes, disabled }) => {
-  // const className = disabled
-  //   ? 'react-fine-uploader-gallery-nodrop-content'
-  //   : 'react-fine-uploader-gallery-dropzone-content';
+  /*
+  const className = disabled
+    ? 'react-fine-uploader-gallery-nodrop-content'
+    : 'react-fine-uploader-gallery-dropzone-content';
+    */
   const className = classes.dropzoneBackgroundContent;
 
-  if (disabled && !content) {
-    return <span className={className}>Upload files</span>;
-  } else if (content) {
-    return <span className={className}>{content}</span>;
-  } else if (!disabled) {
-    return (
-      <div className={className}>
-        <CloudUploadIcon />
-        <Typography variant="display2" component="span">
-          Drop files here AAAA
-        </Typography>
-      </div>
-    );
-  }
+  // if (disabled && !content) {
+  //   return <span className={className}>Upload files</span>;
+  // } else if (content) {
+  //   return <span className={className}>{content}</span>;
+  // } else if (!disabled) {
+  //   return (
+  //     <div className={className}>
+  //       <CloudUploadIcon />
+  //       <Typography variant="display2" component="span">
+  //         Drop files here AAAA
+  //       </Typography>
+  //     </div>
+  //   );
+  // }
+
+  return (
+    <div className={className}>
+      <CloudUploadIcon className={classes.dropzoneIcon} />
+      <Typography variant="display2" component="span">
+        Drop Files Here
+      </Typography>
+    </div>
+  );
 };
 
 const isFileGone = (statusToCheck, statusEnum) => {
