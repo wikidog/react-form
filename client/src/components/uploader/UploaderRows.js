@@ -117,6 +117,7 @@ const gridItemStyle = {
   paddingBottom: 0,
 };
 
+// ==================================================================
 // Uploader
 export const uploader = new FineUploaderTraditional({
   options: {
