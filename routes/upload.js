@@ -6,6 +6,7 @@ const multer = require('multer');
 
 const UPLOAD_DIR = 'uploads';
 
+// ==================================================================
 // multer disStorage configuration
 //
 const destination = async (req, file, next) => {
