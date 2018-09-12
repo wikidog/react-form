@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 // import { CSSTransitionGroup as ReactCssTransitionGroup } from 'react-transition-group'
 
 import FineUploaderTraditional from 'fine-uploader-wrappers';
@@ -45,7 +45,7 @@ import CancelButton from './CancelButton';
 import ProgressBar from './ProgressBar';
 
 const styles = theme => ({
-  // ==== dropzone styles =========================================
+  // ==== dropzone styles ===============
   dropzone: {
     borderRadius: 4,
     // maxHeight: 490,
@@ -76,46 +76,43 @@ const styles = theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  dropzoneIcon: {
+  dropzoneBackgroundIcon: {
     marginRight: theme.spacing.unit,
-    fontSize: 36,
+    fontSize: 32,
     // color: theme.status.succeed,
   },
-  // ==== file select button ======================================
+  // ==== file select button =============
   fileInput: {
     marginBottom: theme.spacing.unit * 2,
   },
-  // ==== item list ===============================================
+  // ==== file list item =================
   uploadItem: {
     padding: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
   },
-  gridItem: {
-    paddingTop: 0,
-    paddingBottom: 0,
+  // ==== file information ===============
+  filename: {
+    fontSize: 16,
   },
-  statusIcon: {
-    margin: 0,
-    // fontSize: 24,
-    // color: theme.status.succeed,
+  filesize: {
+    fontSize: 14,
   },
-  iconStatus: {
+  fileStatus: {
     display: 'flex',
     width: theme.spacing.unit * 5,
     height: theme.spacing.unit * 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    // marginBottom: 16,
-    fontSize: 16,
-  },
-  status: {
-    fontStyle: 'italic',
+  fileStatusIcon: {
+    margin: 0,
+    // fontSize: 24,
+    // color: theme.status.succeed,
   },
 });
 
-const gridItemStyle = {
+// this is to
+const inlineStyleGridItem = {
   paddingTop: 0,
   paddingBottom: 0,
 };
@@ -159,20 +156,6 @@ const statusEnum = uploader.qq.status;
 
 class UploaderRows extends Component {
   //
-  static propTypes = {
-    className: PropTypes.string,
-    // uploader: PropTypes.object.isRequired,
-  };
-
-  static defaultProps = {
-    // className: '',
-    // 'dropzone-disabled': false,
-    // 'dropzone-dropActiveClassName':
-    //   'react-fine-uploader-gallery-dropzone-active',
-    // 'dropzone-multiple': true,
-    // 'fileInput-multiple': true,
-  };
-
   state = {
     visibleFiles: [],
   };
@@ -262,7 +245,6 @@ class UploaderRows extends Component {
   }
 
   render() {
-    console.log('== in UploaderRows', this.props);
     const { classes } = this.props;
 
     // console.log(statusEnum);
@@ -314,13 +296,13 @@ class UploaderRows extends Component {
         {this.state.visibleFiles.map(({ id, status, fromServer }) => (
           <Paper key={id} className={classes.uploadItem}>
             <Grid container spacing={16} alignItems={'center'}>
-              <Grid item xs={12} sm style={gridItemStyle}>
-                <Typography variant="title" className={classes.title}>
+              <Grid item xs={12} sm style={inlineStyleGridItem}>
+                <Typography variant="title" className={classes.filename}>
                   <Filename id={id} uploader={uploader} />
                 </Typography>
               </Grid>
-              <Grid item style={gridItemStyle}>
-                <Typography variant="subheading" className={classes.subheading}>
+              <Grid item style={inlineStyleGridItem}>
+                <Typography variant="subheading" className={classes.filesize}>
                   <Filesize id={id} uploader={uploader} />
                 </Typography>
               </Grid>
@@ -328,17 +310,23 @@ class UploaderRows extends Component {
                 item
                 style={{ paddingTop: 0, paddingBottom: 0, paddingRight: 0 }}
               >
-                <div className={classes.iconStatus}>
+                <div className={classes.fileStatus}>
                   {!status && <CancelButton id={id} uploader={uploader} />}
                   {(status === statusEnum.UPLOADING ||
                     status === statusEnum.UPLOAD_FINALIZING) && (
                     <CircularProgress color="primary" size={20} />
                   )}
                   {status === statusEnum.UPLOAD_SUCCESSFUL && (
-                    <DoneIcon className={classes.statusIcon} color="primary" />
+                    <DoneIcon
+                      className={classes.fileStatusIcon}
+                      color="primary"
+                    />
                   )}
                   {status === statusEnum.UPLOAD_FAILED && (
-                    <ErrorIcon className={classes.statusIcon} color="error" />
+                    <ErrorIcon
+                      className={classes.fileStatusIcon}
+                      color="error"
+                    />
                   )}
                 </div>
               </Grid>
@@ -523,7 +511,7 @@ const getDefaultMaybeDropzoneContent = ({ content, classes, disabled }) => {
 
   return (
     <div className={className}>
-      <CloudUploadIcon className={classes.dropzoneIcon} />
+      <CloudUploadIcon className={classes.dropzoneBackgroundIcon} />
       <Typography variant="display2" component="span">
         Drop Files Here
       </Typography>
