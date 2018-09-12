@@ -108,7 +108,7 @@ const styles = theme => ({
   },
 });
 
-// this is to
+// this is to overwrite styles of <Grid item />
 const inlineStyleGridItem = {
   paddingTop: 0,
   paddingBottom: 0,
@@ -230,16 +230,24 @@ class UploaderRows extends Component {
     // );
   };
 
+  handleOnComplete = (id, name, responseJSON, xhr) => {
+    console.log('=========== onComplete =============');
+    console.log('id:', id);
+    console.log('name:', name);
+  };
+
   componentDidMount() {
     uploader.on('statusChange', this.handleOnStatusChange);
     uploader.on('validateBatch', this.handleOnValidateBatch);
     uploader.on('error', this.handleOnError);
+    uploader.on('complete', this.handleOnComplete);
   }
 
   componentWillUnmount() {
     uploader.off('statusChange', this.handleOnStatusChange);
     uploader.off('validateBatch', this.handleOnValidateBatch);
     uploader.off('error', this.handleOnError);
+    uploader.off('complete', this.handleOnComplete);
   }
 
   render() {
