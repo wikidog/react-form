@@ -18,6 +18,8 @@ class DropzoneElement extends Component {
   //   dropActiveClassName: 'react-fine-uploader-dropzone-active',
   // };
 
+  dropzoneRef = React.createRef();
+
   componentDidMount() {
     this._registerDropzone();
   }
@@ -37,7 +39,8 @@ class DropzoneElement extends Component {
       <div
         // {...getElementProps(this.props)}
         className={this.props.className}
-        ref="dropZone"
+        // ref="dropZone"
+        ref={this.dropzoneRef}
       >
         {this.props.children}
       </div>
@@ -60,7 +63,8 @@ class DropzoneElement extends Component {
   _registerDropzone() {
     this._qqDropzone && this._qqDropzone.dispose();
 
-    const dropzoneEl = this.props.element || this.refs.dropZone;
+    // const dropzoneEl = this.props.element || this.refs.dropZone;
+    const dropzoneEl = this.props.element || this.dropzoneRef.current;
 
     this._qqDropzone = new qq.DragAndDrop({
       allowMultipleItems: !!this.props.multiple,

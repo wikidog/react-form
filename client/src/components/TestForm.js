@@ -16,7 +16,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 // import UploadComponent, { uploader } from './Upload';
-import UploaderRows, { uploader } from './UploaderRows';
+import UploaderRows, { uploader } from './uploader/UploaderRows';
 
 import * as myActions from '../actions';
 // import showResults from './showResults';
@@ -86,6 +86,9 @@ class TestForm extends Component {
     </FormControl>
   );
 
+  // =================================================================
+  // for submission
+  //
   submitForm = values => {
     // console.log('uploader', uploader);
     // console.log('uploader-methods', uploader.methods);
@@ -96,6 +99,7 @@ class TestForm extends Component {
 
     this.props.submitFormRequest(values);
   };
+  // =================================================================
 
   render() {
     // console.log('TestForm:', this.props);
