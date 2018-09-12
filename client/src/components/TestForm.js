@@ -87,14 +87,15 @@ class TestForm extends Component {
   );
 
   // =================================================================
-  // for submission
+  // form submission
   //
   submitForm = values => {
     // console.log('uploader', uploader);
     // console.log('uploader-methods', uploader.methods);
-    uploader.methods.log('adfadfadfadsfasdfasdfasdfadfa ==============');
+    console.log('========= trigger upload... ==============');
 
     // trigger file upload
+    //!! this function is asynchronous !!
     uploader.methods.uploadStoredFiles();
 
     this.props.submitFormRequest(values);
@@ -108,7 +109,7 @@ class TestForm extends Component {
       handleSubmit,
       closeSnackbar,
       snackbarOpen,
-      uploadSubmitting,
+      uploaderUploading,
       // uploadResponse,
       uploadError,
       classes,
@@ -148,7 +149,7 @@ class TestForm extends Component {
             type="submit"
             disableFocusRipple={true}
             disableRipple={true}
-            disabled={uploadSubmitting}
+            disabled={uploaderUploading}
           >
             Submit
           </Button>
@@ -185,8 +186,6 @@ class TestForm extends Component {
 const validate = values => {
   const errors = {};
 
-  // console.log('form values:', values);
-
   if (!values.firstName) {
     errors.firstName = 'Enter your first name';
   }
@@ -205,7 +204,6 @@ const validate = values => {
     errors.uploader = 'Please select a file';
   }
 
-  // console.log('form validate errors:', errors);
   return errors;
 };
 
@@ -223,12 +221,12 @@ function onSubmitFail(errors) {
   console.log(errors);
 }
 
-const mapStateToProps = ({ upload }) => {
+const mapStateToProps = ({ uploader }) => {
   return {
-    uploadSubmitting: upload.submitting,
-    uploadError: upload.error,
-    uploadResponse: upload.response,
-    snackbarOpen: upload.snackbarOpen,
+    uploaderUploading: uploader.uploading,
+    uploadError: uploader.error,
+    uploadResponse: uploader.response,
+    snackbarOpen: uploader.snackbarOpen,
   };
 };
 

@@ -101,9 +101,9 @@ class ProgressBar extends Component {
     const statusEnum = this.props.uploader.qq.status;
 
     this._trackStatusEventHandler = (id, oldStatus, newStatus) => {
-      console.log('-------------------- in progressBar -----------');
-      console.log('oldStatus:', oldStatus);
-      console.log('newStatus:', newStatus);
+      // console.log('-------------------- in progressBar -----------');
+      // console.log('oldStatus:', oldStatus);
+      // console.log('newStatus:', newStatus);
       if (!this._unmounted) {
         if (this._isTotalProgress) {
           if (

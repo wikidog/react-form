@@ -7,7 +7,8 @@ import {
 
 // this reducer manages this piece of state
 const initialSate = {
-  submitting: false,
+  workInProgress: false,
+  fileUploading: false,
   error: null,
   response: null,
   snackbarOpen: false,
@@ -16,12 +17,17 @@ const initialSate = {
 export default (state = initialSate, action) => {
   switch (action.type) {
     case SUBMIT_FORM_REQUEST:
-      return { ...state, submitting: true, error: null, snackbarOpen: false };
+      return {
+        ...state,
+        fileUploading: true,
+        error: null,
+        snackbarOpen: false,
+      };
 
     case SUBMIT_FORM_SUCCESS:
       return {
         ...state,
-        submitting: false,
+        fileUploading: false,
         snackbarOpen: false,
         response: action.payload,
       };
@@ -29,7 +35,7 @@ export default (state = initialSate, action) => {
     case SUBMIT_FORM_FAILURE:
       return {
         ...state,
-        submitting: false,
+        fileUploading: false,
         response: null,
         snackbarOpen: true,
         error: action.payload,
