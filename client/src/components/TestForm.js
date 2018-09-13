@@ -94,6 +94,9 @@ class TestForm extends Component {
     // console.log('uploader-methods', uploader.methods);
     console.log('========= trigger upload... ==============');
 
+    console.log('========= setParams ==============');
+    uploader.methods.setParams(values);
+
     // trigger file upload
     //!! this function is asynchronous !!
     uploader.methods.uploadStoredFiles();

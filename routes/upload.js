@@ -154,6 +154,9 @@ module.exports = app => {
   });
 
   app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
+    // res.status(420).send({ success: false });
+    console.log('========= one upload done ==========');
+    console.log(req.body);
     res.send({ success: true });
   });
 };

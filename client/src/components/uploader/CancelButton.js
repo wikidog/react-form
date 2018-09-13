@@ -20,7 +20,6 @@ class CancelButton extends Component {
 
   handleOnStatusChange = (id, oldStatus, newStatus) => {
     //
-    console.log('----- in CancelButton ------');
     const statusEnum = this.props.uploader.qq.status;
 
     if (id === this.props.id && !this._unmounted) {
