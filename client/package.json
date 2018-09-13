@@ -19,7 +19,7 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "fine-uploader": "^5.16.2",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.11",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
     "react-fine-uploader": "^1.1.1",
