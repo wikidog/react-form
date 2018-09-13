@@ -164,9 +164,9 @@ class UploaderRows extends Component {
     this.props.change(
       this.props.input.name,
       // uploader.methods.getUploads({ status: 'submitted' })
-      // uploader.methods.getUploads({ status: statusEnum.SUBMITTED })
+      uploader.methods.getUploads({ status: statusEnum.SUBMITTED }).length
       // uploader.methods.getUploads()
-      value
+      // value
     );
   };
 

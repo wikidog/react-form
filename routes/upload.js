@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 
-//* middleware for handling multipart/form-data
-//* Multer won't process any request body which is not multipart/form-data
+// * middleware for handling multipart/form-data
+// * Multer won't process any request body which is not multipart/form-data
 const multer = require('multer');
 
 const UPLOAD_DIR = 'uploads';
@@ -126,6 +126,7 @@ module.exports = app => {
   app.post('/chunksdone', (req, res, next) => {
     console.log('======== chunksdone ==========');
     console.log(req.body);
+    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
 
     // res.send({ success: true });
     // // res.status(422).send({ error: 'Wrong password' });
@@ -157,6 +158,8 @@ module.exports = app => {
     // res.status(420).send({ success: false });
     console.log('========= one upload done ==========');
     console.log(req.body);
+    console.log(req.file);
+    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
     res.send({ success: true });
   });
 };

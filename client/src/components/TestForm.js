@@ -93,7 +93,6 @@ class TestForm extends Component {
     // console.log('uploader', uploader);
     // console.log('uploader-methods', uploader.methods);
     console.log('========= trigger upload... ==============');
-
     console.log('========= setParams ==============');
     uploader.methods.setParams(values);
 
@@ -189,6 +188,9 @@ class TestForm extends Component {
 const validate = values => {
   const errors = {};
 
+  console.log('********* form validation ****************');
+  console.log(values);
+
   if (!values.firstName) {
     errors.firstName = 'Enter your first name';
   }
@@ -203,10 +205,11 @@ const validate = values => {
     errors.email = 'Invalid Email';
   }
 
-  if (!values.uploader || values.uploader.length === 0) {
+  if (!values.uploader || values.uploader === 0) {
     errors.uploader = 'Please select a file';
   }
 
+  console.log(errors);
   return errors;
 };
 
