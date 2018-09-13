@@ -67,6 +67,7 @@ class TestForm extends Component {
       <UploaderRows
         change={this.props.change}
         touch={this.props.touch}
+        endProcess={this.props.endProcess}
         // blur={this.props.blur}
         {...fields}
       />
@@ -90,6 +91,9 @@ class TestForm extends Component {
   // form submission
   //
   submitForm = values => {
+    // dispatch startProcess action
+    this.props.startProcess();
+
     // console.log('uploader', uploader);
     // console.log('uploader-methods', uploader.methods);
     console.log('========= trigger upload... ==============');
@@ -99,8 +103,6 @@ class TestForm extends Component {
     // trigger file upload
     //!! this function is asynchronous !!
     uploader.methods.uploadStoredFiles();
-
-    this.props.submitFormRequest(values);
   };
   // =================================================================
 
@@ -112,6 +114,7 @@ class TestForm extends Component {
       closeSnackbar,
       snackbarOpen,
       uploaderUploading,
+      uploaderWorkInProgress,
       // uploadResponse,
       uploadError,
       classes,
@@ -151,7 +154,7 @@ class TestForm extends Component {
             type="submit"
             disableFocusRipple={true}
             disableRipple={true}
-            disabled={uploaderUploading}
+            disabled={uploaderWorkInProgress}
           >
             Submit
           </Button>
@@ -187,9 +190,8 @@ class TestForm extends Component {
 
 const validate = values => {
   const errors = {};
-
-  console.log('********* form validation ****************');
-  console.log(values);
+  // console.log('********* form validation ****************');
+  // console.log(values);
 
   if (!values.firstName) {
     errors.firstName = 'Enter your first name';
@@ -209,7 +211,7 @@ const validate = values => {
     errors.uploader = 'Please select a file';
   }
 
-  console.log(errors);
+  // console.log(errors);
   return errors;
 };
 
@@ -229,6 +231,7 @@ function onSubmitFail(errors) {
 
 const mapStateToProps = ({ uploader }) => {
   return {
+    uploaderWorkInProgress: uploader.workInProgress,
     uploaderUploading: uploader.uploading,
     uploadError: uploader.error,
     uploadResponse: uploader.response,

@@ -220,6 +220,8 @@ class UploaderRows extends Component {
 
     // this.props.input.onBlur('aaaaaaaaaa');
     alert(errorReason);
+
+    this.props.endProcess();
     // alert(
     //   uploader.qq.format(
     //     'Error on file number {} - {}.  Reason: {}',
@@ -236,11 +238,18 @@ class UploaderRows extends Component {
     console.log('name:', name);
   };
 
+  handleOnAllComplete = (succeeded, failed) => {
+    console.log('=========== onAllComplete =============');
+    console.log('dispatch action');
+    this.props.endProcess();
+  };
+
   componentDidMount() {
     uploader.on('statusChange', this.handleOnStatusChange);
     uploader.on('validateBatch', this.handleOnValidateBatch);
     uploader.on('error', this.handleOnError);
     uploader.on('complete', this.handleOnComplete);
+    uploader.on('allComplete', this.handleOnAllComplete);
   }
 
   componentWillUnmount() {
@@ -248,6 +257,7 @@ class UploaderRows extends Component {
     uploader.off('validateBatch', this.handleOnValidateBatch);
     uploader.off('error', this.handleOnError);
     uploader.off('complete', this.handleOnComplete);
+    uploader.off('allComplete', this.handleOnAllComplete);
   }
 
   render() {

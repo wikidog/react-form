@@ -1,4 +1,6 @@
 import {
+  START_PROCESS,
+  END_PROCESS,
   SUBMIT_FORM_REQUEST,
   SUBMIT_FORM_SUCCESS,
   SUBMIT_FORM_FAILURE,
@@ -16,6 +18,22 @@ const initialSate = {
 
 export default (state = initialSate, action) => {
   switch (action.type) {
+    case START_PROCESS:
+      return {
+        ...state,
+        workInProgress: true,
+        error: null,
+        snackbarOpen: false,
+      };
+
+    case END_PROCESS:
+      return {
+        ...state,
+        workInProgress: false,
+        error: null,
+        snackbarOpen: false,
+      };
+
     case SUBMIT_FORM_REQUEST:
       return {
         ...state,

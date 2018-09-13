@@ -1,11 +1,16 @@
 import {
   SUBMIT_FORM_REQUEST,
   CLOSE_SNACKBAR,
-  UPLOADER_START_UPLOAD,
+  START_PROCESS,
+  END_PROCESS,
 } from './types';
 
-export const uploaderStartUpload = () => ({
-  type: UPLOADER_START_UPLOAD,
+export const startProcess = () => ({
+  type: START_PROCESS,
+});
+
+export const endProcess = () => ({
+  type: END_PROCESS,
 });
 
 export const submitFormRequest = values => ({
