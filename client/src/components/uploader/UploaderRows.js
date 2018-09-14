@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 // import PropTypes from 'prop-types';
-// import { CSSTransitionGroup as ReactCssTransitionGroup } from 'react-transition-group'
-
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -13,30 +11,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 
 import FineUploaderTraditional from 'fine-uploader-wrappers';
-// import Gallery from 'react-fine-uploader';
-// import Dropzone from 'react-fine-uploader/dropzone';
-import Dropzone from './Dropzone';
-// import FileInput from 'react-fine-uploader/file-input';
 import Filename from 'react-fine-uploader/filename';
 import Filesize from 'react-fine-uploader/filesize';
-// import ProgressBar from 'react-fine-uploader/progress-bar';
 
-// import Status from 'react-fine-uploader/status';
+import Dropzone from './Dropzone';
 import Status from './Status';
-
-// import DeleteButton from 'react-fine-uploader/delete-button';
-// import RetryButton from 'react-fine-uploader/retry-button';
-// import PauseResumeButton from 'react-fine-uploader/pause-resume-button';
-
-// import UploadIcon from 'react-fine-uploader/gallery/upload-icon';
-// import PauseIcon from 'react-fine-uploader/gallery/pause-icon';
-// import PlayIcon from 'react-fine-uploader/gallery/play-icon';
-// import UploadFailedIcon from 'react-fine-uploader/gallery/upload-failed-icon';
-// import UploadSuccessIcon from 'react-fine-uploader/gallery/upload-success-icon';
-// import XIcon from 'react-fine-uploader/gallery/x-icon';
-
-// import './gallery.css';
-
 import FileInput from './FileInput';
 import CancelButton from './CancelButton';
 import ProgressBar from './ProgressBar';
@@ -139,7 +118,6 @@ export const uploader = new FineUploaderTraditional({
     },
     deleteFile: {
       enabled: false,
-      endpoint: '/uploads',
     },
     request: {
       endpoint: '/uploads',
@@ -219,8 +197,6 @@ class UploaderRows extends Component {
     console.log('errorReason:', errorReason);
     console.log('xhr:', xhr);
 
-    // this.props.input.onBlur('aaaaaaaaaa');
-    // alert(errorReason);
     let errorMsg = errorReason;
     if (errorReason.toLowerCase().startsWith('xhr returned response code 0')) {
       errorMsg = 'Network error';
@@ -228,14 +204,6 @@ class UploaderRows extends Component {
     this.props.openNotifier(errorMsg);
 
     this.props.endProcess();
-    // alert(
-    //   uploader.qq.format(
-    //     'Error on file number {} - {}.  Reason: {}',
-    //     id,
-    //     name,
-    //     errorReason
-    //   )
-    // );
   };
 
   handleOnComplete = (id, name, responseJSON, xhr) => {
@@ -247,7 +215,7 @@ class UploaderRows extends Component {
   handleOnAllComplete = (succeeded, failed) => {
     console.log('=========== onAllComplete =============');
     console.log('dispatch action');
-    this.props.endProcess();
+    this.props.endProcess(); //* dispatch an action
   };
 
   componentDidMount() {
@@ -268,8 +236,6 @@ class UploaderRows extends Component {
 
   render() {
     const { classes } = this.props;
-
-    // console.log(statusEnum);
 
     // const chunkingEnabled =
     //   uploader.options.chunking && uploader.options.chunking.enabled;

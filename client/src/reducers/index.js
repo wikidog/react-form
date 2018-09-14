@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { reducer as reduxForm } from 'redux-form';
 
-import uploaderReducer from './uploaderReducer';
+import uploaderReducer from '../components/uploader/reducer';
 import notifierReducer from '../components/notifier/reducer';
 
 export default combineReducers({

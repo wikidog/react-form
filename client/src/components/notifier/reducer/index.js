@@ -1,4 +1,4 @@
-import { OPEN_NOTIFIER, CLOSE_NOTIFIER } from './actionTypes';
+import { OPEN_NOTIFIER, CLOSE_NOTIFIER } from '../actions/types';
 
 const initialSate = {
   open: false,

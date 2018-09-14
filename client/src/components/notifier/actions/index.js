@@ -1,4 +1,4 @@
-import { OPEN_NOTIFIER, CLOSE_NOTIFIER } from './actionTypes';
+import { OPEN_NOTIFIER, CLOSE_NOTIFIER } from './types';
 
 export const openNotifier = message => ({
   type: OPEN_NOTIFIER,

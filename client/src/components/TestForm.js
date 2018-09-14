@@ -15,9 +15,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 
 import UploaderRows, { uploader } from './uploader/UploaderRows';
 
-import * as myActions from '../actions';
-//
-// we need these actions to open the Notifier component
+import * as uploaderActions from './uploader/actions';
+// we need these actions to open the Notifier component in this component
 import * as notifierActions from './notifier/actions';
 
 const styles = {};
@@ -194,7 +193,7 @@ const mapStateToProps = ({ uploader }) => {
 export default withStyles(styles)(
   connect(
     mapStateToProps,
-    { ...myActions, ...notifierActions }
+    { ...uploaderActions, ...notifierActions }
   )(
     reduxForm({
       form: 'testForm',

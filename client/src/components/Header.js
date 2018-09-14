@@ -9,7 +9,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import AccountBox from '@material-ui/icons/AccountBox';
 
-import * as actions from '../actions';
+// import * as actions from '../actions';
 
 const styles = theme => ({
   title: {
@@ -65,5 +65,6 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  actions
+  // actions
+  null
 )(withStyles(styles)(Header));
