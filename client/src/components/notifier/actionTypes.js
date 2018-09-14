@@ -1,0 +1,2 @@
+export const OPEN_NOTIFIER = 'OPEN_NOTIFIER';
+export const CLOSE_NOTIFIER = 'CLOSE_NOTIFIER';

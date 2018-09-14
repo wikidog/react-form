@@ -212,15 +212,20 @@ class UploaderRows extends Component {
     this.props.touch(this.props.input.name);
   };
 
-  handleOnError = (id, name, errorReason) => {
+  handleOnError = (id, name, errorReason, xhr) => {
     console.log('============== onError ==================');
-    // console.log('id', id);
-    // console.log('name', name);
+    console.log('id', id);
+    console.log('name', name);
     console.log('errorReason:', errorReason);
+    console.log('xhr:', xhr);
 
     // this.props.input.onBlur('aaaaaaaaaa');
     // alert(errorReason);
-    this.props.openSnackbar(errorReason);
+    let errorMsg = errorReason;
+    if (errorReason.toLowerCase().startsWith('xhr returned response code 0')) {
+      errorMsg = 'Network error';
+    }
+    this.props.openSnackbar(errorMsg);
 
     this.props.endProcess();
     // alert(
