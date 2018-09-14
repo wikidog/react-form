@@ -4,8 +4,6 @@ import {
   SUBMIT_FORM_REQUEST,
   SUBMIT_FORM_SUCCESS,
   SUBMIT_FORM_FAILURE,
-  OPEN_SNACKBAR,
-  CLOSE_SNACKBAR,
 } from '../actions/types';
 
 // this reducer manages this piece of state
@@ -34,12 +32,6 @@ export default (state = initialSate, action) => {
         // error: null,
         // snackbarOpen: false,
       };
-
-    case OPEN_SNACKBAR:
-      return { ...state, snackbarOpen: true, error: action.payload };
-
-    case CLOSE_SNACKBAR:
-      return { ...state, snackbarOpen: false };
 
     case SUBMIT_FORM_REQUEST:
       return {

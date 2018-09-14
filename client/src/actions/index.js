@@ -1,10 +1,4 @@
-import {
-  SUBMIT_FORM_REQUEST,
-  OPEN_SNACKBAR,
-  CLOSE_SNACKBAR,
-  START_PROCESS,
-  END_PROCESS,
-} from './types';
+import { SUBMIT_FORM_REQUEST, START_PROCESS, END_PROCESS } from './types';
 
 export const startProcess = () => ({
   type: START_PROCESS,
@@ -19,11 +13,11 @@ export const submitFormRequest = values => ({
   payload: values,
 });
 
-export const openSnackbar = message => ({
-  type: OPEN_SNACKBAR,
-  payload: message,
-});
+// export const openSnackbar = message => ({
+//   type: OPEN_SNACKBAR,
+//   payload: message,
+// });
 
-export const closeSnackbar = () => ({
-  type: CLOSE_SNACKBAR,
-});
+// export const closeSnackbar = () => ({
+//   type: CLOSE_SNACKBAR,
+// });

@@ -2,37 +2,33 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
-// import Fade from 'material-ui/transitions/Fade';
+import Fade from '@material-ui/core/Fade';
+
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 import * as actions from './actions';
 
-const styles = {
+const styles = theme => ({
   root: {
     position: 'absolute',
   },
-};
+});
 
-class Nifitier extends Component {
+class Notifier extends Component {
   //
-  render() {
-    // console.log('TestForm:', this.props);
-    const {
-      // error,
-      handleSubmit,
-      closeSnackbar, // * my action creator
-      snackbarOpen,
-      uploaderUploading,
-      uploaderWorkInProgress,
-      // uploadResponse,
-      uploadError,
-      classes,
-    } = this.props;
+  handleClose = (event, reason) => {
+    // if (reason === 'clickaway') {  // * this disables 'clickaway'
+    //   return;
+    // }
+    this.props.closeNotifier(); // dispatch an action
+  };
 
-    handleClose = () => {
-      this.props.closeNofitier(); // dispatch an action
-    };
+  render() {
+    //
+    const { open, message, classes } = this.props;
 
     return (
       <Snackbar
@@ -40,23 +36,32 @@ class Nifitier extends Component {
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={open}
         // autoHideDuration={4000}
-        onClose={closeNofitier}
-        // transition={Fade}
+        onClose={this.handleClose}
+        TransitionComponent={Fade}
         ContentProps={{
           'aria-describedby': 'snackbar-message-id',
           className: classes.snackbarContent,
         }}
         message={<span id="snackbar-message-id">{message}</span>}
         action={
-          <Button
+          // <Button
+          //   color="inherit"
+          //   size="small"
+          //   onClick={this.handleClose}
+          //   disableFocusRipple={true}
+          //   disableRipple={true}
+          // >
+          //   Undo
+          // </Button>
+          <IconButton
+            key="close"
+            aria-label="Close"
             color="inherit"
-            size="small"
+            className={classes.close}
             onClick={this.handleClose}
-            disableFocusRipple={true}
-            disableRipple={true}
           >
-            Undo
-          </Button>
+            <CloseIcon />
+          </IconButton>
         }
       />
     );

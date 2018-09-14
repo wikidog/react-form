@@ -7,35 +7,20 @@ import isValidEmail from 'sane-email-validation';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
-// import Fade from 'material-ui/transitions/Fade';
 
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-// import UploadComponent, { uploader } from './Upload';
 import UploaderRows, { uploader } from './uploader/UploaderRows';
 
 import * as myActions from '../actions';
-// import showResults from './showResults';
+//
+// we need these actions to open the Notifier component
+import * as notifierActions from './notifier/actions';
 
-const styles = {
-  root: {
-    position: 'relative',
-    // overflow: 'hidden',
-    // textAlign: 'center',
-    // paddingTop: this.props.theme.spacing.unit * 20,
-  },
-  snackbar: {
-    position: 'absolute',
-  },
-  fineUploader: {
-    margin: '10px',
-    textAlign: 'left',
-  },
-};
+const styles = {};
 
 // return axios
 //   .post('http://localhost:5000/formsubmit', values)
@@ -68,7 +53,7 @@ class TestForm extends Component {
         change={this.props.change}
         touch={this.props.touch}
         endProcess={this.props.endProcess} // * my action creator
-        openSnackbar={this.props.openSnackbar} // * my action creator
+        openNotifier={this.props.openNotifier} // * my action creator
         // blur={this.props.blur}
         {...fields}
       />
@@ -95,8 +80,6 @@ class TestForm extends Component {
     // dispatch startProcess action
     this.props.startProcess();
 
-    // console.log('uploader', uploader);
-    // console.log('uploader-methods', uploader.methods);
     console.log('========= trigger upload... ==============');
     console.log('========= setParams ==============');
     uploader.methods.setParams(values);
@@ -112,17 +95,11 @@ class TestForm extends Component {
     const {
       // error,
       handleSubmit,
-      closeSnackbar, // * my action creator
-      snackbarOpen,
-      uploaderUploading,
       uploaderWorkInProgress,
-      // uploadResponse,
-      uploadError,
-      classes,
     } = this.props;
 
     return (
-      <form className={classes.root} onSubmit={handleSubmit(this.submitForm)}>
+      <form onSubmit={handleSubmit(this.submitForm)}>
         <div>
           <Field
             name="firstName"
@@ -160,30 +137,6 @@ class TestForm extends Component {
             Submit
           </Button>
         </div>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={snackbarOpen}
-          // autoHideDuration={4000}
-          onClose={closeSnackbar}
-          // transition={Fade}
-          ContentProps={{
-            'aria-describedby': 'snackbar-message-id',
-            className: classes.snackbarContent,
-          }}
-          message={<span id="snackbar-message-id">{uploadError}</span>}
-          action={
-            <Button
-              color="inherit"
-              size="small"
-              onClick={this.handleClose}
-              disableFocusRipple={true}
-              disableRipple={true}
-            >
-              Undo
-            </Button>
-          }
-          className={classes.snackbar}
-        />
       </form>
     );
   }
@@ -233,17 +186,15 @@ function onSubmitFail(errors) {
 const mapStateToProps = ({ uploader }) => {
   return {
     uploaderWorkInProgress: uploader.workInProgress,
-    uploaderUploading: uploader.uploading,
     uploadError: uploader.error,
     uploadResponse: uploader.response,
-    snackbarOpen: uploader.snackbarOpen,
   };
 };
 
 export default withStyles(styles)(
   connect(
     mapStateToProps,
-    myActions
+    { ...myActions, ...notifierActions }
   )(
     reduxForm({
       form: 'testForm',

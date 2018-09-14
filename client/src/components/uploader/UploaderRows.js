@@ -225,7 +225,7 @@ class UploaderRows extends Component {
     if (errorReason.toLowerCase().startsWith('xhr returned response code 0')) {
       errorMsg = 'Network error';
     }
-    this.props.openSnackbar(errorMsg);
+    this.props.openNotifier(errorMsg);
 
     this.props.endProcess();
     // alert(
