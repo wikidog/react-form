@@ -67,7 +67,8 @@ class TestForm extends Component {
       <UploaderRows
         change={this.props.change}
         touch={this.props.touch}
-        endProcess={this.props.endProcess}
+        endProcess={this.props.endProcess} // * my action creator
+        openSnackbar={this.props.openSnackbar} // * my action creator
         // blur={this.props.blur}
         {...fields}
       />
@@ -111,7 +112,7 @@ class TestForm extends Component {
     const {
       // error,
       handleSubmit,
-      closeSnackbar,
+      closeSnackbar, // * my action creator
       snackbarOpen,
       uploaderUploading,
       uploaderWorkInProgress,

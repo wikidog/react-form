@@ -219,7 +219,8 @@ class UploaderRows extends Component {
     console.log('errorReason:', errorReason);
 
     // this.props.input.onBlur('aaaaaaaaaa');
-    alert(errorReason);
+    // alert(errorReason);
+    this.props.openSnackbar(errorReason);
 
     this.props.endProcess();
     // alert(
