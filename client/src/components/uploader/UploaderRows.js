@@ -15,7 +15,8 @@ import Filename from 'react-fine-uploader/filename';
 import Filesize from 'react-fine-uploader/filesize';
 
 import Dropzone from './Dropzone';
-import Status from './Status';
+import Status from './Status'; // file status
+import Remark from './Remark'; // file remark
 import FileInput from './FileInput';
 import CancelButton from './CancelButton';
 import ProgressBar from './ProgressBar';
@@ -195,15 +196,23 @@ class UploaderRows extends Component {
     console.log('id', id);
     console.log('name', name);
     console.log('errorReason:', errorReason);
-    console.log('xhr:', xhr);
+    // console.log('xhr:', xhr);
 
+    let showError = false;
     let errorMsg = errorReason;
-    if (errorReason.toLowerCase().startsWith('xhr returned response code 0')) {
-      errorMsg = 'Network error';
-    }
-    this.props.openNotifier(errorMsg);
+    let emsg = errorReason.toLowerCase();
 
-    this.props.endProcess();
+    if (emsg.startsWith('xhr returned response code 0')) {
+      this._updateVisibleFileRemark(id, 'Network error');
+      // uploader.methods.cancelAll();
+    } else if (emsg.startsWith('no files to upload')) {
+      showError = true;
+      this.props.endProcess();
+    }
+
+    if (showError) {
+      this.props.openNotifier(errorMsg);
+    }
   };
 
   handleOnComplete = (id, name, responseJSON, xhr) => {
@@ -214,6 +223,11 @@ class UploaderRows extends Component {
 
   handleOnAllComplete = (succeeded, failed) => {
     console.log('=========== onAllComplete =============');
+    console.log('succeeded:', succeeded);
+    console.log('failed:', failed);
+    console.log('visiableFiles:', this.state.visibleFiles);
+
+    this.props.openNotifier('Upload completed');
     console.log('dispatch action');
     this.props.endProcess(); //* dispatch an action
   };
@@ -266,7 +280,7 @@ class UploaderRows extends Component {
           />
         </div>
 
-        {this.state.visibleFiles.map(({ id, status, fromServer }) => (
+        {this.state.visibleFiles.map(({ id, status, remark, fromServer }) => (
           <Paper key={id} className={classes.uploadItem}>
             <Grid container spacing={16} alignItems={'center'}>
               <Grid item xs={12} sm style={inlineStyleGridItem}>
@@ -316,12 +330,16 @@ class UploaderRows extends Component {
                   sm
                   style={{ paddingTop: 0, paddingBottom: 0 }}
                 >
-                  <ProgressBar
-                    id={id}
-                    uploader={uploader}
-                    hideBeforeStart={true}
-                    hideOnComplete={true}
-                  />
+                  {remark ? (
+                    <Remark status={status} remark={remark} />
+                  ) : (
+                    <ProgressBar
+                      id={id}
+                      uploader={uploader}
+                      hideBeforeStart={true}
+                      hideOnComplete={true}
+                    />
+                  )}
                 </Grid>
               </Grid>
             </div>
@@ -346,6 +364,17 @@ class UploaderRows extends Component {
     this.state.visibleFiles.some(file => {
       if (file.id === id) {
         file.status = status;
+        this.setState({ visibleFiles: this.state.visibleFiles });
+        return true;
+      }
+      return false;
+    });
+  }
+
+  _updateVisibleFileRemark(id, remark) {
+    this.state.visibleFiles.some(file => {
+      if (file.id === id) {
+        file.remark = remark;
         this.setState({ visibleFiles: this.state.visibleFiles });
         return true;
       }
