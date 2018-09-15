@@ -107,6 +107,7 @@ export const uploader = new FineUploaderTraditional({
     messages: {
       tooManyItemsError: 'one file a time',
     },
+    // maxConnections: 1,  // default is 3
     chunking: {
       enabled: true,
       partSize: 10000000,
