@@ -227,6 +227,7 @@ class UploaderRows extends Component {
     console.log('succeeded:', succeeded);
     console.log('failed:', failed);
     console.log('visiableFiles:', this.state.visibleFiles);
+    console.log('getInProgress:', uploader.methods.getInProgress());
 
     this.props.openNotifier('Upload completed');
     console.log('dispatch action');
