@@ -14,10 +14,15 @@ const Remark = ({ status, remark, classes }) => {
     return null;
   }
 
+  let textColor = 'textSecondary';
+  if (status === 'upload failed') {
+    textColor = 'error';
+  }
+
   return (
     <Typography
       variant="body1"
-      color="textSecondary"
+      color={textColor}
       component="div"
       align="left"
       classes={{ root: classes.root }}

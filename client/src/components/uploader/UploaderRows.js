@@ -199,19 +199,18 @@ class UploaderRows extends Component {
     console.log('errorReason:', errorReason);
     // console.log('xhr:', xhr);
 
-    let showError = false;
     let errorMsg = errorReason;
     let emsg = errorReason.toLowerCase();
 
     if (emsg.startsWith('xhr returned response code 0')) {
-      this._updateVisibleFileRemark(id, 'Network error');
       // uploader.methods.cancelAll();
-    } else if (emsg.startsWith('no files to upload')) {
-      showError = true;
-      this.props.endProcess();
+      errorMsg = 'Network error';
     }
 
-    if (showError) {
+    if (id !== null) {
+      this._updateVisibleFileRemark(id, errorMsg);
+    } else {
+      this.props.endProcess();
       this.props.openNotifier(errorMsg);
     }
   };
@@ -229,9 +228,16 @@ class UploaderRows extends Component {
     console.log('visiableFiles:', this.state.visibleFiles);
     console.log('getInProgress:', uploader.methods.getInProgress());
 
-    this.props.openNotifier('Upload completed');
-    console.log('dispatch action');
-    this.props.endProcess(); //* dispatch an action
+    const filesInFinalizing = uploader.methods.getUploads({
+      status: statusEnum.UPLOAD_FINALIZING,
+    }).length;
+    console.log('fip:', filesInFinalizing);
+
+    if (!filesInFinalizing) {
+      this.props.openNotifier('Upload completed');
+      console.log('dispatch action');
+      this.props.endProcess(); //* dispatch an action
+    }
   };
 
   componentDidMount() {
