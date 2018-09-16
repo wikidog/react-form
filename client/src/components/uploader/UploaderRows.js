@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
 // import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -142,13 +141,13 @@ class UploaderRows extends Component {
   // this function is for Redux-Form <Field /> component
   handleOnFieldValueChange = value => {
     // this will dispatch a CHANGE action on Redux-Form
-    this.props.change(
-      this.props.input.name,
-      // uploader.methods.getUploads({ status: 'submitted' })
-      uploader.methods.getUploads({ status: statusEnum.SUBMITTED }).length
-      // uploader.methods.getUploads()
-      // value
-    );
+    // this.props.change(
+    //   this.props.input.name,
+    //   // uploader.methods.getUploads({ status: 'submitted' })
+    //   uploader.methods.getUploads({ status: statusEnum.SUBMITTED }).length
+    //   // uploader.methods.getUploads()
+    //   // value
+    // );
   };
 
   handleOnStatusChange = (id, oldStatus, newStatus) => {
@@ -162,10 +161,10 @@ class UploaderRows extends Component {
     if (newStatus === statusEnum.SUBMITTED) {
       visibleFiles.push({ id });
       this.setState({ visibleFiles });
-      this.handleOnFieldValueChange(visibleFiles);
+      // this.handleOnFieldValueChange(visibleFiles);
     } else if (isFileGone(newStatus, statusEnum)) {
       this._removeVisibleFile(id);
-      this.handleOnFieldValueChange(visibleFiles);
+      // this.handleOnFieldValueChange(visibleFiles);
     } else if (
       // * we only display these statuses
       newStatus === statusEnum.UPLOAD_SUCCESSFUL ||
@@ -190,7 +189,7 @@ class UploaderRows extends Component {
     // uploader.methods.clearStoredFiles();
     // uploader.methods.cancelAll();
     // for Redux-Form
-    this.props.touch(this.props.input.name);
+    // this.props.touch(this.props.input.name);
   };
 
   handleOnError = (id, name, errorReason, xhr) => {

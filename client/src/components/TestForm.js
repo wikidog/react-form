@@ -19,7 +19,11 @@ import * as uploaderActions from './uploader/actions';
 // we need these actions to open the Notifier component in this component
 import * as notifierActions from './notifier/actions';
 
-const styles = {};
+const styles = theme => ({
+  uploader: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+});
 
 // return axios
 //   .post('http://localhost:5000/formsubmit', values)
@@ -41,31 +45,6 @@ const styles = {};
 
 class TestForm extends Component {
   //
-  renderUploaderField = fields => (
-    <FormControl
-      fullWidth
-      error={fields.meta.touched && fields.meta.error ? true : false}
-    >
-      {/* <InputLabel htmlFor={input.name}>{label}</InputLabel> */}
-      {/* <Input id={input.name} {...input} {...custom} /> */}
-      <UploaderRows
-        change={this.props.change}
-        touch={this.props.touch}
-        endProcess={this.props.endProcess} // * my action creator
-        openNotifier={this.props.openNotifier} // * my action creator
-        addSucceeded={this.props.addSucceeded} // * my action creator
-        addFailed={this.props.addFailed} // * my action creator
-        uploaderSucceeded={this.props.uploaderSucceeded} // * my state
-        uploaderFailed={this.props.uploaderFailed} // * my state
-        // blur={this.props.blur}
-        {...fields}
-      />
-      <FormHelperText id={`${fields.input.name}-text`}>
-        {fields.meta.touched && fields.meta.error ? fields.meta.error : ''}
-      </FormHelperText>
-    </FormControl>
-  );
-
   renderTextField = ({ input, meta: { touched, error }, label, ...custom }) => (
     <FormControl fullWidth error={touched && error ? true : false}>
       <InputLabel htmlFor={input.name}>{label}</InputLabel>
@@ -96,9 +75,15 @@ class TestForm extends Component {
   render() {
     // console.log('TestForm:', this.props);
     const {
-      // error,
+      classes,
       handleSubmit,
-      uploaderWorkInProgress,
+      uploaderWorkInProgress, // my state
+      uploaderSucceeded, // my state
+      uploaderFailed, // my state
+      endProcess, // my actin creator
+      addSucceeded, // my actin creator
+      addFailed, // my actin creator
+      openNotifier, // my actin creator
     } = this.props;
 
     return (
@@ -124,8 +109,15 @@ class TestForm extends Component {
             label="Email *"
           />
         </div> */}
-        <div>
-          <Field name="uploader" component={this.renderUploaderField} />
+        <div className={classes.uploader}>
+          <UploaderRows
+            endProcess={endProcess} // my action creator
+            openNotifier={openNotifier} // my action creator
+            addSucceeded={addSucceeded} // my action creator
+            addFailed={addFailed} // my action creator
+            uploaderSucceeded={uploaderSucceeded} // my state
+            uploaderFailed={uploaderFailed} // my state
+          />
         </div>
         <div>
           <Button
@@ -162,10 +154,6 @@ const validate = values => {
     errors.email = 'Enter your email';
   } else if (!isValidEmail(values.email)) {
     errors.email = 'Invalid Email';
-  }
-
-  if (!values.uploader || values.uploader === 0) {
-    errors.uploader = 'Please select a file';
   }
 
   // console.log(errors);
