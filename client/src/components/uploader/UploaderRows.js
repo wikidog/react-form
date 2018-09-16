@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import classNames from 'classnames';
 // import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -209,6 +210,7 @@ class UploaderRows extends Component {
 
     if (id !== null) {
       this._updateVisibleFileRemark(id, errorMsg);
+      this.props.addFailed(id); // dispatch action
     } else {
       this.props.endProcess();
       this.props.openNotifier(errorMsg);
@@ -219,6 +221,11 @@ class UploaderRows extends Component {
     console.log('=========== onComplete =============');
     console.log('id:', id);
     console.log('name:', name);
+    console.log('response:', responseJSON);
+    if (responseJSON.success) {
+      this._updateVisibleFileRemark(id, `Renamed to: ${responseJSON.filename}`);
+      this.props.addSucceeded(id); // dispatch action
+    }
   };
 
   handleOnAllComplete = (succeeded, failed) => {
@@ -234,10 +241,19 @@ class UploaderRows extends Component {
     console.log('fip:', filesInFinalizing);
 
     if (!filesInFinalizing) {
+      console.log(this.props);
+      console.log('uploaderSucceeded:', this.props.uploaderSucceeded);
+      console.log('uploaderFailed:', this.props.uploaderFailed);
       this.props.openNotifier('Upload completed');
       console.log('dispatch action');
       this.props.endProcess(); //* dispatch an action
     }
+  };
+
+  handleOnSessionRequestComplete = (response, success) => {
+    console.log('=========== onSessionRequestComplete =============');
+    console.log('response:', response);
+    console.log('success:', success);
   };
 
   componentDidMount() {
@@ -246,6 +262,7 @@ class UploaderRows extends Component {
     uploader.on('error', this.handleOnError);
     uploader.on('complete', this.handleOnComplete);
     uploader.on('allComplete', this.handleOnAllComplete);
+    uploader.on('sessionRequestComplete', this.handleOnSessionRequestComplete);
   }
 
   componentWillUnmount() {
@@ -254,6 +271,7 @@ class UploaderRows extends Component {
     uploader.off('error', this.handleOnError);
     uploader.off('complete', this.handleOnComplete);
     uploader.off('allComplete', this.handleOnAllComplete);
+    uploader.off('sessionRequestComplete', this.handleOnSessionRequestComplete);
   }
 
   render() {

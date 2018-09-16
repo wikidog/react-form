@@ -53,6 +53,10 @@ class TestForm extends Component {
         touch={this.props.touch}
         endProcess={this.props.endProcess} // * my action creator
         openNotifier={this.props.openNotifier} // * my action creator
+        addSucceeded={this.props.addSucceeded} // * my action creator
+        addFailed={this.props.addFailed} // * my action creator
+        uploaderSucceeded={this.props.uploaderSucceeded} // * my state
+        uploaderFailed={this.props.uploaderFailed} // * my state
         // blur={this.props.blur}
         {...fields}
       />
@@ -185,8 +189,8 @@ function onSubmitFail(errors) {
 const mapStateToProps = ({ uploader }) => {
   return {
     uploaderWorkInProgress: uploader.workInProgress,
-    uploadError: uploader.error,
-    uploadResponse: uploader.response,
+    uploaderSucceeded: uploader.succeeded,
+    uploaderFailed: uploader.failed,
   };
 };
 

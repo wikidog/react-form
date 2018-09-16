@@ -140,7 +140,8 @@ module.exports = app => {
     //
     const fromDir = `${UPLOAD_DIR}/${uuid}`;
     // const files = await fs.readdir(destDir);
-    const toFile = `${UPLOAD_DIR}/upload_${Date.now()}-${filename}`;
+    const toFilename = `upload_${Date.now()}-${filename}`;
+    const toFile = `${UPLOAD_DIR}/${toFilename}`;
 
     //! Node has default 2 minute timeout for the request
     //! if the uploaded file is very big, merging could take long time
@@ -149,7 +150,7 @@ module.exports = app => {
       fromDir,
       totalPartsInt,
       toFile,
-      () => res.send({ success: true }),
+      () => res.send({ success: true, filename: toFilename }),
       next
     );
   });
@@ -160,6 +161,13 @@ module.exports = app => {
     console.log(req.body);
     console.log(req.file);
     console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-    res.send({ success: true });
+    let rtnData = { success: true };
+    const partIndex = req.body.qqpartindex;
+    if (partIndex == null) {
+      // no chunking
+      rtnData.filename = req.file.filename;
+    }
+    // res.send({ success: true });
+    res.send(rtnData);
   });
 };
