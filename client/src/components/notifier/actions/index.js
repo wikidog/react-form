@@ -1,8 +1,8 @@
 import { OPEN_NOTIFIER, CLOSE_NOTIFIER } from './types';
 
-export const openNotifier = message => ({
+export const openNotifier = messageObj => ({
   type: OPEN_NOTIFIER,
-  payload: message,
+  payload: messageObj,
 });
 
 export const closeNotifier = () => ({

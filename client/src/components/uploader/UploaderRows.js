@@ -212,7 +212,7 @@ class UploaderRows extends Component {
       this.props.addFailed(id); // dispatch action
     } else {
       this.props.endProcess();
-      this.props.openNotifier(errorMsg);
+      this.props.openNotifier({ variant: 'info', message: errorMsg });
     }
   };
 
@@ -243,7 +243,22 @@ class UploaderRows extends Component {
       console.log(this.props);
       console.log('uploaderSucceeded:', this.props.uploaderSucceeded);
       console.log('uploaderFailed:', this.props.uploaderFailed);
-      this.props.openNotifier('Upload completed');
+      if (this.props.uploaderFailed.length === 0) {
+        this.props.openNotifier({
+          variant: 'success',
+          message: 'Upload Succeeded',
+        });
+      } else if (this.props.uploaderSucceeded.length === 0) {
+        this.props.openNotifier({
+          variant: 'error',
+          message: 'Upload Failed',
+        });
+      } else {
+        this.props.openNotifier({
+          variant: 'warning',
+          message: 'Upload succeeded partially',
+        });
+      }
       console.log('dispatch action');
       this.props.endProcess(); //* dispatch an action
     }
