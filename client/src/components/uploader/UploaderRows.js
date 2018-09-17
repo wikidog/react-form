@@ -33,15 +33,18 @@ const styles = theme => ({
     position: 'relative',
   },
   dropzoneEnabled: {
-    border: '2px dashed #00ABC7',
+    // border: '2px dashed #00ABC7',
+    border: `2px dashed ${theme.palette.secondary.light}`,
   },
   dropzoneActive: {
     // background: '#FDFDFD',
     background: '#FEFEFE',
-    border: '2px solid #00ABC7',
+    // border: '2px solid #00ABC7',
+    border: `2px solid ${theme.palette.secondary.light}`,
   },
   dropzoneDisabled: {
-    border: '2px solid #00ABC7',
+    // border: '2px solid #00ABC7',
+    border: `2px solid ${theme.palette.secondary.light}`,
   },
   dropzoneBackgroundContent: {
     position: 'absolute',
