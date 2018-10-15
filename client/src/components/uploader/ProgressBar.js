@@ -68,10 +68,10 @@ class ProgressBar extends Component {
       };
     }
 
-    const statusEnum = this.props.uploader.qq.status;
-
     /**
      *
+    const statusEnum = this.props.uploader.qq.status;
+
     this._trackStatusEventHandler = (id, oldStatus, newStatus) => {
       // console.log('-------------------- in progressBar -----------');
       // console.log('oldStatus:', oldStatus);
@@ -168,9 +168,9 @@ class ProgressBar extends Component {
   }
 } // ==== end of "class ProgressBar extends Component {...}" ==============
 
-const isUploadComplete = (statusToCheck, statusEnum) =>
-  statusToCheck === statusEnum.UPLOAD_FAILED ||
-  statusToCheck === statusEnum.UPLOAD_SUCCESSFUL ||
-  statusToCheck === statusEnum.CANCELED;
+// const isUploadComplete = (statusToCheck, statusEnum) =>
+//   statusToCheck === statusEnum.UPLOAD_FAILED ||
+//   statusToCheck === statusEnum.UPLOAD_SUCCESSFUL ||
+//   statusToCheck === statusEnum.CANCELED;
 
 export default withStyles(styles)(ProgressBar);
