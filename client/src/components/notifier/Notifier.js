@@ -6,7 +6,8 @@ import { withStyles } from '@material-ui/core/styles';
 // import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
-// import Fade from '@material-ui/core/Fade';
+import Fade from '@material-ui/core/Fade';
+// import Slide from '@material-ui/core/Slide';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -70,12 +71,20 @@ const MySnackbarContent = props => {
           key="close"
           aria-label="Close"
           color="inherit"
+          disableRipple={true}
           className={classes.close}
           onClick={onClose}
         >
           <CloseIcon className={classes.icon} />
         </IconButton>,
       ]}
+      //
+      // this is just a workaround
+      // headlineMapping={{
+      //   body1: 'div',
+      //   body2: 'div',
+      // }}
+      //
       {...other}
     />
   );
@@ -111,7 +120,8 @@ class Notifier extends Component {
         open={open}
         // autoHideDuration={4000}
         onClose={this.handleClose}
-        // TransitionComponent={Fade}
+        // TransitionComponent={Slide}
+        TransitionComponent={Fade}
       >
         <MySnackbarContentWrapper
           onClose={this.handleClose}

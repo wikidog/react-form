@@ -21,7 +21,7 @@ const Remark = ({ status, remark, classes }) => {
 
   return (
     <Typography
-      variant="body1"
+      variant="body2"
       color={textColor}
       component="div"
       align="left"

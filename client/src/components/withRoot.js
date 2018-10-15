@@ -31,6 +31,9 @@ const theme = createMuiTheme({
     danger: orange,
     succeed: green,
   },
+  typography: {
+    useNextVariants: true,
+  },
   // mixins: {
   //   toolbar: {
   //     minHeight: 64,

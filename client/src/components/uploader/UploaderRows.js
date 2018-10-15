@@ -327,12 +327,12 @@ class UploaderRows extends Component {
           <Paper key={id} className={classes.uploadItem}>
             <Grid container spacing={16} alignItems={'center'}>
               <Grid item xs={12} sm style={inlineStyleGridItem}>
-                <Typography variant="title" className={classes.filename}>
+                <Typography variant="h6" className={classes.filename}>
                   <Filename id={id} uploader={uploader} />
                 </Typography>
               </Grid>
               <Grid item style={inlineStyleGridItem}>
-                <Typography variant="subheading" className={classes.filesize}>
+                <Typography variant="subtitle1" className={classes.filesize}>
                   <Filesize id={id} uploader={uploader} />
                 </Typography>
               </Grid>
@@ -379,7 +379,7 @@ class UploaderRows extends Component {
                     <ProgressBar
                       id={id}
                       uploader={uploader}
-                      hideBeforeStart={true}
+                      hideBeforeStart={false}
                       hideOnComplete={true}
                     />
                   )}
@@ -510,7 +510,7 @@ const getDefaultMaybeDropzoneContent = ({ content, classes, disabled }) => {
   return (
     <div className={className}>
       <CloudUploadIcon className={classes.dropzoneBackgroundIcon} />
-      <Typography variant="display2" component="span">
+      <Typography variant="h3" component="span">
         Drop Files Here
       </Typography>
     </div>

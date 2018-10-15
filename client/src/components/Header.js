@@ -33,7 +33,7 @@ class Header extends Component {
         <Toolbar>
           <Typography
             className={classes.title}
-            variant="title"
+            variant="h6"
             color="inherit"
             noWrap
           >

@@ -34,7 +34,7 @@ const Status = ({ status, classes }) => {
   const newStatusToDisplay = getStatusToDisplay({ displayMap: text, status });
   return (
     <Typography
-      variant="body1" //!! change the minWidth if we change this property !!
+      variant="body2" //!! change the minWidth if we change this property !!
       color="textSecondary"
       component="div"
       align="left"

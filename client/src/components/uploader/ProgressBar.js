@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-// import _debounce from 'lodash/debounce';
-import _throttle from 'lodash/throttle';
 
 const styles = {
   root: {
@@ -28,28 +26,23 @@ class ProgressBar extends Component {
     super(props);
 
     this.state = {
-      bytesUploaded: null,
-      hidden: props.hideBeforeStart,
-      totalSize: null,
+      completed: 0,
+      // hidden: props.hideBeforeStart,
     };
+
+    this.progressUpdateCounter = 0;
 
     this._createEventHandlers();
   }
 
   componentDidMount() {
     if (this._isTotalProgress) {
-      this.props.uploader.on(
-        'totalProgress',
-        _throttle(this._trackProgressEventHandler, 80)
-      );
+      this.props.uploader.on('totalProgress', this._trackProgressEventHandler);
     } else {
-      this.props.uploader.on(
-        'progress',
-        _throttle(this._trackProgressEventHandler, 80)
-      );
+      this.props.uploader.on('progress', this._trackProgressEventHandler);
     }
 
-    this.props.uploader.on('statusChange', this._trackStatusEventHandler);
+    // this.props.uploader.on('statusChange', this._trackStatusEventHandler);
   }
 
   componentWillUnmount() {
@@ -57,32 +50,10 @@ class ProgressBar extends Component {
     this._unregisterEventHandlers();
   }
 
-  render() {
-    // const className = this._isTotalProgress
-    //   ? 'react-fine-uploader-total-progress-bar'
-    //   : 'react-fine-uploader-file-progress-bar';
-    // const customContainerClassName = this.props.className
-    //   ? this.props.className + '-container'
-    //   : '';
-
-    const intPercent = Math.round(
-      (this.state.bytesUploaded / this.state.totalSize) * 100 || 0
-    );
-    // const percentWidth = 10;
-
-    const { classes } = this.props;
-    return (
-      <div className={classes.root} hidden={this.state.hidden}>
-        {/* <span>{intPercent}</span> */}
-        <LinearProgress variant="determinate" value={intPercent} />
-      </div>
-    );
-  }
-
   _createEventHandlers() {
     if (this._isTotalProgress) {
       this._trackProgressEventHandler = (bytesUploaded, totalSize) => {
-        this.setState({ bytesUploaded, totalSize });
+        this.handleProgressStateUpdate({ bytesUploaded, totalSize });
       };
     } else {
       this._trackProgressEventHandler = (
@@ -92,14 +63,15 @@ class ProgressBar extends Component {
         totalSize
       ) => {
         if (id === this.props.id) {
-          // console.log('bytesUpload:', bytesUploaded);
-          this.setState({ bytesUploaded, totalSize });
+          this.handleProgressStateUpdate({ bytesUploaded, totalSize });
         }
       };
     }
 
     const statusEnum = this.props.uploader.qq.status;
 
+    /**
+     *
     this._trackStatusEventHandler = (id, oldStatus, newStatus) => {
       // console.log('-------------------- in progressBar -----------');
       // console.log('oldStatus:', oldStatus);
@@ -132,7 +104,30 @@ class ProgressBar extends Component {
         }
       }
     };
-  }
+     */
+  } // ---- end of "_createEventHandlers() {...}" ------------------------
+
+  handleProgressStateUpdate = ({ bytesUploaded, totalSize }) => {
+    //
+    //* throttle the updates - no need to update so frequently
+    //
+    this.progressUpdateCounter++;
+
+    if (bytesUploaded > 0 && totalSize > 0) {
+      if (bytesUploaded < totalSize && this.progressUpdateCounter % 4 > 0) {
+        return;
+      }
+      console.log('counter:', this.progressUpdateCounter);
+      console.log('bytesUploaded:', bytesUploaded);
+      console.log('totalize:', totalSize);
+      let completed = 0;
+      if (bytesUploaded > 0) {
+        completed = Math.round((bytesUploaded / totalSize) * 100 || 0);
+      }
+      console.log('completed:', completed);
+      this.setState({ completed });
+    }
+  };
 
   get _isTotalProgress() {
     return this.props.id == null;
@@ -145,9 +140,33 @@ class ProgressBar extends Component {
       this.props.uploader.off('progress', this._trackProgressEventHandler);
     }
 
-    this.props.uploader.off('statusChange', this._trackStatusEventHandler);
+    // this.props.uploader.off('statusChange', this._trackStatusEventHandler);
   }
-}
+
+  // ----------------------------------------------------------------------
+  render() {
+    // let the initial value be to be some value greater than 0
+    //    this makes the initial rendering of progress bar nicer in IE 11
+    //    some how, initial value 0 doesn't play well in IE 11
+    // let intPercent = 0;
+    // if (this.state.bytesUploaded > 0) {
+    //   intPercent = Math.round(
+    //     (this.state.bytesUploaded / this.state.totalSize) * 100 || 0
+    //   );
+    // }
+    // if (intPercent < 1) {
+    //   intPercent = 0;
+    // }
+
+    const { classes } = this.props;
+    return (
+      <div className={classes.root}>
+        {/* <span>{intPercent}</span> */}
+        <LinearProgress variant="determinate" value={this.state.completed} />
+      </div>
+    );
+  }
+} // ==== end of "class ProgressBar extends Component {...}" ==============
 
 const isUploadComplete = (statusToCheck, statusEnum) =>
   statusToCheck === statusEnum.UPLOAD_FAILED ||

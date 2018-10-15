@@ -7,9 +7,14 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import 'typeface-roboto';
 
+// ==============================================================
+// add support for IE 11 for create-react-app 2
+import 'react-app-polyfill/ie11';
+//
 //! Polyfills are needed for Redux-Form to work in IE 11
 //* Material UI doesn't need any polyfills.
 import 'babel-polyfill';
+// -------------------------------------------------------------
 
 import reducer from './reducers';
 // import rootSaga from './sagas';

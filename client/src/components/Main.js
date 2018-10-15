@@ -37,18 +37,18 @@ class Main extends Component {
     const { classes } = this.props;
 
     return (
-      <main>
+      <div>
         <div className={classes.filler} />
         <div className={classes.notifierWrapper}>
           <Notifier />
         </div>
         <div className={classes.main}>
-          <Typography variant="title" color="inherit">
+          <Typography variant="h6" color="inherit">
             My Test Form
           </Typography>
           <TestForm />
         </div>
-      </main>
+      </div>
     );
   }
 }
