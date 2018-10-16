@@ -20,11 +20,11 @@ const mergeParts = (
     const fromStream = fs.createReadStream(`${fromDir}/${paddedFilename}`);
     // console.log('reading:', `${fromDir}/${paddedFilename}`);
 
-    // if an error occurred while reding the source stream
+    // an error occurred while reading the source stream
     fromStream.on('error', error => {
       console.log('!!!!!! problem appending chunk !!!!!!', error);
       toStream.end();
-      // TODO: return error??????
+      // return error
       next(error);
     });
 
@@ -51,8 +51,8 @@ const mergeParts = (
   } else {
     // only close the destination stream when all parts are merged
     toStream.end();
-    // TODO: done; return results
-    success(req, res, next, toFile); // invoke the function "combineChunksCallback"
+    // done; invoke the function "combineChunksCallback"
+    success(req, res, next, toFile);
   }
 };
 
@@ -72,7 +72,7 @@ const combineChunks = (
   toStream.on('error', error => {
     console.log('!!!!!! problem appending chunk !!!!!!', error);
     toStream.end();
-    // TODO: return error??????
+    // return error
     next(error);
   });
 

@@ -57,6 +57,7 @@ const upload = multer({ storage });
 const combineChunksCallback = (req, res, next, toFile) => {
   // at this point, combining chunks is successful
   res.send({ success: true, filename: path.basename(toFile) });
+  // TODO: save file information
 };
 
 // ====================================================================
@@ -128,6 +129,7 @@ module.exports = app => {
     if (partIndex == null) {
       // no chunking
       rtnData.filename = req.file.filename;
+      // TODO: save file information
     }
     // res.send({ success: true });
     res.send(rtnData);
