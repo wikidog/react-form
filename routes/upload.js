@@ -52,13 +52,22 @@ const upload = multer({ storage });
 
 // ====================================================================
 
-const mergeParts = (index, totalPartsInt, fromDir, toStream, success, next) => {
+const mergeParts = (
+  index,
+  totalPartsInt,
+  fromDirFull,
+  toFile,
+  toStream,
+  success,
+  res,
+  next
+) => {
   if (index < totalPartsInt) {
     const paddedFilename = ('' + index).padStart(
       ('' + totalPartsInt).length,
       '0'
     );
-    const fromStream = fs.createReadStream(`${fromDir}/${paddedFilename}`);
+    const fromStream = fs.createReadStream(`${fromDirFull}/${paddedFilename}`);
     // console.log('reading:', `${fromDir}/${paddedFilename}`);
 
     // if an error occurred while reding the source stream
@@ -72,7 +81,16 @@ const mergeParts = (index, totalPartsInt, fromDir, toStream, success, next) => {
     fromStream.on('end', () => {
       // console.log('=== on end');
       // * recursive
-      mergeParts(index + 1, totalPartsInt, fromDir, toStream, success, next);
+      mergeParts(
+        index + 1,
+        totalPartsInt,
+        fromDirFull,
+        toFile,
+        toStream,
+        success,
+        res,
+        next
+      );
     });
 
     fromStream.pipe(
@@ -83,13 +101,16 @@ const mergeParts = (index, totalPartsInt, fromDir, toStream, success, next) => {
     // only close the destination stream when all parts are merged
     toStream.end();
     // TODO: done; return results
-    success();
+    success(res, next, toFile); // invoke the function "combineChunksCallback"
   }
 };
 
-const combineChunks = (fromDir, totalPartsInt, toFile, success, next) => {
+const combineChunks = (fromDir, totalPartsInt, toFile, success, res, next) => {
   // console.log('----- combineChunks -------');
-  const toStream = fs.createWriteStream(toFile, { flags: 'a' });
+  const toFileFull = `${UPLOAD_DIR}/${toFile}`;
+  const toStream = fs.createWriteStream(toFileFull, { flags: 'a' });
+
+  const fromDirFull = `${UPLOAD_DIR}/${fromDir}`;
 
   toStream.on('error', error => {
     console.log('!!!!!! problem appending chunk !!!!!!', error);
@@ -98,9 +119,22 @@ const combineChunks = (fromDir, totalPartsInt, toFile, success, next) => {
     next(error);
   });
 
-  mergeParts(0, totalPartsInt, fromDir, toStream, success, next);
+  mergeParts(
+    0,
+    totalPartsInt,
+    fromDirFull,
+    toFile,
+    toStream,
+    success,
+    res,
+    next
+  );
 };
 
+// ====================================================================
+const combineChunksCallback = (res, next, toFile) => {
+  res.send({ success: true, filename: toFile });
+};
 // ====================================================================
 
 module.exports = app => {
@@ -134,14 +168,15 @@ module.exports = app => {
 
     const uuid = req.body.qquuid;
     const filename = req.body.qqfilename;
-    const totalSize = req.body.qqtotalfilesizes;
+    // const totalSize = req.body.qqtotalfilesizes;
     const totalParts = req.body.qqtotalparts;
     const totalPartsInt = parseInt(totalParts);
     //
-    const fromDir = `${UPLOAD_DIR}/${uuid}`;
+    // const fromDir = `${UPLOAD_DIR}/${uuid}`;
+    const fromDir = uuid;
     // const files = await fs.readdir(destDir);
-    const toFilename = `upload_${Date.now()}-${filename}`;
-    const toFile = `${UPLOAD_DIR}/${toFilename}`;
+    const toFile = `upload_${Date.now()}-${filename}`;
+    // const toFile = `${UPLOAD_DIR}/${toFilename}`;
 
     //! Node has default 2 minute timeout for the request
     //! if the uploaded file is very big, merging could take long time
@@ -150,9 +185,17 @@ module.exports = app => {
       fromDir,
       totalPartsInt,
       toFile,
-      () => res.send({ success: true, filename: toFilename }),
+      combineChunksCallback,
+      res,
       next
     );
+    // combineChunks(
+    //   fromDir,
+    //   totalPartsInt,
+    //   toFile,
+    //   () => res.send({ success: true, filename: toFilename }),
+    //   next
+    // );
   });
 
   app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
