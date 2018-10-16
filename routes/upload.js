@@ -7,7 +7,7 @@ const multer = require('multer');
 
 const combineChunks = require('../services/upload_combine_chunks');
 
-const UPLOAD_DIR = 'uploads';
+const UPLOAD_DIR = process.env.UPLOAD_DIR || 'uploads';
 
 // ==================================================================
 // multer disStorage configuration

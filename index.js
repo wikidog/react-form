@@ -3,12 +3,12 @@
 //
 
 // load dotenv as early as possible
-// require('dotenv').config();
+require('dotenv').config();
 
 //
 const express = require('express');
 const path = require('path');
-const http = require('http');
+// const http = require('http');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
