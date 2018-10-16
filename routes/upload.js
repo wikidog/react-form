@@ -1,8 +1,11 @@
+const path = require('path');
 const fs = require('fs-extra');
 
 // * middleware for handling multipart/form-data
 // * Multer won't process any request body which is not multipart/form-data
 const multer = require('multer');
+
+const combineChunks = require('../services/upload_combine_chunks');
 
 const UPLOAD_DIR = 'uploads';
 
@@ -51,92 +54,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // ====================================================================
-
-const mergeParts = (
-  index,
-  totalPartsInt,
-  fromDirFull,
-  toFile,
-  toStream,
-  success,
-  res,
-  next
-) => {
-  if (index < totalPartsInt) {
-    const paddedFilename = ('' + index).padStart(
-      ('' + totalPartsInt).length,
-      '0'
-    );
-    const fromStream = fs.createReadStream(`${fromDirFull}/${paddedFilename}`);
-    // console.log('reading:', `${fromDir}/${paddedFilename}`);
-
-    // if an error occurred while reding the source stream
-    fromStream.on('error', error => {
-      console.log('!!!!!! problem appending chunk !!!!!!', error);
-      toStream.end();
-      // TODO: return error??????
-      next(error);
-    });
-
-    fromStream.on('end', () => {
-      // console.log('=== on end');
-      // * recursive
-      mergeParts(
-        index + 1,
-        totalPartsInt,
-        fromDirFull,
-        toFile,
-        toStream,
-        success,
-        res,
-        next
-      );
-    });
-
-    fromStream.pipe(
-      toStream,
-      { end: false }
-    );
-  } else {
-    // only close the destination stream when all parts are merged
-    toStream.end();
-    // TODO: done; return results
-    success(res, next, toFile); // invoke the function "combineChunksCallback"
-  }
-};
-
-const combineChunks = (fromDir, totalPartsInt, toFile, success, res, next) => {
-  // console.log('----- combineChunks -------');
-  const toFileFull = `${UPLOAD_DIR}/${toFile}`;
-  const toStream = fs.createWriteStream(toFileFull, { flags: 'a' });
-
-  const fromDirFull = `${UPLOAD_DIR}/${fromDir}`;
-
-  toStream.on('error', error => {
-    console.log('!!!!!! problem appending chunk !!!!!!', error);
-    toStream.end();
-    // TODO: return error??????
-    next(error);
-  });
-
-  mergeParts(
-    0,
-    totalPartsInt,
-    fromDirFull,
-    toFile,
-    toStream,
-    success,
-    res,
-    next
-  );
+const combineChunksCallback = (req, res, next, toFile) => {
+  // at this point, combining chunks is successful
+  res.send({ success: true, filename: path.basename(toFile) });
 };
 
 // ====================================================================
-const combineChunksCallback = (res, next, toFile) => {
-  res.send({ success: true, filename: toFile });
-};
-// ====================================================================
-
 module.exports = app => {
   app.get('/upload', (req, res) => {
     res.send({ message: 'secret code 123456' });
@@ -172,30 +95,26 @@ module.exports = app => {
     const totalParts = req.body.qqtotalparts;
     const totalPartsInt = parseInt(totalParts);
     //
-    // const fromDir = `${UPLOAD_DIR}/${uuid}`;
-    const fromDir = uuid;
+    const fromDir = `${UPLOAD_DIR}/${uuid}`;
+    // const fromDir = uuid;
     // const files = await fs.readdir(destDir);
-    const toFile = `upload_${Date.now()}-${filename}`;
+    const toFile = `${UPLOAD_DIR}/upload_${Date.now()}-${filename}`;
     // const toFile = `${UPLOAD_DIR}/${toFilename}`;
 
+    //  fromDir: dirname with full path
+    //  toFile:  filename with full path
     //! Node has default 2 minute timeout for the request
     //! if the uploaded file is very big, merging could take long time
     //! we must extend the timeout value for this request
     combineChunks(
-      fromDir,
       totalPartsInt,
+      fromDir,
       toFile,
       combineChunksCallback,
+      req,
       res,
       next
     );
-    // combineChunks(
-    //   fromDir,
-    //   totalPartsInt,
-    //   toFile,
-    //   () => res.send({ success: true, filename: toFilename }),
-    //   next
-    // );
   });
 
   app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
