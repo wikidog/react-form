@@ -1,6 +1,9 @@
 const path = require('path');
 const fs = require('fs-extra');
 
+const debug = require('debug')('upload:upload');
+const logger = require('../services/logger');
+
 // * middleware for handling multipart/form-data
 // * Multer won't process any request body which is not multipart/form-data
 const multer = require('multer');
@@ -74,7 +77,8 @@ module.exports = app => {
   });
 
   app.post('/formsubmit', (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
+    logger.info('request body:', req.body);
     res.send({ success: true });
     // res.status(422).send({ error: 'Wrong password' });
   });
@@ -120,10 +124,10 @@ module.exports = app => {
 
   app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
     // res.status(420).send({ success: false });
-    console.log('========= one upload done ==========');
-    console.log(req.body);
-    console.log(req.file);
-    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
+    logger.info('========= one upload done ==========');
+    logger.info('request body:\n%o', req.body);
+    logger.info('file:\n%o', req.file);
+    logger.info('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
     let rtnData = { success: true };
     const partIndex = req.body.qqpartindex;
     if (partIndex == null) {
