@@ -1,5 +1,8 @@
 const fs = require('fs-extra');
 
+// const debug = require('debug')('upload:upload');
+const logger = require('../services/logger');
+
 // ---------------------------------------------------------------------
 const mergeParts = (
   index,
@@ -22,7 +25,7 @@ const mergeParts = (
 
     // an error occurred while reading the source stream
     fromStream.on('error', error => {
-      console.log('!!!!!! problem appending chunk !!!!!!', error);
+      logger.error('!!!!!! problem appending chunk !!!!!! %s', error);
       toStream.end();
       // return error
       next(error);
@@ -70,7 +73,7 @@ const combineChunks = (
   const toStream = fs.createWriteStream(toFile, { flags: 'a' });
 
   toStream.on('error', error => {
-    console.log('!!!!!! problem appending chunk !!!!!!', error);
+    logger.error('!!!!!! problem appending chunk !!!!!! %s', error);
     toStream.end();
     // return error
     next(error);

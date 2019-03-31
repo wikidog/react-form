@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs-extra');
 
-const debug = require('debug')('upload:upload');
+// const debug = require('debug')('upload:upload');
 const logger = require('../services/logger');
 
 // * middleware for handling multipart/form-data
@@ -86,9 +86,9 @@ module.exports = app => {
   // for this request, we need
   //    app.use(bodyParser.urlencoded({ extended: true }));
   app.post('/chunksdone', (req, res, next) => {
-    console.log('======== chunksdone ==========');
-    console.log(req.body);
-    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
+    logger.info('======== chunksdone ==========');
+    logger.info('request body:\n%o', req.body);
+    logger.info('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
 
     // res.send({ success: true });
     // // res.status(422).send({ error: 'Wrong password' });
