@@ -66,7 +66,7 @@ const combineChunksCallback = (req, res, next, toFile) => {
 // ====================================================================
 module.exports = app => {
   app.get('/upload', (req, res) => {
-    res.send({ message: 'secret code 123456' });
+    res.send({ message: 'message 123456' });
     return;
 
     // req.setTimeout(10000);
@@ -87,7 +87,7 @@ module.exports = app => {
   //    app.use(bodyParser.urlencoded({ extended: true }));
   app.post('/chunksdone', (req, res, next) => {
     logger.info('======== chunksdone ==========');
-    logger.info('request body:\n%o', req.body);
+    logger.info('>>>>>>>> request body:\n%o', req.body);
     logger.info('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
 
     // res.send({ success: true });
@@ -125,8 +125,8 @@ module.exports = app => {
   app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
     // res.status(420).send({ success: false });
     logger.info('========= one upload done ==========');
-    logger.info('request body:\n%o', req.body);
-    logger.info('file:\n%o', req.file);
+    logger.info('>>>>>>>> request body:\n%o', req.body);
+    logger.info('>>>>>>>> file:\n%o', req.file);
     logger.info('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
     let rtnData = { success: true };
     const partIndex = req.body.qqpartindex;
