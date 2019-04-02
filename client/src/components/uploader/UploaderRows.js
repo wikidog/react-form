@@ -118,14 +118,16 @@ export const uploader = new FineUploaderTraditional({
         enabled: true,
       },
       success: {
-        endpoint: '/chunksdone',
+        // endpoint: '/chunksdone',
+        endpoint: 'http://dekostactrs04.ugs.com/chunksdone',
       },
     },
     deleteFile: {
       enabled: false,
     },
     request: {
-      endpoint: '/uploads',
+      // endpoint: '/uploads',
+      endpoint: 'http://dekostactrs04.ugs.com/uploads',
     },
     retry: {
       enableAuto: false,
