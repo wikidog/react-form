@@ -65,7 +65,7 @@ const combineChunksCallback = (req, res, next, toFile) => {
 
 // ====================================================================
 module.exports = app => {
-  app.get('/upload', (req, res) => {
+  app.get('/test', (req, res) => {
     res.send({ message: 'message 123456' });
     return;
 
@@ -122,7 +122,7 @@ module.exports = app => {
     );
   });
 
-  app.post('/uploads', upload.single('qqfile'), (req, res, next) => {
+  app.post('/upload', upload.single('qqfile'), (req, res, next) => {
     // res.status(420).send({ success: false });
     logger.info('========= one upload done ==========');
     logger.info('>>>>>>>> request body:\n%o', req.body);

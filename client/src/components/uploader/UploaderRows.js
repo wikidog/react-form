@@ -126,7 +126,7 @@ export const uploader = new FineUploaderTraditional({
       enabled: false,
     },
     request: {
-      endpoint: '/uploads',
+      endpoint: '/upload',
       // endpoint: 'http://dekostactrs04.ugs.com/uploads',
     },
     retry: {
