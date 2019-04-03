@@ -112,7 +112,8 @@ export const uploader = new FineUploaderTraditional({
     },
     // maxConnections: 1,  // default is 3
     chunking: {
-      enabled: true,
+      // enabled: true,
+      enabled: false,
       partSize: 10000000,
       concurrent: {
         enabled: true,
